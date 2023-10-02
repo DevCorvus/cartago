@@ -1,10 +1,40 @@
-import Link from 'next/link';
+'use client';
 
-export default function Login() {
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FormEvent } from 'react';
+
+export default function SignIn() {
+  const router = useRouter();
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (e.target instanceof HTMLFormElement) {
+      const formData = new FormData(e.target);
+
+      const res = await signIn('credentials', {
+        email: formData.get('email'),
+        password: formData.get('password'),
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        return router.push('/');
+      } else {
+        // TODO: Handle auth error
+      }
+    }
+  };
+
   return (
     <div className="bg-lime-50 w-full h-full flex items-center justify-center text-green-800">
       <div className="flex flex-col gap-12">
-        <form className="flex items-center justify-center flex-col gap-10">
+        <form
+          onSubmit={onSubmit}
+          className="flex items-center justify-center flex-col gap-10"
+        >
           <header className="w-full ">
             <h1 className=" text-2xl font-bold">Sign In</h1>
           </header>
@@ -15,6 +45,7 @@ export default function Login() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="text"
                 placeholder="Write your email"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
@@ -26,6 +57,7 @@ export default function Login() {
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="Write your password"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
