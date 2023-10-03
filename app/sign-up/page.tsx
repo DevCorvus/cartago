@@ -1,44 +1,101 @@
+'use client'
+
 import Link from 'next/link';
+import { ChangeEvent, useState } from 'react';
 
 export default function SignUp() {
+  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false)
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    if (!displayConfirmPassword && value.length >= 6) {
+      setDisplayConfirmPassword(true)
+    }
+  }
+
   return (
-    <>
-      <h1>Sign up</h1>
-      <form>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input id="name" type="text" placeholder="name" />
+    <div className="bg-lime-50 w-full h-full flex items-center justify-center text-green-800">
+      <div className="flex flex-col gap-12">
+        <form
+          className="flex items-center justify-center flex-col gap-10"
+        >
+          <header className="w-full ">
+            <h1 className=" text-2xl font-bold">Sign Up</h1>
+          </header>
+          <div className="flex flex-col gap-6 w-full">
+            <div className="flex justify-center flex-col gap-2">
+              <label htmlFor="fullname" className="opacity-50">
+                Name
+              </label>
+              <input
+                id="fullname"
+                name="fullname"
+                type="text"
+                placeholder="Write your name"
+                className="rounded-lg p-4 outline-none text-sm shadow-md"
+              />
+            </div>
+            <div className="flex justify-center flex-col gap-2">
+              <label htmlFor="email" className="opacity-50">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="text"
+                placeholder="Write your email"
+                className="rounded-lg p-4 outline-none text-sm shadow-md"
+              />
+            </div>
+            <div className="flex  gap-2 items-center">
+              <label htmlFor="location" className="opacity-50">Location</label>
+              <select name="location" id="location" className="p-1 opacity-75 border border-lime-700 rounded-lg outline-none ">
+                <option defaultValue={""} disabled>Select country</option>
+                <option value="peru">Peru</option>
+                <option value="venezuela">Venezuela</option>
+                <option value="colombia">Colombia</option>
+                <option value="Brasil">Brasil</option>
+              </select>
+            </div>
+            <div className="flex justify-center flex-col gap-2">
+              <label htmlFor="password" className="opacity-50">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Write your password"
+                className="rounded-lg p-4 outline-none text-sm shadow-md"
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <div className={`${displayConfirmPassword ? 'flex' : 'hidden'} justify-center flex-col gap-2 `}>
+              <label htmlFor="confirmPassword" className="opacity-50">
+                Confirm password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="confirmPassword"
+                placeholder="Write again your password"
+                className="rounded-lg p-4 outline-none text-sm shadow-md"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
+          >
+            Sing Up
+          </button>
+        </form>
+        <div className="flex items-center justify-center flex-col text-sm opacity-75">
+          <p>
+            Do you already have an account? <Link href="sign-in" className="hover:text-lime-700 transition font-semibold">Sing In</Link>
+          </p>
         </div>
-        <div>
-          <label htmlFor="location">Location</label>
-          <select name="location" id="location">
-            <option value="peru">Peru</option>
-            <option value="venezuela">Venezuela</option>
-            <option value="colombia">Colombia</option>
-            <option value="Brasil">Brasil</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input id="email" type="text" placeholder="email" />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input id="password" type="password" placeholder="password" />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Password</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            placeholder="confirm password"
-          />
-        </div>
-        <button type="submit">Sing Up</button>
-      </form>
-      <p>
-        Do you already have an account? <Link href="sign-in">Sing In</Link>
-      </p>
-    </>
+      </div>
+    </div>
   );
 }
