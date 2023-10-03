@@ -20,10 +20,10 @@ export default function SignIn() {
         redirect: false,
       });
 
-      if (res?.ok) {
+      if (res?.ok && !res.error) {
         return router.push('/');
       } else {
-        // TODO: Handle auth error
+        console.log(res?.error);
       }
     }
   };
