@@ -8,7 +8,7 @@ import { FormEvent } from 'react';
 export default function SignIn() {
   const router = useRouter();
 
-  const onSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (e.target instanceof HTMLFormElement) {
@@ -32,7 +32,7 @@ export default function SignIn() {
     <div className="bg-lime-50 w-full h-full flex items-center justify-center text-green-800">
       <div className="flex flex-col gap-12">
         <form
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           className="flex items-center justify-center flex-col gap-10"
         >
           <header className="w-full ">
