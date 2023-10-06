@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import AuthProviders from '@/components/providers/AuthProviders';
+import NavBar from '@/components/ui/NavBar';
 
 export const metadata: Metadata = {
   title: 'eCommerce Next',
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-neutral-50">
         <AuthProviders>
+          <NavBar />
           <main className="w-screen h-screen ">{children}</main>
         </AuthProviders>
       </body>

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
@@ -6,7 +8,7 @@ export default function NavBar() {
   const isAuthenticated = session.status === 'authenticated';
 
   return (
-    <nav className="flex items-center justify-between p-3 text-lime-50 bg-green-800 ">
+    <nav className="fixed w-full flex items-center justify-between p-3 text-green-800 bg-slate-100 font-semibold shadow-md">
       <header>
         <Link href="/">eCommerce</Link>
       </header>
