@@ -131,7 +131,7 @@ export default function SignUp() {
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type="confirmPassword"
+                type="password"
                 placeholder="Write again your password"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
