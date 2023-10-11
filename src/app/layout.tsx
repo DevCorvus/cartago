@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="bg-neutral-50">
         <AuthProviders>
           <NavBar />
-          <main className="w-screen h-screen">{children}</main>
+          <main className="w-screen h-screen px-6 pt-20 pb-6">{children}</main>
         </AuthProviders>
       </body>
     </html>

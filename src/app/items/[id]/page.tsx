@@ -5,6 +5,7 @@ export default function ProductItem() {
     <ProductItemDetails
       id="3243"
       name="shoes"
+      price="100.00"
       createdAt="25/03/2023"
       description="loresdfhnkdjlsgvkdfmgkl"
       stock={4}
