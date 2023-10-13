@@ -1,8 +1,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { userService } from '../user/user.service';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
-import { passwordService } from '../password/password.service';
+import { authService } from '../services';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -20,26 +19,16 @@ export const nextAuthOptions: NextAuthOptions = {
       },
       async authorize(credentials, _req) {
         const result = await loginUserSchema.safeParseAsync(credentials);
-
         if (!result.success) throw new Error('Invalid input');
 
-        const data = result.data;
+        const loggedUser = await authService.login(result.data);
 
-        const user = await userService.findByEmail(data.email);
-
-        if (!user) throw new Error('User not found');
-
-        const passwordsMatch = await passwordService.compare(
-          data.password,
-          user.password,
-        );
-
-        if (!passwordsMatch) throw new Error('Unauthorized');
+        if (!loggedUser) throw new Error('Unauthorized');
 
         return {
-          id: user.id,
-          name: user.fullname,
-          role: user.role,
+          id: loggedUser.id,
+          name: loggedUser.fullname,
+          role: loggedUser.role,
         };
       },
     }),

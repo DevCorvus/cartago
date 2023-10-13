@@ -1,8 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { User } from '@prisma/client';
+import { PasswordService } from '../password/password.service';
 
-class UserService {
+export class UserService {
+  constructor(private passwordService: PasswordService) {}
+
   async find(id: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: { id },
@@ -26,14 +29,19 @@ class UserService {
   }
 
   async create(data: CreateUserDto): Promise<void> {
+    const encryptedPassword = await this.passwordService.encrypt(data.password);
+    data.password = encryptedPassword;
+
     await prisma.user.create({ data });
   }
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
+    const encryptedPassword = await this.passwordService.encrypt(newPassword);
+
     await prisma.user.update({
       where: { id },
       data: {
-        password: newPassword,
+        password: encryptedPassword,
       },
     });
   }
@@ -42,5 +50,3 @@ class UserService {
     await prisma.user.delete({ where: { id } });
   }
 }
-
-export const userService = new UserService();
