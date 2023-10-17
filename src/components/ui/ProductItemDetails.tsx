@@ -1,7 +1,12 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import { HiStar } from 'react-icons/hi2';
+import {
+  HiStar,
+  HiShoppingCart,
+  HiHeart,
+  HiOutlineHeart,
+} from 'react-icons/hi2';
 
 interface Props {
   id: string;
@@ -25,57 +30,80 @@ export default function ProductItemDetails({
   tags,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [isWished, setWished] = useState(false);
+
   return (
-    <div>
-      <div className="w-full h-96 relative flex flex-col border border-red-600">
-        <div className="relative h-4/5">
+    <div className="flex flex-col items-center gap-6">
+      <div className="w-full h-96 relative flex flex-col gap-2">
+        <div className="relative h-4/5 bg-neutral-100 shadow-md rounded-md">
           <Image
             src={selectedImage}
             fill={true}
             objectFit="contain"
             alt={`${name} selected image`}
+            className="rounded-md p-1"
           />
         </div>
-        <div className="flex-1 flex border border-green-600 relative">
+        <div className="flex-1 flex gap-1">
           {images.map((url, i) => (
-            <div className="relative w-20 h-full" key={i}>
+            <button
+              className={`relative w-20 h-full border rounded bg-neutral-100 ${
+                selectedImage === url
+                  ? 'border-green-500'
+                  : 'border-neutral-300'
+              }`}
+              key={i}
+              onClick={() => {
+                setSelectedImage(url);
+              }}
+            >
               <Image
                 src={url}
                 alt={`${name} image #${i + 1}`}
                 fill={true}
                 objectFit="contain"
-                onClick={() => {
-                  setSelectedImage(url);
-                }}
               />
-            </div>
+            </button>
           ))}
         </div>
-        <button className="absolute top-2 right-2 z-10 text-base">
-          <HiStar />
+        <button
+          className="absolute top-2 right-2 z-10"
+          onClick={() => setWished((prev) => !prev)}
+        >
+          {isWished ? (
+            <HiHeart className=" text-rose-500 text-3xl" />
+          ) : (
+            <HiOutlineHeart className=" text-rose-500 text-3xl" />
+          )}
         </button>
       </div>
-      <div className="text-lg flex justify-between font-bold">
+      <div className="text-2xl w-full flex justify-between font-bold">
         <header>
-          <h1 className="">{name}</h1>
+          <h1 className="uppercase">{name}</h1>
         </header>
-        <p>$ {price}</p>
+        <p className="justify-start align-top">$ {price}</p>
       </div>
-      <section className="text-sm flex flex-col p-2 h-32 justify-between">
-        <p className="py-1">{description}</p>
-        <div className="flex justify-between">
+      <section className="w-full flex flex-col justify-between gap-6">
+        <p>{description}</p>
+        <div className="w-full flex justify-between text-green-950 opacity-60">
           <p>{stock} in stock</p>
           <p>Created at {createdAt}</p>
         </div>
+        <div className="w-full flex flex-wrap gap-2">
+          {tags.map((tag, i) => (
+            <span
+              key={i}
+              className="bg-green-100 text-green-600 rounded-full text-xs px-2 py-1  "
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </section>
-      <div>
-        {tags.map((tag, i) => (
-          <span key={i} className="border border-red-600 w-9 h-6 rounded-full">
-            {tag}
-          </span>
-        ))}
-      </div>
-      <button>Add to shopping cart</button>
+      <button className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center">
+        <HiShoppingCart />
+        Add to shopping cart
+      </button>
     </div>
   );
 }
