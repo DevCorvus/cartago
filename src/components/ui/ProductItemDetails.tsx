@@ -1,13 +1,8 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import {
-  HiStar,
-  HiShoppingCart,
-  HiHeart,
-  HiOutlineHeart,
-} from 'react-icons/hi2';
-
+import { HiShoppingCart } from 'react-icons/hi2';
+import WishProduct from './WishProduct';
 interface Props {
   id: string;
   images: string[];
@@ -30,7 +25,6 @@ export default function ProductItemDetails({
   tags,
 }: Props) {
   const [selectedImage, setSelectedImage] = useState(images[0]);
-  const [isWished, setWished] = useState(false);
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -66,16 +60,9 @@ export default function ProductItemDetails({
             </button>
           ))}
         </div>
-        <button
-          className="absolute top-2 right-2 z-10"
-          onClick={() => setWished((prev) => !prev)}
-        >
-          {isWished ? (
-            <HiHeart className=" text-rose-500 text-3xl" />
-          ) : (
-            <HiOutlineHeart className=" text-rose-500 text-3xl" />
-          )}
-        </button>
+        <div className="absolute top-2 right-2 z-10">
+          <WishProduct />
+        </div>
       </div>
       <div className="text-2xl w-full flex justify-between font-bold">
         <header>
