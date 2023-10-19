@@ -6,9 +6,9 @@ export default function WishProduct() {
   return (
     <button onClick={() => setWished((prev) => !prev)}>
       {isWished ? (
-        <HiHeart className=" text-rose-500 text-3xl" />
+        <HiHeart className="text-rose-500" />
       ) : (
-        <HiOutlineHeart className=" text-rose-500 text-3xl" />
+        <HiOutlineHeart className="text-rose-500" />
       )}
     </button>
   );

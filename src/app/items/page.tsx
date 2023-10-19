@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import WishProduct from '@/components/ui/WishProduct';
+import Link from 'next/link';
 
 interface Props {
   url: string;
@@ -32,22 +33,35 @@ const PRODUCTS = [
   },
 ];
 export default function ProductList() {
-  return PRODUCTS.map((product, i) => (
-    <div key={i} className="flex">
-      <div className="relative h-20 w-24">
-        <Image
-          src={product.url}
-          alt={product.name}
-          objectFit="contain"
-          fill={true}
-        />
-      </div>
-      <section>
-        <h1>{product.name}</h1>
-        <p>{product.price}</p>
-        <p>{product.description}</p>
-        <WishProduct />
-      </section>
+  return (
+    <div className="flex flex-col gap-6">
+      {PRODUCTS.map((product, i) => (
+        <Link
+          href={'/items/abc'}
+          key={i}
+          className="flex rounded-md shadow-md max-h-32"
+        >
+          <div className="relative h-auto w-32 bg-neutral-100 rounded-md">
+            <Image
+              src={product.url}
+              alt={product.name}
+              objectFit="contain"
+              fill={true}
+              className="rounded-md"
+            />
+          </div>
+          <section className="flex-1 p-4 relative flex flex-col gap-2">
+            <header className="flex justify-between uppercase font-bold">
+              <h1>{product.name}</h1>
+              <p>$ {product.price}</p>
+            </header>
+            <p className="opacity-60 line-clamp-2">{product.description}</p>
+            <div className="absolute bottom-2 right-2 flex text-xl">
+              <WishProduct />
+            </div>
+          </section>
+        </Link>
+      ))}
     </div>
-  ));
+  );
 }
