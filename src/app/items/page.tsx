@@ -45,7 +45,7 @@ export default function ProductList() {
             <Image
               src={product.url}
               alt={product.name}
-              objectFit="contain"
+              object-fit="contain"
               fill={true}
               className="rounded-md"
             />
