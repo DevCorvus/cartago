@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function NavBar() {
   const session = useSession();
@@ -14,13 +14,19 @@ export default function NavBar() {
       </header>
       <ul className="flex items-center gap-5 px-3 text-sm">
         <li>Cart</li>
-        {!isAuthenticated && (
+        {!isAuthenticated ? (
           <>
             <li>
               <Link href="/sign-in">Login</Link>
             </li>
             <li>
               <Link href="/sign-up">Register</Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <button onClick={() => signOut()}>Sign out</button>
             </li>
           </>
         )}
