@@ -3,23 +3,33 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String   @id @default(uuid())
-    email     String   @unique
-    fullname  String
-    password  String
-    role      UserRole @default(USER)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(uuid())
+  email     String   @unique
+  fullname  String
+  password  String
+  countryId String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  country   Country  @relation(fields: [countryId], references: [id])
 
-    @@map("users")
+  @@map("users")
+}
+
+model Country {
+  id  String @db.VarChar(2) @id
+  name  String @unique
+  users User[]
+
+  @@map("countries")
 }
 
 enum UserRole {
-    USER
-    ADMIN
+  USER
+  ADMIN
 }

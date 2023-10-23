@@ -32,7 +32,14 @@ export class UserService {
     const encryptedPassword = await this.passwordService.encrypt(data.password);
     data.password = encryptedPassword;
 
-    await prisma.user.create({ data });
+    await prisma.user.create({
+      data: {
+        email: data.email,
+        fullname: data.fullname,
+        password: data.password,
+        countryId: data.location,
+      },
+    });
   }
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
