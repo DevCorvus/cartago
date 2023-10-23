@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:push": "dotenv -e .env.local -- prisma db push && prisma generate"
+    "migrate:push": "dotenv -e .env.local -- prisma db push && prisma generate",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "dotenv -e .env.local -- ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
@@ -32,6 +36,7 @@
     "postcss": "latest",
     "prisma": "^5.3.1",
     "tailwindcss": "latest",
+    "ts-node": "^10.9.1",
     "typescript": "latest"
   }
 }
