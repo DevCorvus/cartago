@@ -3,28 +3,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { HiShoppingCart } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
+import { Product } from '../types';
 interface Props {
-  id: string;
-  images: string[];
-  name: string;
-  price: string;
-  description: string;
-  stock: number;
-  createdAt: string;
-  tags: string[];
+  product: Product;
 }
 
-export default function ProductItemDetails({
-  id,
-  images,
-  name,
-  price,
-  description,
-  stock,
-  createdAt,
-  tags,
-}: Props) {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+export default function ProductItemDetails({ product }: Props) {
+  const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -34,12 +19,12 @@ export default function ProductItemDetails({
             src={selectedImage}
             fill={true}
             objectFit="contain"
-            alt={`${name} selected image`}
+            alt={`${product.title} selected image`}
             className="rounded-md p-1"
           />
         </div>
         <div className="flex-1 flex gap-1">
-          {images.map((url, i) => (
+          {product.images.map((url, i) => (
             <button
               className={`relative w-20 h-full border rounded bg-neutral-100 ${
                 selectedImage === url
@@ -53,9 +38,9 @@ export default function ProductItemDetails({
             >
               <Image
                 src={url}
-                alt={`${name} image #${i + 1}`}
+                alt={`${product.title} image #${i + 1}`}
                 fill={true}
-                objectFit="contain"
+                object-fit="contain"
               />
             </button>
           ))}
@@ -66,18 +51,18 @@ export default function ProductItemDetails({
       </div>
       <div className="text-2xl w-full flex justify-between font-bold">
         <header>
-          <h1 className="uppercase">{name}</h1>
+          <h1 className="uppercase">{product.title}</h1>
         </header>
-        <p className="justify-start align-top">$ {price}</p>
+        <p className="justify-start align-top">$ {product.price}</p>
       </div>
       <section className="w-full flex flex-col justify-between gap-6">
-        <p>{description}</p>
+        <p>{product.description}</p>
         <div className="w-full flex justify-between text-green-950 opacity-60">
-          <p>{stock} in stock</p>
-          <p>Created at {createdAt}</p>
+          <p>{product.stock} in stock</p>
+          <p>Created at {product.createdAt}</p>
         </div>
         <div className="w-full flex flex-wrap gap-2">
-          {tags.map((tag, i) => (
+          {product.tags.map((tag, i) => (
             <span
               key={i}
               className="bg-green-100 text-green-600 rounded-full text-xs px-2 py-1  "

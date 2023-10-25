@@ -8,29 +8,33 @@ export default function NavBar() {
   const isAuthenticated = session.status === 'authenticated';
 
   return (
-    <nav className="z-50 fixed w-full flex items-center justify-between p-3 text-green-800 bg-slate-100 font-semibold shadow-md">
-      <header>
-        <Link href="/">eCommerce</Link>
-      </header>
-      <ul className="flex items-center gap-5 px-3 text-sm">
-        <li>Cart</li>
-        {!isAuthenticated ? (
-          <>
-            <li>
-              <Link href="/sign-in">Login</Link>
-            </li>
-            <li>
-              <Link href="/sign-up">Register</Link>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <button onClick={() => signOut()}>Sign out</button>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
+    <div className="absolute top-0 left-0 w-full h-12">
+      <nav className="z-50 fixed w-full flex items-center justify-between py-3 px-4 text-green-800 bg-slate-100 font-semibold shadow-md">
+        <header>
+          <Link href="/">eCommerce</Link>
+        </header>
+        <ul className="flex items-center gap-5 text-sm">
+          <li>
+            <Link href="/cart">Cart</Link>
+          </li>
+          {!isAuthenticated ? (
+            <>
+              <li>
+                <Link href="/sign-in">Login</Link>
+              </li>
+              <li>
+                <Link href="/sign-up">Register</Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <button onClick={() => signOut()}>Sign out</button>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+    </div>
   );
 }

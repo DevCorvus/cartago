@@ -15,10 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-50">
+      <body className="bg-neutral-50 relative">
         <AuthProviders>
           <NavBar />
-          <main className="w-screen h-screen px-6 pt-20 pb-6">{children}</main>
+          <main className="w-screen h-screen">{children}</main>
         </AuthProviders>
       </body>
     </html>
