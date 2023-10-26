@@ -2,6 +2,7 @@
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import ProductCartItem from '@/components/ui/ProductCartItem';
 import { CartProduct } from '@/components/types';
+import { useState } from 'react';
 
 const productMock: CartProduct = {
   id: '',
@@ -11,27 +12,37 @@ const productMock: CartProduct = {
   price: 23.1,
   description:
     'A car is a vehicle that has wheels, carries a small number of passengers, and is moved by an engine or a motor',
-  stock: 12,
+  stock: 8,
 };
 
-const productsMock: CartProduct[] = new Array(10)
+const productsMock: CartProduct[] = new Array(8)
   .fill(productMock)
   .map((product: CartProduct, i) => {
     return { ...product, id: String(i + 1) };
   });
 
 export default function Cart() {
-  const number = 3;
+  const [cartProducts, setCartProducts] = useState<CartProduct[]>(productsMock);
 
+  const handleCartProductDelete = (id: string) => {
+    setCartProducts((prev) => {
+      return prev.filter((product) => product.id !== id);
+    });
+  };
   return (
     <div className="w-full flex flex-col gap-6">
       <div>
-        <h1>Shopping cart ({number})</h1>
-        <p>Total: $ {number}</p>
+        <h1>Shopping cart ({cartProducts.length})</h1>
+        <p>Total: $ 34</p>
       </div>
       <div className="w-full flex flex-col gap-4">
-        {productsMock.map((product, i) => (
-          <ProductCartItem key={i} i={i} product={product} />
+        {cartProducts.map((product, i) => (
+          <ProductCartItem
+            key={i}
+            i={i}
+            product={product}
+            handleDelete={handleCartProductDelete}
+          />
         ))}
       </div>
       <button
