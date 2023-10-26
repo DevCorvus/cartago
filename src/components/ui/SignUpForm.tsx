@@ -95,7 +95,7 @@ export default function SignUpForm({ countries }: Props) {
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
             </div>
-            <div className="flex  gap-2 items-center">
+            <div className="flex flex-col  gap-2 items-start">
               <label htmlFor="location" className="opacity-50">
                 Location
               </label>
