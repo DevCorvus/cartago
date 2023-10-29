@@ -28,11 +28,11 @@ export class UserService {
     return count > 0;
   }
 
-  async create(data: CreateUserDto): Promise<void> {
+  async create(data: CreateUserDto): Promise<User> {
     const encryptedPassword = await this.passwordService.encrypt(data.password);
     data.password = encryptedPassword;
 
-    await prisma.user.create({
+    const newUser = prisma.user.create({
       data: {
         email: data.email,
         fullname: data.fullname,
@@ -40,6 +40,8 @@ export class UserService {
         countryId: data.location,
       },
     });
+
+    return newUser;
   }
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
