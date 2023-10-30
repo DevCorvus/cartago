@@ -18,7 +18,7 @@ export default function ProductItemDetails({ product }: Props) {
           <Image
             src={selectedImage}
             fill={true}
-            objectFit="contain"
+            object-fit="contain"
             alt={`${product.title} selected image`}
             className="rounded-md p-1"
           />
