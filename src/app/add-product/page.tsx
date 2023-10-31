@@ -1,5 +1,6 @@
 'use client';
 
+import { ProductDto } from '@/shared/dtos/product.dto';
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
 
@@ -33,7 +34,8 @@ export default function AddProduct() {
           }),
         });
         if (res.ok) {
-          return router.push('/items/abc');
+          const { data }: { data: ProductDto } = await res.json();
+          return router.push(`/items/${data.id}`);
         }
       } catch (error) {
         console.log(error);

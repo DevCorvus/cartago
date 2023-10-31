@@ -1,11 +1,13 @@
 'use client';
+
 import Image from 'next/image';
 import { useState } from 'react';
 import { HiShoppingCart } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
-import { Product } from '../types';
+import { ProductDto } from '@/shared/dtos/product.dto';
+
 interface Props {
-  product: Product;
+  product: ProductDto;
 }
 
 export default function ProductItemDetails({ product }: Props) {
@@ -15,29 +17,35 @@ export default function ProductItemDetails({ product }: Props) {
     <div className="flex flex-col items-center gap-6">
       <div className="w-full h-96 relative flex flex-col gap-2">
         <div className="relative h-4/5 bg-neutral-100 shadow-md rounded-md">
-          <Image
-            src={selectedImage}
-            fill={true}
-            object-fit="contain"
-            alt={`${product.title} selected image`}
-            className="rounded-md p-1"
-          />
+          {selectedImage ? (
+            <Image
+              src={selectedImage.path}
+              fill={true}
+              object-fit="contain"
+              alt={`${product.title} selected image`}
+              className="rounded-md p-1"
+            />
+          ) : (
+            <span className="h-full flex justify-center items-center bg-neutral-200">
+              Image not found
+            </span>
+          )}
         </div>
         <div className="flex-1 flex gap-1">
-          {product.images.map((url, i) => (
+          {product.images.map((image, i) => (
             <button
               className={`relative w-20 h-full border rounded bg-neutral-100 ${
-                selectedImage === url
+                selectedImage === image
                   ? 'border-green-500'
                   : 'border-neutral-300'
               }`}
               key={i}
               onClick={() => {
-                setSelectedImage(url);
+                setSelectedImage(image);
               }}
             >
               <Image
-                src={url}
+                src={image.path}
                 alt={`${product.title} image #${i + 1}`}
                 fill={true}
                 object-fit="contain"
@@ -59,15 +67,15 @@ export default function ProductItemDetails({ product }: Props) {
         <p>{product.description}</p>
         <div className="w-full flex justify-between text-green-950 opacity-60">
           <p>{product.stock} in stock</p>
-          <p>Created at {product.createdAt}</p>
+          <p>Created at {product.createdAt.toDateString()}</p>
         </div>
         <div className="w-full flex flex-wrap gap-2">
-          {product.tags.map((tag, i) => (
+          {product.categories.map((category, i) => (
             <span
               key={i}
               className="bg-green-100 text-green-600 rounded-full text-xs px-2 py-1  "
             >
-              {tag}
+              {category.title}
             </span>
           ))}
         </div>
