@@ -1,6 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { ProductDto, CreateProductDto } from '@/shared/dtos/product.dto';
 
+interface CreateProductInterface extends Omit<CreateProductDto, 'images'> {
+  images: string[];
+}
+
 export class ProductService {
   constructor() {}
 
@@ -19,7 +23,7 @@ export class ProductService {
     return count > 0;
   }
 
-  async create(data: CreateProductDto): Promise<ProductDto> {
+  async create(data: CreateProductInterface): Promise<ProductDto> {
     const newProduct = await prisma.product.create({
       data: {
         title: data.title,

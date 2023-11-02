@@ -6,34 +6,46 @@ import { FormEvent, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 
-interface FilePreview {
+interface ImagePreview {
   name: string;
   url: string;
 }
 
 export default function AddProduct() {
   const router = useRouter();
-  const [files, setFiles] = useState<File[]>([]);
-  const [filePreviews, setFilePreviews] = useState<FilePreview[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
+  const [categories, setCategories] = useState<number[]>([]);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader();
 
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-      reader.onload = () => {
-        setFiles((prev) => [...prev, file]);
-        setFilePreviews((prev) => [
-          ...prev,
-          { name: file.name, url: URL.createObjectURL(file) },
-        ]);
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  }, []);
+        reader.onabort = () => console.log('File reading was aborted');
+        reader.onerror = () => console.log('File reading has failed');
+        reader.onload = () => {
+          if (!images.some((image) => image.name === file.name)) {
+            setImages((prev) => [...prev, file]);
+            setImagePreviews((prev) => [
+              ...prev,
+              { name: file.name, url: URL.createObjectURL(file) },
+            ]);
+          }
+        };
+
+        reader.readAsArrayBuffer(file);
+      });
+    },
+    [images],
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const handleDeleteImage = (name: string) => {
+    setImages((prev) => prev.filter((image) => image.name !== name));
+    setImagePreviews((prev) => prev.filter((image) => image.name !== name));
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,24 +53,13 @@ export default function AddProduct() {
     if (e.target instanceof HTMLFormElement) {
       const formData = new FormData(e.target);
 
-      const title = formData.get('title');
-      const description = formData.get('description');
-      const price = Number(formData.get('price'));
-      const stock = Number(formData.get('stock'));
+      images.forEach((image) => formData.append('images', image));
+      formData.append('categories', JSON.stringify(categories));
 
       try {
         const res = await fetch('/api/products', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'aplication/json',
-          },
-          body: JSON.stringify({
-            title,
-            description,
-            price,
-            stock,
-            categories: [],
-          }),
+          body: formData,
         });
         if (res.ok) {
           const { data }: { data: ProductDto } = await res.json();
@@ -73,7 +74,6 @@ export default function AddProduct() {
   return (
     <div className="p-5 pt-30 bg-lime-50 w-full h-full flex flex-col gap-5 items-center justify-center text-green-800">
       <form
-        action=""
         onSubmit={handleSubmit}
         className="flex items-center justify-center flex-col gap-6"
       >
@@ -92,9 +92,9 @@ export default function AddProduct() {
               <p>Drag and drop some files here or click to select files</p>
             )}
           </div>
-          {files.length > 0 && (
+          {images.length > 0 && (
             <div className=" flex gap-1 border border-green-700 border-opacity-30 p-1 rounded-md">
-              {filePreviews.map((file, i) => (
+              {imagePreviews.map((file, i) => (
                 <div key={i + 1} className="relative w-16 h-16">
                   <Image
                     src={file.url}
@@ -102,6 +102,13 @@ export default function AddProduct() {
                     fill={true}
                     object-fit="contain"
                   />
+                  <button
+                    type="button"
+                    className="absolute top-0 right-0 text-red-500"
+                    onClick={() => handleDeleteImage(file.name)}
+                  >
+                    X
+                  </button>
                 </div>
               ))}
             </div>
