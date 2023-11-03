@@ -18,3 +18,8 @@ export interface CartProduct {
   stock: number;
   image: string;
 }
+
+export interface ImagePreview {
+  name: string;
+  url: string;
+}

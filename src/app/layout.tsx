@@ -18,7 +18,9 @@ export default function RootLayout({
       <body className="bg-neutral-50 relative">
         <AuthProviders>
           <NavBar />
-          <main className="w-screen h-screen">{children}</main>
+          <main className="w-screen min-h-screen flex flex-col">
+            {children}
+          </main>
         </AuthProviders>
       </body>
     </html>

@@ -61,7 +61,7 @@ export default function SignUpForm({ countries }: Props) {
   };
 
   return (
-    <div className="bg-lime-50 w-full h-full flex items-center justify-center text-green-800">
+    <div className="flex-1 bg-lime-50 flex items-center justify-center text-green-800">
       <div className="flex flex-col gap-12">
         <form
           onSubmit={handleSubmit}
