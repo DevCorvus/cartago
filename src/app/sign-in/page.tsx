@@ -1,30 +1,32 @@
 'use client';
 
+import { LoginUserDto } from '@/shared/dtos/user.dto';
+import { loginUserSchema } from '@/shared/schemas/user.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 export default function SignIn() {
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginUserDto>({ resolver: zodResolver(loginUserSchema) });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
+    const res = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-    if (e.target instanceof HTMLFormElement) {
-      const formData = new FormData(e.target);
-
-      const res = await signIn('credentials', {
-        email: formData.get('email'),
-        password: formData.get('password'),
-        redirect: false,
-      });
-
-      if (res?.ok && !res.error) {
-        return router.push('/');
-      } else {
-        console.log(res?.error);
-      }
+    if (res?.ok && !res.error) {
+      return router.push('/');
+    } else {
+      console.log(res?.error);
     }
   };
 
@@ -32,7 +34,7 @@ export default function SignIn() {
     <div className="flex-1 bg-lime-50 flex items-center justify-center text-green-800">
       <div className="flex flex-col gap-12">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center flex-col gap-10"
         >
           <header className="w-full ">
@@ -44,24 +46,30 @@ export default function SignIn() {
                 Email
               </label>
               <input
+                {...register('email')}
                 id="email"
-                name="email"
-                type="text"
-                placeholder="Write your email"
+                type="email"
+                placeholder="Enter your email"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
+              {errors.email && (
+                <p className="text-red-400">{errors.email.message}</p>
+              )}
             </div>
             <div className="flex justify-center flex-col gap-2">
               <label htmlFor="password" className="opacity-50">
                 Password
               </label>
               <input
+                {...register('password')}
                 id="password"
-                name="password"
                 type="password"
-                placeholder="Write your password"
+                placeholder="Enter your password"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
+              {errors.password && (
+                <p className="text-red-400">{errors.password.message}</p>
+              )}
             </div>
           </div>
           <button
