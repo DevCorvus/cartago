@@ -5,6 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { CountryDto } from '@/shared/dtos/country.dto';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createUserSchema } from '@/shared/schemas/user.schema';
+import { CreateUserDto } from '@/shared/dtos/user.dto';
 
 interface Props {
   countries: CountryDto[];
@@ -13,43 +17,39 @@ interface Props {
 export default function SignUpForm({ countries }: Props) {
   const router = useRouter();
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateUserDto>({
+    resolver: zodResolver(createUserSchema),
+  });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
+    try {
+      const signUpRes = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (e.target instanceof HTMLFormElement) {
-      const formData = new FormData(e.target);
+      if (!signUpRes.ok) throw new Error('User not created');
 
-      const fullname = formData.get('fullname');
-      const email = formData.get('email');
-      const password = formData.get('password');
-      const location = formData.get('location');
+      const signInRes = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-      try {
-        const signUpRes = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ fullname, email, password, location }),
-        });
-
-        if (!signUpRes.ok) throw new Error('User not created');
-
-        const signInRes = await signIn('credentials', {
-          email,
-          password,
-          redirect: false,
-        });
-
-        if (signInRes?.ok && !signInRes.error) {
-          return router.push('/');
-        } else {
-          console.log(signInRes?.error);
-        }
-      } catch (err) {
-        console.log(err);
+      if (signInRes?.ok && !signInRes.error) {
+        return router.push('/');
+      } else {
+        console.log(signInRes?.error);
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -64,7 +64,7 @@ export default function SignUpForm({ countries }: Props) {
     <div className="flex-1 bg-lime-50 flex items-center justify-center text-green-800">
       <div className="flex flex-col gap-12">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center flex-col gap-10"
         >
           <header className="w-full ">
@@ -76,31 +76,37 @@ export default function SignUpForm({ countries }: Props) {
                 Name
               </label>
               <input
+                {...register('fullname')}
                 id="fullname"
-                name="fullname"
                 type="text"
-                placeholder="Write your name"
+                placeholder="Enter your name"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
+              {errors.fullname && (
+                <p className="text-red-400">{errors.fullname.message}</p>
+              )}
             </div>
             <div className="flex justify-center flex-col gap-2">
               <label htmlFor="email" className="opacity-50">
                 Email
               </label>
               <input
+                {...register('email')}
                 id="email"
-                name="email"
-                type="text"
-                placeholder="Write your email"
+                type="email"
+                placeholder="Enter your email"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
+              {errors.email && (
+                <p className="text-red-400">{errors.email.message}</p>
+              )}
             </div>
             <div className="flex flex-col  gap-2 items-start">
               <label htmlFor="location" className="opacity-50">
                 Location
               </label>
               <select
-                name="location"
+                {...register('location')}
                 id="location"
                 className="p-1 opacity-75 border border-lime-700 rounded-lg outline-none"
               >
@@ -113,19 +119,25 @@ export default function SignUpForm({ countries }: Props) {
                   </option>
                 ))}
               </select>
+              {errors.location && (
+                <p className="text-red-400">{errors.location.message}</p>
+              )}
             </div>
             <div className="flex justify-center flex-col gap-2">
               <label htmlFor="password" className="opacity-50">
                 Password
               </label>
               <input
+                {...register('password')}
                 id="password"
-                name="password"
                 type="password"
-                placeholder="Write your password"
+                placeholder="Enter your password"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
                 onChange={handlePasswordChange}
               />
+              {errors.password && (
+                <p className="text-red-400">{errors.password.message}</p>
+              )}
             </div>
             <div
               className={`${
@@ -136,12 +148,15 @@ export default function SignUpForm({ countries }: Props) {
                 Confirm password
               </label>
               <input
+                {...register('confirmPassword')}
                 id="confirmPassword"
-                name="confirmPassword"
                 type="password"
-                placeholder="Write again your password"
+                placeholder="Repeat your password"
                 className="rounded-lg p-4 outline-none text-sm shadow-md"
               />
+              {errors.confirmPassword && (
+                <p className="text-red-400">{errors.confirmPassword.message}</p>
+              )}
             </div>
           </div>
           <button
