@@ -8,7 +8,7 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
 ];
 
-export const productImageSchema = z
+const productImageSchema = z
   .instanceof(File)
   .refine((file) => {
     return file.size <= MAX_FILE_SIZE;
@@ -17,11 +17,17 @@ export const productImageSchema = z
     return ACCEPTED_IMAGE_TYPES.includes(file.type);
   }, 'Only .jpeg, jpg, .png and .webp formats are supported');
 
-export const createProductSchema = z.object({
+export const createPartialProductSchema = z.object({
   title: z.string().min(10).max(150),
   description: z.string().max(200),
   price: z.number().int().min(0),
   stock: z.number().int().min(0),
-  images: z.array(productImageSchema).max(5),
-  categories: z.array(z.number().int()),
+});
+
+export const productImageListSchema = z.array(productImageSchema).max(5);
+export const productCategoryListSchema = z.array(z.number().int().positive());
+
+export const createProductSchema = createPartialProductSchema.extend({
+  images: productImageListSchema,
+  categories: productCategoryListSchema,
 });
