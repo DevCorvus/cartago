@@ -1,43 +1,70 @@
 'use client';
 
-import { ProductDto } from '@/shared/dtos/product.dto';
-import { FormEvent, useCallback, useState } from 'react';
+import { CreatePartialProductDto, ProductDto } from '@/shared/dtos/product.dto';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  createPartialProductSchema,
+  productImageListSchema,
+} from '@/shared/schemas/product.schema';
 
 export default function AddProduct() {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [categories, setCategories] = useState<number[]>([]);
+  const [imageUploadError, setImageUploadError] = useState<string>('');
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreatePartialProductDto>({
+    resolver: zodResolver(createPartialProductSchema),
+  });
 
-    if (e.target instanceof HTMLFormElement) {
-      const formData = new FormData(e.target);
+  useEffect(() => {
+    const result = productImageListSchema.safeParse(images);
+    if (result.success) {
+      setImageUploadError('');
+    } else {
+      setImageUploadError(result.error.errors[0].message);
+    }
+  }, [images]);
 
-      images.forEach((image) => formData.append('images', image));
-      formData.append('categories', JSON.stringify(categories));
+  const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
+    if (imageUploadError) return;
 
-      try {
-        const res = await fetch('/api/products', {
-          method: 'POST',
-          body: formData,
-        });
-        if (res.ok) {
-          const { data }: { data: ProductDto } = await res.json();
-          return router.push(`/items/${data.id}`);
-        }
-      } catch (error) {
-        console.log(error);
+    const formData = new FormData();
+
+    formData.set('title', data.title);
+    formData.set('description', data.description);
+    formData.set('price', String(data.price));
+    formData.set('stock', String(data.stock));
+
+    images.forEach((image) => formData.append('images', image));
+    formData.append('categories', JSON.stringify(categories));
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        const { data }: { data: ProductDto } = await res.json();
+        return router.push(`/items/${data.id}`);
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <div className="p-5 bg-lime-50 w-full h-full flex flex-col gap-5 items-center justify-center text-green-800">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex items-center justify-center flex-col gap-6"
       >
         <header className="w-full ">
@@ -45,52 +72,71 @@ export default function AddProduct() {
         </header>
         <div className="flex flex-col gap-4 w-auto">
           <ImageUploader setImages={setImages} />
+          {imageUploadError && (
+            <p className="text-red-400">{imageUploadError}</p>
+          )}
           <div className="flex flex-col gap-3">
             <label htmlFor="title">Title</label>
             <input
+              {...register('title')}
               id="title"
-              name="title"
               type="text"
-              placeholder="write product title"
+              placeholder="Enter product title"
               className="rounded-lg p-4 outline-none text-sm shadow-md"
             />
+            {errors.title && (
+              <p className="text-red-400">{errors.title.message}</p>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             <label htmlFor="description">Description</label>
             <textarea
+              {...register('description')}
               id="description"
-              name="description"
               cols={30}
               rows={5}
-              placeholder="write description"
+              placeholder="Enter product description"
               className="rounded-lg p-4 outline-none text-sm shadow-md"
-            ></textarea>
+            />
+            {errors.description && (
+              <p className="text-red-400">{errors.description.message}</p>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             <label htmlFor="price">Price</label>
             <input
+              {...register('price', { valueAsNumber: true })}
               id="price"
-              name="price"
+              defaultValue={0}
+              min={0}
               type="number"
-              placeholder="write price product"
+              placeholder="Enter product price"
               className="rounded-lg p-4 outline-none text-sm shadow-md"
             />
+            {errors.price && (
+              <p className="text-red-400">{errors.price.message}</p>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             <label htmlFor="stock">Stock</label>
             <input
+              {...register('stock', { valueAsNumber: true })}
               id="stock"
-              name="stock"
+              defaultValue={0}
+              min={0}
               type="number"
-              placeholder="write stock of product"
+              placeholder="Enter product stock"
               className="rounded-lg p-4 outline-none text-sm shadow-md"
             />
+            {errors.stock && (
+              <p className="text-red-400">{errors.stock.message}</p>
+            )}
           </div>
           <div className="flex flex-col gap-3">
             <label htmlFor="">Categories</label>
             <input
               type="text"
-              placeholder="write categories product"
+              placeholder="Enter product categories"
               className="rounded-lg p-4 outline-none text-sm shadow-md"
             />
           </div>
