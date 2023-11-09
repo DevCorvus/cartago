@@ -1,3 +1,4 @@
+import { productImageSchema } from '@/shared/schemas/product.schema';
 import Image from 'next/image';
 import {
   Dispatch,
@@ -6,14 +7,24 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { ImagePreview } from '../types';
 import { useDropzone } from 'react-dropzone';
+import { HiMiniXCircle, HiOutlineExclamationTriangle } from 'react-icons/hi2';
+
+interface ImagePreview {
+  filename: string;
+  url: string;
+  errors?: string[];
+}
 
 interface Props {
   setImages: Dispatch<SetStateAction<File[]>>;
+  setImageUploadError: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function ImageUploader({ setImages }: Props) {
+export default function ImageUploader({
+  setImages,
+  setImageUploadError,
+}: Props) {
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
   const [selectedImage, setSelectedImage] = useState<ImagePreview | null>(null);
 
@@ -25,10 +36,15 @@ export default function ImageUploader({ setImages }: Props) {
         reader.onabort = () => console.log('File reading was aborted');
         reader.onerror = () => console.log('File reading has failed');
         reader.onload = () => {
-          if (!imagePreviews.some((image) => image.name === file.name)) {
+          if (!imagePreviews.some((image) => image.filename === file.name)) {
+            const validation = productImageSchema.safeParse(file);
+
             const imagePreview: ImagePreview = {
-              name: file.name,
+              filename: file.name,
               url: URL.createObjectURL(file),
+              errors: validation.success
+                ? undefined
+                : validation.error.errors.map((err) => err.message),
             };
 
             setImages((prev) => [...prev, file]);
@@ -42,11 +58,15 @@ export default function ImageUploader({ setImages }: Props) {
     [imagePreviews, setImages],
   );
 
+  useEffect(() => {
+    setImageUploadError(imagePreviews.some((img) => Boolean(img.errors)));
+  }, [imagePreviews, setImageUploadError]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteImage = (name: string) => {
     setImages((prev) => prev.filter((image) => image.name !== name));
-    setImagePreviews((prev) => prev.filter((image) => image.name !== name));
+    setImagePreviews((prev) => prev.filter((image) => image.filename !== name));
   };
 
   useEffect(() => {
@@ -59,52 +79,70 @@ export default function ImageUploader({ setImages }: Props) {
 
   return (
     <div className="w-full h-96 relative flex flex-col gap-2">
-      <div
+      <button
         {...getRootProps()}
         className="relative h-4/5 bg-neutral-100 shadow-md rounded-md"
       >
         <input {...getInputProps()} />
-        {selectedImage ? (
-          <Image
-            src={selectedImage.url}
-            fill={true}
-            object-fit="contain"
-            alt={`${selectedImage.name} selected image`}
-            className="rounded-md p-1"
-          />
-        ) : (
-          <span className="p-5 text-center h-full flex justify-center items-center bg-neutral-200">
+        {!selectedImage ? (
+          <span className="h-full flex justify-center items-center w-60 mx-auto">
             Drag and drop some files here or click to select files
           </span>
-        )}
-      </div>
-      <div className="flex-1 flex gap-1">
-        {imagePreviews.map((image, i) => (
-          <div key={i} className="relative">
-            <button
-              className={`relative w-20 h-full border rounded bg-neutral-100 ${
-                selectedImage === image
-                  ? 'border-green-500'
-                  : 'border-neutral-300'
-              }`}
-              onClick={() => {
-                setSelectedImage(image);
-              }}
-            >
+        ) : (
+          <>
+            {!selectedImage.errors ? (
               <Image
-                src={image.url}
-                alt={`${image.name} image #${i + 1}`}
+                src={selectedImage.url}
                 fill={true}
                 object-fit="contain"
+                alt={`${selectedImage.filename} selected image`}
+                className="rounded-md p-1"
               />
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDeleteImage(image.name)}
-              className="absolute top-0 right-0"
-            >
-              X
-            </button>
+            ) : (
+              <div className="h-full flex flex-col justify-center items-center gap-4 border border-red-300 rounded-md">
+                {selectedImage.errors.map((err, i) => (
+                  <p key={i} className="text-red-400 w-60">
+                    {err}
+                  </p>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </button>
+      <div className="flex-1 flex gap-1">
+        {imagePreviews.map((image, i) => (
+          <div key={i}>
+            <div className="relative h-full">
+              <button
+                className={`relative w-20 h-full border rounded bg-neutral-100 ${
+                  image.errors
+                    ? 'border-red-300 hover:border-red-400 focus:border-red-400'
+                    : ''
+                } transition`}
+                onClick={() => {
+                  setSelectedImage(image);
+                }}
+              >
+                {!image.errors ? (
+                  <Image
+                    src={image.url}
+                    alt={`${image.filename} image #${i + 1}`}
+                    fill={true}
+                    object-fit="contain"
+                  />
+                ) : (
+                  <HiOutlineExclamationTriangle className="text-red-400 text-3xl mx-auto" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteImage(image.filename)}
+                className="absolute top-0 right-0 text-lg text-red-300 hover:text-red-400 focus:text-red-400 transition"
+              >
+                <HiMiniXCircle />
+              </button>
+            </div>
           </div>
         ))}
       </div>

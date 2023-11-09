@@ -1,21 +1,18 @@
 'use client';
 
 import { CreatePartialProductDto, ProductDto } from '@/shared/dtos/product.dto';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  createPartialProductSchema,
-  productImageListSchema,
-} from '@/shared/schemas/product.schema';
+import { createPartialProductSchema } from '@/shared/schemas/product.schema';
 
 export default function AddProduct() {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [categories, setCategories] = useState<number[]>([]);
-  const [imageUploadError, setImageUploadError] = useState<string>('');
+  const [imageUploadError, setImageUploadError] = useState<boolean>(false);
 
   const {
     register,
@@ -24,15 +21,6 @@ export default function AddProduct() {
   } = useForm<CreatePartialProductDto>({
     resolver: zodResolver(createPartialProductSchema),
   });
-
-  useEffect(() => {
-    const result = productImageListSchema.safeParse(images);
-    if (result.success) {
-      setImageUploadError('');
-    } else {
-      setImageUploadError(result.error.errors[0].message);
-    }
-  }, [images]);
 
   const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
     if (imageUploadError) return;
@@ -71,10 +59,11 @@ export default function AddProduct() {
           <h1 className=" text-2xl font-bold">Add Product</h1>
         </header>
         <div className="flex flex-col gap-4 w-auto">
-          <ImageUploader setImages={setImages} />
-          {imageUploadError && (
-            <p className="text-red-400">{imageUploadError}</p>
-          )}
+          <ImageUploader
+            setImages={setImages}
+            setImageUploadError={setImageUploadError}
+          />
+
           <div className="flex flex-col gap-3">
             <label htmlFor="title">Title</label>
             <input
