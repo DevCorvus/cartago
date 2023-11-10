@@ -30,7 +30,12 @@ export default function ImageUploader({
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      acceptedFiles.forEach((file) => {
+      const LIMIT = 5;
+      const slots = LIMIT - imagePreviews.length;
+
+      if (slots <= 0) return;
+
+      acceptedFiles.slice(0, slots).forEach((file) => {
         const reader = new FileReader();
 
         reader.onabort = () => console.log('File reading was aborted');
@@ -78,9 +83,10 @@ export default function ImageUploader({
   }, [imagePreviews]);
 
   return (
-    <div className="w-full h-96 relative flex flex-col gap-2">
+    <div className="w-full h-96 relative flex flex-col gap-1">
       <button
         {...getRootProps()}
+        type="button"
         className="relative h-4/5 bg-neutral-100 shadow-md rounded-md"
       >
         <input {...getInputProps()} />
@@ -110,6 +116,7 @@ export default function ImageUploader({
           </>
         )}
       </button>
+      <p className="text-sm italic opacity-50">Max 5</p>
       <div className="flex-1 flex gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i}>
