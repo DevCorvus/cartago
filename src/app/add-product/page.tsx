@@ -7,11 +7,12 @@ import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPartialProductSchema } from '@/shared/schemas/product.schema';
+import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 
 export default function AddProduct() {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
-  const [categories, setCategories] = useState<number[]>([]);
+  const [categoryIds, setCategoryIds] = useState<number[]>([]);
   const [imageUploadError, setImageUploadError] = useState<boolean>(false);
 
   const {
@@ -33,7 +34,7 @@ export default function AddProduct() {
     formData.set('stock', String(data.stock));
 
     images.forEach((image) => formData.append('images', image));
-    formData.append('categories', JSON.stringify(categories));
+    formData.append('categories', JSON.stringify(categoryIds));
 
     try {
       const res = await fetch('/api/products', {
@@ -121,14 +122,7 @@ export default function AddProduct() {
               <p className="text-red-400">{errors.stock.message}</p>
             )}
           </div>
-          <div className="flex flex-col gap-3">
-            <label htmlFor="">Categories</label>
-            <input
-              type="text"
-              placeholder="Enter product categories"
-              className="rounded-lg p-4 outline-none text-sm shadow-md"
-            />
-          </div>
+          <CategoryTagsInput setCategoryIds={setCategoryIds} />
         </div>
         <div className="w-full">
           <button
