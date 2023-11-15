@@ -23,6 +23,9 @@ export default function CategoryTagsInput({
   const [selectedCategoryTags, setSelectedCategoryTags] = useState<
     CategoryTag[]
   >([]);
+  const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
+    CategoryTag[]
+  >([]);
 
   useEffect(() => {
     setCategoryIds(categoryTags.map((tag) => tag.id));
@@ -46,6 +49,18 @@ export default function CategoryTagsInput({
           categoryTags.filter((_, i) => i !== prev.length - 1),
         );
       }
+
+      if (value) {
+        const lowerCaseValue = value.toLowerCase();
+
+        setAutocompleteCategoryTags(
+          categoryTags.filter((tag) =>
+            tag.title.toLowerCase().startsWith(lowerCaseValue),
+          ),
+        );
+      } else {
+        setAutocompleteCategoryTags([]);
+      }
     }
   };
 
@@ -56,6 +71,12 @@ export default function CategoryTagsInput({
   return (
     <div className="flex flex-col gap-3 w-72 relative">
       <label htmlFor="categories">Categories</label>
+      <ul>
+        {autocompleteCategoryTags.map((tag) => (
+          <li key={tag.id}>{tag.title}</li>
+        ))}
+      </ul>
+
       <ul className="flex flex-wrap gap-1 rounded-lg p-3 text-sm bg-white shadow-md">
         {selectedCategoryTags.map((selectedTag) => (
           <li key={selectedTag.id}>
