@@ -21,6 +21,7 @@ export default function RootLayout({
           <main className="w-screen min-h-screen flex flex-col">
             {children}
           </main>
+          <div id="modal-container"></div>
         </AuthProviders>
       </body>
     </html>

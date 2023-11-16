@@ -11,6 +11,7 @@ import {
   useMemo,
 } from 'react';
 import { HiXMark } from 'react-icons/hi2';
+import AddCategoryFormModal from './AddCategoryFormModal';
 
 interface Props {
   categoryTags: CategoryTagDto[];
@@ -28,6 +29,7 @@ export default function CategoryTagsInput({
     CategoryTag[]
   >([]);
   const [input, setInput] = useState<string>('');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setCategoryIds(categoryTags.map((tag) => tag.id));
@@ -77,7 +79,8 @@ export default function CategoryTagsInput({
           if (categoryMatch) {
             setSelectedCategoryTags((prev) => [...prev, { ...categoryMatch }]);
           } else {
-            // TODO: Create new category
+            // TODO: Create new category;
+            setShowModal(true);
             setSelectedCategoryTags((prev) => [
               ...prev,
               { id: prev.length + 1, title: value },
@@ -131,6 +134,7 @@ export default function CategoryTagsInput({
             </button>
           </li>
         ))}
+
         <li>
           <input
             id="categories"
@@ -143,6 +147,7 @@ export default function CategoryTagsInput({
           />
         </li>
       </ul>
+      {showModal && <AddCategoryFormModal />}
     </div>
   );
 }
