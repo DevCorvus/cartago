@@ -1,35 +1,45 @@
-import {
-  CategoryTagDto as CategoryTag,
-  CategoryTagDto,
-} from '@/shared/dtos/category.dto';
+import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import {
   Dispatch,
   SetStateAction,
   useState,
   KeyboardEvent,
   useEffect,
-  useMemo,
 } from 'react';
 import { HiXMark } from 'react-icons/hi2';
 import AddCategoryFormModal from './AddCategoryFormModal';
+import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
 
 interface Props {
-  categoryTags: CategoryTagDto[];
+  defaultCategoryTags: CategoryTagDto[];
   setCategoryIds: Dispatch<SetStateAction<number[]>>;
 }
 
 export default function CategoryTagsInput({
-  categoryTags,
+  defaultCategoryTags,
   setCategoryIds,
 }: Props) {
-  const [selectedCategoryTags, setSelectedCategoryTags] = useState<
-    CategoryTag[]
-  >([]);
-  const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
-    CategoryTag[]
-  >([]);
   const [input, setInput] = useState<string>('');
-  const [showModal, setShowModal] = useState(false);
+
+  const [categoryTags, setCategoryTags] =
+    useState<CategoryTagDto[]>(defaultCategoryTags);
+
+  const [selectedCategoryTags, setSelectedCategoryTags] = useState<
+    CategoryTagDto[]
+  >([]);
+
+  const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
+    CategoryTagDto[]
+  >([]);
+
+  const { creatingCategory, setCreatingCategory, setCategoryTitle } =
+    useCategoryFormStore(
+      ({ creatingCategory, setCreatingCategory, setCategoryTitle }) => ({
+        creatingCategory,
+        setCreatingCategory,
+        setCategoryTitle,
+      }),
+    );
 
   useEffect(() => {
     setCategoryIds(categoryTags.map((tag) => tag.id));
@@ -42,8 +52,7 @@ export default function CategoryTagsInput({
       setAutocompleteCategoryTags(
         categoryTags.filter((tag) => {
           const tagAlreadyExist = selectedCategoryTags.some(
-            // It should be selected by id
-            (selectedTag) => selectedTag.title === tag.title,
+            (selectedTag) => selectedTag.id === tag.id,
           );
           const tagStartsWith = tag.title.toLowerCase().startsWith(lowerInput);
 
@@ -55,6 +64,16 @@ export default function CategoryTagsInput({
     }
   }, [input, categoryTags, selectedCategoryTags]);
 
+  const addSelectedCategoryTag = (tag: CategoryTagDto) => {
+    setSelectedCategoryTags((prev) => [...prev, { ...tag }]);
+    setAutocompleteCategoryTags([]);
+    setInput('');
+  };
+
+  const handleDelete = (id: number) => {
+    setSelectedCategoryTags((prev) => prev.filter((tag) => tag.id !== id));
+  };
+
   const handleKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.target instanceof HTMLInputElement) {
       const value: string = e.target.value;
@@ -64,7 +83,6 @@ export default function CategoryTagsInput({
 
         if (value) {
           const lowerInput = input.toLowerCase();
-          setInput('');
 
           const selectedTagAlreadyExist = selectedCategoryTags.some(
             (tag) => tag.title.toLowerCase() === lowerInput,
@@ -77,17 +95,11 @@ export default function CategoryTagsInput({
           );
 
           if (categoryMatch) {
-            setSelectedCategoryTags((prev) => [...prev, { ...categoryMatch }]);
+            addSelectedCategoryTag(categoryMatch);
           } else {
-            // TODO: Create new category;
-            setShowModal(true);
-            setSelectedCategoryTags((prev) => [
-              ...prev,
-              { id: prev.length + 1, title: value },
-            ]);
+            setCreatingCategory(true);
+            setCategoryTitle(input);
           }
-
-          setAutocompleteCategoryTags([]);
         }
       } else if (e.key == 'Backspace' && !value) {
         setSelectedCategoryTags((prev) =>
@@ -97,14 +109,9 @@ export default function CategoryTagsInput({
     }
   };
 
-  const handleSelectAutocomplete = (tag: CategoryTag) => {
-    setSelectedCategoryTags((prev) => [...prev, { ...tag }]);
-    setAutocompleteCategoryTags([]);
-    setInput('');
-  };
-
-  const handleDelete = (id: number) => {
-    setSelectedCategoryTags((prev) => prev.filter((tag) => tag.id !== id));
+  const handleNewCategory = (data: CategoryTagDto) => {
+    setCategoryTags((prev) => [...prev, data]);
+    addSelectedCategoryTag(data);
   };
 
   return (
@@ -114,7 +121,7 @@ export default function CategoryTagsInput({
         <ul>
           {autocompleteCategoryTags.map((tag) => (
             <li key={tag.id}>
-              <button onClick={() => handleSelectAutocomplete(tag)}>
+              <button onClick={() => addSelectedCategoryTag(tag)}>
                 {tag.title}
               </button>
             </li>
@@ -147,8 +154,8 @@ export default function CategoryTagsInput({
           />
         </li>
       </ul>
-      {showModal && (
-        <AddCategoryFormModal closeModal={() => setShowModal(false)} />
+      {creatingCategory && (
+        <AddCategoryFormModal handleNewCategory={handleNewCategory} />
       )}
     </div>
   );

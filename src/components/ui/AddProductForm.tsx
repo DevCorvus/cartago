@@ -9,16 +9,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createPartialProductSchema } from '@/shared/schemas/product.schema';
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
+import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
 
 interface Props {
-  categoryTags: CategoryTagDto[];
+  defaultCategoryTags: CategoryTagDto[];
 }
 
-export default function AddProductForm({ categoryTags }: Props) {
+export default function AddProductForm({ defaultCategoryTags }: Props) {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [categoryIds, setCategoryIds] = useState<number[]>([]);
   const [imageUploadError, setImageUploadError] = useState<boolean>(false);
+
+  const creatingCategory = useCategoryFormStore(
+    (state) => state.creatingCategory,
+  );
 
   const {
     register,
@@ -58,7 +63,7 @@ export default function AddProductForm({ categoryTags }: Props) {
   return (
     <div className="p-5 bg-lime-50 w-full h-full flex flex-col gap-5 items-center justify-center text-green-800">
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={() => !creatingCategory && handleSubmit(onSubmit)}
         className="flex items-center justify-center flex-col gap-6"
       >
         <header className="w-full ">
@@ -128,7 +133,7 @@ export default function AddProductForm({ categoryTags }: Props) {
             )}
           </div>
           <CategoryTagsInput
-            categoryTags={categoryTags}
+            defaultCategoryTags={defaultCategoryTags}
             setCategoryIds={setCategoryIds}
           />
         </div>
