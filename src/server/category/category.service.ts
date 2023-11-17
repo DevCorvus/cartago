@@ -14,9 +14,13 @@ export class CategoryService {
     return prisma.category.findMany({ select: { id: true, title: true } });
   }
 
-  create(data: CreateUpdateCategoryDto): Promise<Category> {
+  create(data: CreateUpdateCategoryDto): Promise<CategoryTagDto> {
     return prisma.category.create({
       data,
+      select: {
+        id: true,
+        title: true,
+      },
     });
   }
 
