@@ -3,16 +3,15 @@ import { createUserSchema } from '@/shared/schemas/user.schema';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { countryService, userService } from '@/server/services';
 
-// I don't like this but I had to do it this way.
 export async function POST(req: NextRequest) {
-  let data: CreateUserDto;
+  const json = await req.json();
+  const result = await createUserSchema.safeParseAsync(json);
 
-  try {
-    const json = await req.json();
-    data = await createUserSchema.parseAsync(json);
-  } catch {
+  if (!result.success) {
     return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
   }
+
+  const data: CreateUserDto = result.data;
 
   const countryExists = await countryService.exists(data.location);
   if (!countryExists) {
@@ -21,15 +20,15 @@ export async function POST(req: NextRequest) {
 
   try {
     await userService.create(data);
+
+    return NextResponse.json(
+      { message: 'User created successfully' },
+      { status: 201 },
+    );
   } catch {
     return NextResponse.json(
       { message: 'User already exists' },
       { status: 409 },
     );
   }
-
-  return NextResponse.json(
-    { message: 'User created successfully' },
-    { status: 201 },
-  );
 }
