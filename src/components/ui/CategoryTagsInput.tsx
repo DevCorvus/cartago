@@ -147,7 +147,9 @@ export default function CategoryTagsInput({
           />
         </li>
       </ul>
-      {showModal && <AddCategoryFormModal />}
+      {showModal && (
+        <AddCategoryFormModal closeModal={() => setShowModal(false)} />
+      )}
     </div>
   );
 }
