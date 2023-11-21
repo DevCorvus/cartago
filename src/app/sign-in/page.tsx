@@ -31,18 +31,18 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex-1 bg-lime-50 flex items-center justify-center text-green-800">
+    <div className="flex-1 bg-amber-50 flex items-center justify-center">
       <div className="flex flex-col gap-12">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center justify-center flex-col gap-10"
+          className="flex items-center justify-center flex-col gap-10 max-w-sm"
         >
-          <header className="w-full ">
-            <h1 className=" text-2xl font-bold">Sign In</h1>
+          <header className="w-full">
+            <h1 className="text-2xl font-bold text-green-800">Sign In</h1>
           </header>
           <div className="flex flex-col gap-6 w-full">
             <div className="flex justify-center flex-col gap-2">
-              <label htmlFor="email" className="opacity-50">
+              <label htmlFor="email" className="text-green-800 opacity-75">
                 Email
               </label>
               <input
@@ -50,14 +50,14 @@ export default function SignIn() {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className="rounded-lg p-4 outline-none text-sm shadow-md"
+                className="rounded-lg p-4 outline-none shadow-md"
               />
               {errors.email && (
                 <p className="text-red-400">{errors.email.message}</p>
               )}
             </div>
             <div className="flex justify-center flex-col gap-2">
-              <label htmlFor="password" className="opacity-50">
+              <label htmlFor="password" className="text-green-800 opacity-75">
                 Password
               </label>
               <input
@@ -65,7 +65,7 @@ export default function SignIn() {
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                className="rounded-lg p-4 outline-none text-sm shadow-md"
+                className="rounded-lg p-4 outline-none shadow-md"
               />
               {errors.password && (
                 <p className="text-red-400">{errors.password.message}</p>
@@ -79,7 +79,7 @@ export default function SignIn() {
             Log In
           </button>
         </form>
-        <div className="flex items-center justify-center flex-col text-sm opacity-75">
+        <div className="flex items-center justify-center flex-col text-sm text-green-800 opacity-75">
           <p>
             You do not have an account?
             <Link

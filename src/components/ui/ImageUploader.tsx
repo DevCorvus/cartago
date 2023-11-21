@@ -91,7 +91,7 @@ export default function ImageUploader({
       >
         <input {...getInputProps()} />
         {!selectedImage ? (
-          <span className="h-full flex justify-center items-center w-60 mx-auto">
+          <span className="h-full flex justify-center items-center w-60 mx-auto opacity-50">
             Drag and drop some files here or click to select files
           </span>
         ) : (

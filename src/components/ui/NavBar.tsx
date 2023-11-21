@@ -9,7 +9,7 @@ export default function NavBar() {
 
   return (
     <div className="w-full h-12">
-      <nav className="z-50 fixed w-full flex items-center justify-between py-3 px-4 text-green-800 bg-slate-100 font-semibold shadow-md">
+      <nav className="z-50 fixed w-full flex items-center justify-between py-3 px-4 text-green-800 bg-white font-semibold shadow-md">
         <header>
           <Link href="/">eCommerce</Link>
         </header>

@@ -116,7 +116,9 @@ export default function CategoryTagsInput({
 
   return (
     <div className="flex flex-col gap-3 relative">
-      <label htmlFor="categories">Categories</label>
+      <label htmlFor="categories" className="text-green-800 opacity-75">
+        Categories
+      </label>
       <div className="bg-white p-1 rounded-md shadow-md">
         <ul className="flex flex-wrap p-2 gap-1">
           {selectedCategoryTags.map((selectedTag) => (

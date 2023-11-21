@@ -61,49 +61,55 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
   };
 
   return (
-    <div className="p-5 bg-lime-50 w-full h-full flex flex-col gap-5 items-center justify-center text-green-800">
-      <form
-        onSubmit={() => !creatingCategory && handleSubmit(onSubmit)}
-        className="flex items-center justify-center flex-col gap-6"
-      >
-        <header className="w-full ">
-          <h1 className=" text-2xl font-bold">Add Product</h1>
-        </header>
-        <div className="flex flex-col gap-4 w-auto">
-          <ImageUploader
-            setImages={setImages}
-            setImageUploadError={setImageUploadError}
-          />
+    <form
+      onSubmit={() => !creatingCategory && handleSubmit(onSubmit)}
+      className="flex items-center justify-center flex-col gap-10 max-w-sm"
+    >
+      <header className="w-full">
+        <h1 className="text-2xl font-bold text-green-800">Add Product</h1>
+      </header>
+      <div className="flex flex-col gap-6 w-full">
+        <ImageUploader
+          setImages={setImages}
+          setImageUploadError={setImageUploadError}
+        />
 
-          <div className="flex flex-col gap-3">
-            <label htmlFor="title">Title</label>
-            <input
-              {...register('title')}
-              id="title"
-              type="text"
-              placeholder="Enter product title"
-              className="rounded-lg p-4 outline-none text-sm shadow-md"
-            />
-            {errors.title && (
-              <p className="text-red-400">{errors.title.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-3">
-            <label htmlFor="description">Description</label>
-            <textarea
-              {...register('description')}
-              id="description"
-              cols={30}
-              rows={5}
-              placeholder="Enter product description"
-              className="rounded-lg p-4 outline-none text-sm shadow-md"
-            />
-            {errors.description && (
-              <p className="text-red-400">{errors.description.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-3">
-            <label htmlFor="price">Price</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="title" className="text-green-800 opacity-75">
+            Title
+          </label>
+          <input
+            {...register('title')}
+            id="title"
+            type="text"
+            placeholder="Enter product title"
+            className="rounded-lg p-4 outline-none shadow-md"
+          />
+          {errors.title && (
+            <p className="text-red-400">{errors.title.message}</p>
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="description" className="text-green-800 opacity-75">
+            Description
+          </label>
+          <textarea
+            {...register('description')}
+            id="description"
+            cols={30}
+            rows={5}
+            placeholder="Enter product description"
+            className="rounded-lg p-4 outline-none shadow-md resize-none"
+          />
+          {errors.description && (
+            <p className="text-red-400">{errors.description.message}</p>
+          )}
+        </div>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2 w-[45%]">
+            <label htmlFor="price" className="text-green-800 opacity-75">
+              Price
+            </label>
             <input
               {...register('price', { valueAsNumber: true })}
               id="price"
@@ -111,14 +117,16 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
               min={0}
               type="number"
               placeholder="Enter product price"
-              className="rounded-lg p-4 outline-none text-sm shadow-md"
+              className="rounded-lg p-4 outline-none shadow-md"
             />
             {errors.price && (
               <p className="text-red-400">{errors.price.message}</p>
             )}
           </div>
-          <div className="flex flex-col gap-3">
-            <label htmlFor="stock">Stock</label>
+          <div className="flex flex-col gap-2 w-[45%]">
+            <label htmlFor="stock" className="text-green-800 opacity-75">
+              Stock
+            </label>
             <input
               {...register('stock', { valueAsNumber: true })}
               id="stock"
@@ -126,26 +134,26 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
               min={0}
               type="number"
               placeholder="Enter product stock"
-              className="rounded-lg p-4 outline-none text-sm shadow-md"
+              className="rounded-lg p-4 outline-none shadow-md"
             />
             {errors.stock && (
               <p className="text-red-400">{errors.stock.message}</p>
             )}
           </div>
-          <CategoryTagsInput
-            defaultCategoryTags={defaultCategoryTags}
-            setCategoryIds={setCategoryIds}
-          />
         </div>
-        <div className="w-full">
-          <button
-            type="submit"
-            className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
-          >
-            Add Product
-          </button>
-        </div>
-      </form>
-    </div>
+        <CategoryTagsInput
+          defaultCategoryTags={defaultCategoryTags}
+          setCategoryIds={setCategoryIds}
+        />
+      </div>
+      <div className="w-full">
+        <button
+          type="submit"
+          className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
+        >
+          Add Product
+        </button>
+      </div>
+    </form>
   );
 }
