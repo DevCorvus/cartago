@@ -115,45 +115,53 @@ export default function CategoryTagsInput({
   };
 
   return (
-    <div className="flex flex-col gap-3 w-72 relative">
+    <div className="flex flex-col gap-3 relative">
       <label htmlFor="categories">Categories</label>
-      {autocompleteCategoryTags.length > 0 && (
-        <ul>
-          {autocompleteCategoryTags.map((tag) => (
-            <li key={tag.id}>
-              <button onClick={() => addSelectedCategoryTag(tag)}>
-                {tag.title}
+      <div className="bg-white p-1 rounded-md shadow-md">
+        <ul className="flex flex-wrap p-2 gap-1">
+          {selectedCategoryTags.map((selectedTag) => (
+            <li key={selectedTag.id}>
+              <button
+                className="bg-green-800 text-slate-50 rounded-md p-1 flex items-center gap-0.5"
+                type="button"
+                onClick={() => handleDelete(selectedTag.id)}
+              >
+                <span>{selectedTag.title}</span>
+                <HiXMark />
               </button>
             </li>
           ))}
-        </ul>
-      )}
-      <ul className="flex flex-wrap gap-1 rounded-lg p-3 text-sm bg-white shadow-md">
-        {selectedCategoryTags.map((selectedTag) => (
-          <li key={selectedTag.id}>
-            <button
-              className="bg-green-800 text-slate-50 rounded-md p-1 flex items-center gap-0.5"
-              type="button"
-              onClick={() => handleDelete(selectedTag.id)}
-            >
-              <span>{selectedTag.title}</span>
-              <HiXMark />
-            </button>
+          <li>
+            <input
+              id="categories"
+              type="text"
+              className="outline-none p-1 bg-none w-28"
+              placeholder="Add category..."
+              autoComplete="off"
+              onKeyDown={handleKey}
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+            />
           </li>
-        ))}
-
-        <li>
-          <input
-            id="categories"
-            type="text"
-            className="outline-none p-1 bg-none w-28"
-            placeholder="Add category..."
-            onKeyDown={handleKey}
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-          />
-        </li>
-      </ul>
+        </ul>
+        {autocompleteCategoryTags.length > 0 && (
+          <>
+            <hr />
+            <ul className="flex flex-wrap gap-2 p-2">
+              {autocompleteCategoryTags.map((tag) => (
+                <li key={tag.id}>
+                  <button
+                    className=""
+                    onClick={() => addSelectedCategoryTag(tag)}
+                  >
+                    {tag.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
       {creatingCategory && (
         <AddCategoryFormModal handleNewCategory={handleNewCategory} />
       )}
