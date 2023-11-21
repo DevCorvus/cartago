@@ -87,7 +87,7 @@ export default function ImageUploader({
       <button
         {...getRootProps()}
         type="button"
-        className="relative h-4/5 bg-neutral-100 shadow-md rounded-md"
+        className="relative h-4/5 bg-white shadow-md rounded-md"
       >
         <input {...getInputProps()} />
         {!selectedImage ? (
