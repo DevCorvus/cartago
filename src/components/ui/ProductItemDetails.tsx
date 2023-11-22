@@ -19,7 +19,7 @@ export default function ProductItemDetails({ product }: Props) {
         <div className="relative h-4/5 bg-neutral-100 shadow-md rounded-md">
           {selectedImage ? (
             <Image
-              src={selectedImage.path}
+              src={'/uploads/' + selectedImage.path}
               fill={true}
               object-fit="contain"
               alt={`${product.title} selected image`}
@@ -45,7 +45,7 @@ export default function ProductItemDetails({ product }: Props) {
               }}
             >
               <Image
-                src={image.path}
+                src={'/uploads/' + image.path}
                 alt={`${product.title} image #${i + 1}`}
                 fill={true}
                 object-fit="contain"

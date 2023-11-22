@@ -20,7 +20,7 @@ export default async function ProductItem({ params }: Props) {
     notFound();
   }
 
-  const product = await productService.find(result.data.id);
+  const product = await productService.findById(result.data.id);
 
   if (!product) {
     notFound();

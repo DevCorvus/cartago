@@ -1,5 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import { ProductDto, CreateProductDto } from '@/shared/dtos/product.dto';
+import {
+  ProductDto,
+  CreateProductDto,
+  ProductCardDto,
+} from '@/shared/dtos/product.dto';
 
 interface CreateProductInterface extends Omit<CreateProductDto, 'images'> {
   images: string[];
@@ -8,12 +12,47 @@ interface CreateProductInterface extends Omit<CreateProductDto, 'images'> {
 export class ProductService {
   constructor() {}
 
-  async find(id: string): Promise<ProductDto | null> {
+  async findAll(): Promise<ProductCardDto[]> {
+    return prisma.product.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        images: {
+          take: 1,
+          select: {
+            path: true,
+          },
+        },
+        categories: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async findById(id: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
       where: { id },
       include: {
-        images: true,
-        categories: true,
+        images: {
+          select: {
+            path: true,
+          },
+        },
+        categories: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
     });
   }

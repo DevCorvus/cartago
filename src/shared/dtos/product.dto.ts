@@ -3,12 +3,31 @@ import {
   createPartialProductSchema,
   createProductSchema,
 } from '../schemas/product.schema';
-import { Category, Product, ProductImage } from '@prisma/client';
+import { CategoryTagDto } from './category.dto';
 
-// Temp
-export interface ProductDto extends Product {
-  images: ProductImage[];
-  categories: Category[];
+interface ProductImageDto {
+  path: string;
+}
+
+export interface ProductDto {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
+  images: ProductImageDto[];
+  categories: CategoryTagDto[];
+}
+
+export interface ProductCardDto {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  images: ProductImageDto[];
+  categories: CategoryTagDto[];
 }
 
 export type CreatePartialProductDto = z.infer<

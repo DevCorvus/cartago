@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
   }
 
-  const imagesDir = path.join(process.cwd(), '/tmp');
+  const imagesDir = path.join(process.cwd(), '/public/uploads');
   const images: string[] = [];
 
   try {
