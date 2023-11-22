@@ -34,31 +34,27 @@ const PRODUCTS = [
 ];
 export default function ProductList() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {PRODUCTS.map((product, i) => (
         <Link
           href={'/items/abc'}
           key={i}
-          className="flex rounded-md shadow-md max-h-32"
+          className="flex flex-col rounded-md shadow-md bg-white"
         >
-          <div className="relative h-auto w-32 bg-neutral-100 rounded-md">
+          <div className="relative h-40 w-full bg-neutral-100 rounded-md ">
             <Image
               src={product.url}
               alt={product.name}
-              object-fit="contain"
-              fill={true}
-              className="rounded-md"
+              fill
+              className="rounded-md object-contain"
             />
           </div>
-          <section className="flex-1 p-4 relative flex flex-col gap-2">
-            <header className="flex justify-between uppercase font-bold">
+          <section className="p-4 relative flex flex-col gap-2">
+            <header className="flex justify-between uppercase font-bold text-green-800 text-lg">
               <h1>{product.name}</h1>
               <p>$ {product.price}</p>
             </header>
-            <p className="opacity-60 line-clamp-2">{product.description}</p>
-            <div className="absolute bottom-2 right-2 flex text-xl">
-              <WishProduct />
-            </div>
+            <p className="line-clamp-2 font-sans">{product.description}</p>
           </section>
         </Link>
       ))}
