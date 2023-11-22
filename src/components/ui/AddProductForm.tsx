@@ -34,7 +34,7 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
   });
 
   const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
-    if (imageUploadError) return;
+    if (creatingCategory || imageUploadError) return;
 
     const formData = new FormData();
 
@@ -62,7 +62,7 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
 
   return (
     <form
-      onSubmit={() => !creatingCategory && handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex items-center justify-center flex-col gap-10 max-w-sm"
     >
       <header className="w-full">
@@ -73,7 +73,6 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
           setImages={setImages}
           setImageUploadError={setImageUploadError}
         />
-
         <div className="flex flex-col gap-2">
           <label htmlFor="title" className="text-green-800 opacity-75">
             Title
