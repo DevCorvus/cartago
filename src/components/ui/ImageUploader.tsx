@@ -100,9 +100,8 @@ export default function ImageUploader({
               <Image
                 src={selectedImage.url}
                 fill={true}
-                object-fit="contain"
                 alt={`${selectedImage.filename} selected image`}
-                className="rounded-md p-1"
+                className="rounded-md p-1 object-contain"
               />
             ) : (
               <div className="h-full flex flex-col justify-center items-center gap-4 border border-red-300 rounded-md">
@@ -117,7 +116,7 @@ export default function ImageUploader({
         )}
       </button>
       <p className="text-sm italic opacity-50">Max 5</p>
-      <div className="flex-1 flex gap-1">
+      <div className="flex-1 grid grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i}>
             <div className="relative h-full">
@@ -136,7 +135,7 @@ export default function ImageUploader({
                     src={image.url}
                     alt={`${image.filename} image #${i + 1}`}
                     fill={true}
-                    object-fit="contain"
+                    className="object-contain"
                   />
                 ) : (
                   <HiOutlineExclamationTriangle className="text-red-400 text-3xl mx-auto" />
