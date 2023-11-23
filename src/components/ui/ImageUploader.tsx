@@ -121,6 +121,7 @@ export default function ImageUploader({
           <div key={i}>
             <div className="relative h-full">
               <button
+                type="button"
                 className={`relative w-20 h-full border rounded bg-neutral-100 ${
                   image.errors
                     ? 'border-red-300 hover:border-red-400 focus:border-red-400'
