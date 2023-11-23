@@ -42,8 +42,8 @@ export default function CategoryTagsInput({
     );
 
   useEffect(() => {
-    setCategoryIds(categoryTags.map((tag) => tag.id));
-  }, [categoryTags, setCategoryIds]);
+    setCategoryIds(selectedCategoryTags.map((tag) => tag.id));
+  }, [selectedCategoryTags, setCategoryIds]);
 
   useEffect(() => {
     if (input) {
