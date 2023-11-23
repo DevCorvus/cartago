@@ -12,7 +12,7 @@ export default function ProductList({ products }: Props) {
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {products.map((product, i) => (
         <Link
-          href={'/items/abc'}
+          href={'/items/' + product.id}
           key={i}
           className="flex flex-col rounded-md shadow-md bg-white"
         >
