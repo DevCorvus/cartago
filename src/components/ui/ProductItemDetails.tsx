@@ -14,16 +14,15 @@ export default function ProductItemDetails({ product }: Props) {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
       <div className="w-full h-96 relative flex flex-col gap-2">
         <div className="relative h-4/5 bg-neutral-100 shadow-md rounded-md">
           {selectedImage ? (
             <Image
               src={'/uploads/' + selectedImage.path}
               fill={true}
-              object-fit="contain"
               alt={`${product.title} selected image`}
-              className="rounded-md p-1"
+              className="rounded-md p-1 object-contain"
             />
           ) : (
             <span className="h-full flex justify-center items-center bg-neutral-200">
@@ -31,13 +30,11 @@ export default function ProductItemDetails({ product }: Props) {
             </span>
           )}
         </div>
-        <div className="flex-1 flex gap-1">
+        <div className="flex-1 grid grid-cols-5 gap-1">
           {product.images.map((image, i) => (
             <button
-              className={`relative w-20 h-full border rounded bg-neutral-100 ${
-                selectedImage === image
-                  ? 'border-green-500'
-                  : 'border-neutral-300'
+              className={`relative w-20 h-full rounded bg-neutral-100 ${
+                selectedImage === image ? 'border-2 border-neutral-300' : ''
               }`}
               key={i}
               onClick={() => {
@@ -48,7 +45,7 @@ export default function ProductItemDetails({ product }: Props) {
                 src={'/uploads/' + image.path}
                 alt={`${product.title} image #${i + 1}`}
                 fill={true}
-                object-fit="contain"
+                className="object-contain"
               />
             </button>
           ))}
@@ -57,14 +54,16 @@ export default function ProductItemDetails({ product }: Props) {
           <WishProduct />
         </div>
       </div>
-      <div className="text-2xl w-full flex justify-between font-bold">
-        <header>
-          <h1 className="uppercase">{product.title}</h1>
-        </header>
+      <header className="text-green-800 text-2xl w-full flex justify-between font-bold">
+        <h1 className="uppercase">{product.title}</h1>
         <p className="justify-start align-top">$ {product.price}</p>
-      </div>
+      </header>
       <section className="w-full flex flex-col justify-between gap-6">
-        <p>{product.description}</p>
+        {product.description ? (
+          <p>{product.description}</p>
+        ) : (
+          <p className="italic text-amber-800 opacity-50">No description</p>
+        )}
         <div className="w-full flex justify-between text-green-950 opacity-60">
           <p>{product.stock} in stock</p>
           <p>Created at {product.createdAt.toDateString()}</p>
