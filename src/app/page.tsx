@@ -11,7 +11,7 @@ export default function Home() {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-screen lg:h-[60vh] lg:pt-12">
       <HeroImage />
     </div>
   );

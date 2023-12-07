@@ -31,7 +31,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex-1 bg-amber-50 flex items-center justify-center">
+    <div className="bg-amber-50 flex items-center justify-center min-h-screen pt-20">
       <div className="flex flex-col gap-12">
         <form
           onSubmit={handleSubmit(onSubmit)}

@@ -9,7 +9,7 @@ interface Props {
 
 export default function ProductList({ products }: Props) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
       {products.map((product, i) => (
         <Link
           href={'/items/' + product.id}
@@ -31,9 +31,9 @@ export default function ProductList({ products }: Props) {
             )}
           </div>
           <section className="p-4 relative flex flex-col gap-2">
-            <header className="flex justify-between uppercase font-bold text-green-800 text-lg">
-              <h1>{product.title}</h1>
-              <p>$ {product.price}</p>
+            <header className="flex flex-wrap justify-between uppercase font-bold text-green-800 text-sm md:text-lg gap-2">
+              <h2>{product.title}</h2>
+              <span>$ {product.price}</span>
             </header>
             <p className="line-clamp-2 font-sans">{product.description}</p>
           </section>

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { HiShoppingCart } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
 import { ProductDto } from '@/shared/dtos/product.dto';
+import Link from 'next/link';
 
 interface Props {
   product: ProductDto;
@@ -70,12 +71,13 @@ export default function ProductItemDetails({ product }: Props) {
         </div>
         <div className="w-full flex flex-wrap gap-2">
           {product.categories.map((category, i) => (
-            <span
+            <Link
+              href={'/items?categoryId=' + category.id}
               key={i}
               className="bg-green-100 text-green-600 rounded-full text-xs px-2 py-1  "
             >
               {category.title}
-            </span>
+            </Link>
           ))}
         </div>
       </section>

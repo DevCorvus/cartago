@@ -8,8 +8,8 @@ export default function NavBar() {
   const isAuthenticated = session.status === 'authenticated';
 
   return (
-    <div className="w-full h-12">
-      <nav className="z-50 fixed w-full flex items-center justify-between py-3 px-4 text-green-800 bg-white font-semibold shadow-md">
+    <div className="bg-white text-green-800 font-semibold py-3 px-4 shadow-md fixed z-50 w-full">
+      <nav className="container mx-auto flex items-center justify-between">
         <header>
           <Link href="/">eCommerce</Link>
         </header>
