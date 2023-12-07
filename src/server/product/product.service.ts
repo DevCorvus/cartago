@@ -25,12 +25,6 @@ export class ProductService {
             path: true,
           },
         },
-        categories: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
       },
       orderBy: {
         createdAt: 'desc',

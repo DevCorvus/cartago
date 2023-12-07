@@ -27,7 +27,6 @@ export interface ProductCardDto {
   description: string;
   price: number;
   images: ProductImageDto[];
-  categories: CategoryTagDto[];
 }
 
 export type CreatePartialProductDto = z.infer<
