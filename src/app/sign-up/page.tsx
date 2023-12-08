@@ -5,7 +5,7 @@ export default async function SignUp() {
   const countries = await countryService.findAll();
 
   return (
-    <div className="bg-amber-50 flex items-center justify-center min-h-screen pt-20">
+    <div className="flex items-center justify-center pt-20 pb-10">
       <SignUpForm countries={countries} />
     </div>
   );

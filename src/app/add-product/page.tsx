@@ -5,7 +5,7 @@ export default async function AddProduct() {
   const categoryTags = await categoryService.findAllTags();
 
   return (
-    <div className="bg-amber-50 p-5 w-full h-full flex flex-col gap-5 items-center justify-center">
+    <div className="flex items-center justify-center pt-20 pb-10">
       <AddProductForm defaultCategoryTags={categoryTags} />
     </div>
   );

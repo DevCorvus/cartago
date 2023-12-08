@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className="bg-neutral-50 relative">
         <AuthProviders>
           <NavBar />
-          <main className="w-full min-h-screen">{children}</main>
+          <main className="w-full min-h-screen bg-amber-50">{children}</main>
           <div id="modal-container"></div>
         </AuthProviders>
       </body>
