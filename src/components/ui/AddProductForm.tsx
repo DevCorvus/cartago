@@ -1,7 +1,7 @@
 'use client';
 
 import { CreatePartialProductDto, ProductDto } from '@/shared/dtos/product.dto';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -34,8 +34,6 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
   });
 
   const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
-    if (creatingCategory || imageUploadError) return;
-
     const formData = new FormData();
 
     formData.set('title', data.title);
@@ -60,9 +58,18 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
     }
   };
 
+  const submitWrapper = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!creatingCategory && !imageUploadError) {
+      const cb = handleSubmit(onSubmit);
+      await cb(e);
+    }
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={submitWrapper}
       className="flex items-center justify-center flex-col gap-10 max-w-sm"
     >
       <header className="w-full">
