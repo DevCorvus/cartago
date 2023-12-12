@@ -69,17 +69,18 @@ export default function ProductItemDetails({ product }: Props) {
           <p>{product.stock} in stock</p>
           <p>Created at {product.createdAt.toDateString()}</p>
         </div>
-        <div className="w-full flex flex-wrap gap-2">
-          {product.categories.map((category, i) => (
-            <Link
-              href={'/items?categoryId=' + category.id}
-              key={i}
-              className="bg-green-100 text-green-600 rounded-full text-xs px-2 py-1  "
-            >
-              {category.title}
-            </Link>
+        <ul className="w-full flex flex-wrap gap-2">
+          {product.categories.map((category) => (
+            <li key={category.id}>
+              <Link
+                href={`/items?categoryId=${category.id}`}
+                className="bg-green-100 text-green-700 rounded-full text-xs px-2 py-1"
+              >
+                {category.title}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
       <button className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center">
         <HiShoppingCart />
