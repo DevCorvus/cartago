@@ -23,8 +23,8 @@ export default function HeroImage() {
         <Image
           src="/background-tiny.jpeg"
           alt="Hero Image"
-          layout="fill"
-          objectFit="cover"
+          fill={true}
+          object-fit="cover"
           className="grayscale-[70%]"
         />
         <div className="bg-green-700 opacity-30 absolute inset-0"></div>
