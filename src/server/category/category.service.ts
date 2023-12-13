@@ -6,8 +6,11 @@ import {
 } from '@/shared/dtos/category.dto';
 
 export class CategoryService {
-  findAllTags(): Promise<CategoryTagDto[]> {
-    return prisma.category.findMany({ select: { id: true, title: true } });
+  findAllTags(title: string = ''): Promise<CategoryTagDto[]> {
+    return prisma.category.findMany({
+      where: { title: { startsWith: title } },
+      select: { id: true, title: true },
+    });
   }
 
   async findByIdWithProducts(id: number): Promise<CategoryWithProducts | null> {
@@ -45,8 +48,8 @@ export class CategoryService {
     });
   }
 
-  update(id: number, data: CreateUpdateCategoryDto): Promise<Category> {
-    return prisma.category.update({
+  async update(id: number, data: CreateUpdateCategoryDto): Promise<void> {
+    await prisma.category.update({
       where: { id },
       data,
     });
