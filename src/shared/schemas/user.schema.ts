@@ -3,14 +3,14 @@ import { z } from 'zod';
 const passwordSchema = z.string().min(6).max(256);
 
 export const loginUserSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().trim(),
   password: passwordSchema,
 });
 
 export const createUserSchema = z
   .object({
-    fullname: z.string().min(4),
-    email: z.string().email(),
+    fullname: z.string().min(4).trim(),
+    email: z.string().email().trim(),
     location: z.string().length(2),
     password: passwordSchema,
     confirmPassword: z.string(),

@@ -9,8 +9,8 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export const createPartialProductSchema = z.object({
-  title: z.string().min(10).max(150),
-  description: z.string().max(200),
+  title: z.string().min(10).max(150).trim(),
+  description: z.string().max(200).trim(),
   price: z.number().int().min(0),
   stock: z.number().int().min(0),
 });
