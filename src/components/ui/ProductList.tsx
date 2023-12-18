@@ -10,10 +10,10 @@ interface Props {
 export default function ProductList({ products }: Props) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
-      {products.map((product, i) => (
+      {products.map((product) => (
         <Link
           href={'/items/' + product.id}
-          key={i}
+          key={product.id}
           className="flex flex-col rounded-md shadow-md bg-white"
         >
           <div className="relative h-40 w-full bg-neutral-100 rounded-md">
