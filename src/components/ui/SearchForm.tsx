@@ -1,10 +1,16 @@
 'use client';
 
+import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { capitalize } from '@/utils/capitalize';
 
 export default function SearchForm() {
   const [input, setInput] = useState<string>('');
+  const [categories, setCategories] = useState<CategoryTagDto[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const pathname = usePathname();
 
   useEffect(() => {
     clearTimeout(timeoutRef.current);
@@ -18,22 +24,43 @@ export default function SearchForm() {
           const res = await fetch(`/api/categories?${searchParams.toString()}`);
 
           if (res.ok) {
-            const categories = await res.json();
-            // TODO: Show categories
+            const data = await res.json();
+            setCategories(data);
           }
         })();
       }, 500);
+    } else {
+      setCategories([]);
     }
   }, [input]);
 
+  useEffect(() => {
+    setInput('');
+    setCategories([]);
+  }, [pathname]);
+
   return (
-    <form>
-      <input
-        type="text"
-        className="text-black font-sans font-normal p-2 rounded-lg shadow-inner resize-none bg-slate-50 shadow-slate-300 outline-none"
-        placeholder="Search"
-        onChange={(e) => setInput(e.target.value.trim())}
-      />
-    </form>
+    <div className="font-sans font-normal">
+      <form>
+        <input
+          type="text"
+          className="text-black p-2 rounded-lg shadow-inner resize-none bg-slate-50 shadow-slate-300 outline-none"
+          placeholder="Search"
+          onChange={(e) => setInput(e.target.value.trim())}
+          value={input}
+        />
+      </form>
+      {categories.length !== 0 && (
+        <ul className="w-80 px-2 py-4 rounded-b-lg bg-white absolute flex flex-col gap-1">
+          {categories.map((category) => (
+            <li key={category.id}>
+              <Link href={`/items?categoryId=${category.id}`}>
+                {capitalize(category.title)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
