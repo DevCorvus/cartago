@@ -9,6 +9,7 @@ import {
 import { HiXMark } from 'react-icons/hi2';
 import AddCategoryFormModal from './AddCategoryFormModal';
 import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
+import { capitalize } from '@/utils/capitalize';
 
 interface Props {
   defaultCategoryTags: CategoryTagDto[];
@@ -128,7 +129,7 @@ export default function CategoryTagsInput({
                 type="button"
                 onClick={() => handleDelete(selectedTag.id)}
               >
-                <span>{selectedTag.title}</span>
+                <span>{capitalize(selectedTag.title)}</span>
                 <HiXMark />
               </button>
             </li>
@@ -152,11 +153,8 @@ export default function CategoryTagsInput({
             <ul className="flex flex-wrap gap-2 p-2">
               {autocompleteCategoryTags.map((tag) => (
                 <li key={tag.id}>
-                  <button
-                    className=""
-                    onClick={() => addSelectedCategoryTag(tag)}
-                  >
-                    {tag.title}
+                  <button onClick={() => addSelectedCategoryTag(tag)}>
+                    {capitalize(tag.title)}
                   </button>
                 </li>
               ))}
