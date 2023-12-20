@@ -2,9 +2,13 @@ import { prisma } from '@/lib/prisma';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../password/password.service';
+import { CartService } from '../cart/cart.service';
 
 export class UserService {
-  constructor(private passwordService: PasswordService) {}
+  constructor(
+    private passwordService: PasswordService,
+    private cartService: CartService,
+  ) {}
 
   async find(id: string): Promise<User | null> {
     return prisma.user.findUnique({
@@ -32,7 +36,7 @@ export class UserService {
     const encryptedPassword = await this.passwordService.encrypt(data.password);
     data.password = encryptedPassword;
 
-    const newUser = prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         email: data.email,
         fullname: data.fullname,
@@ -40,6 +44,8 @@ export class UserService {
         countryId: data.location,
       },
     });
+
+    await this.cartService.create(newUser.id);
 
     return newUser;
   }

@@ -29,6 +29,16 @@ export interface ProductCardDto {
   images: ProductImageDto[];
 }
 
+export interface ProductCartItemDto {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  amount: number;
+  images: ProductImageDto[];
+}
+
 export type CreatePartialProductDto = z.infer<
   typeof createPartialProductSchema
 >;
