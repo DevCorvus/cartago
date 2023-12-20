@@ -30,10 +30,11 @@ export default function Cart() {
     });
   };
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="max-w-md flex flex-col gap-6 mx-auto">
       <div>
-        <h1>Shopping cart ({cartProducts.length})</h1>
-        <p>Total: $ 34</p>
+        <h1 className="text-green-800 font-bold text-2xl">
+          Shopping cart ({cartProducts.length})
+        </h1>
       </div>
       <div className="w-full flex flex-col gap-4">
         {cartProducts.map((product, i) => (
@@ -45,6 +46,7 @@ export default function Cart() {
           />
         ))}
       </div>
+      <p className="text-right">Total: $ 34</p>
       <button
         type="submit"
         className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg flex items-center justify-center gap-2"
