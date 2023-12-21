@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { HiShoppingCart } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
 import { ProductDto } from '@/shared/dtos/product.dto';
@@ -14,6 +14,11 @@ interface Props {
 
 export default function ProductItemDetails({ product }: Props) {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await fetch(`/api/cart/${product.id}`, { method: 'POST' });
+  };
 
   return (
     <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
@@ -83,10 +88,15 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </ul>
       </section>
-      <button className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center">
-        <HiShoppingCart />
-        Add to shopping cart
-      </button>
+      <form onSubmit={handleSubmit} className="w-full">
+        <button
+          type="submit"
+          className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center"
+        >
+          <HiShoppingCart />
+          Add to shopping cart
+        </button>
+      </form>
     </div>
   );
 }

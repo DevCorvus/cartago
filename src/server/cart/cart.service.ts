@@ -6,6 +6,15 @@ export class CartService {
     await prisma.cart.create({ data: { userId } });
   }
 
+  async findUserCartId(userId: string): Promise<string | null> {
+    const data = await prisma.cart.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    return data ? data.id : null;
+  }
+
   async addItem(cartId: string, productId: string): Promise<void> {
     await prisma.cartItem.create({ data: { cartId, productId, amount: 1 } });
   }

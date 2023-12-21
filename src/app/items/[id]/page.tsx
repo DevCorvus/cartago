@@ -1,13 +1,8 @@
 import ProductItemDetails from '@/components/ui/ProductItemDetails';
 import { productService } from '@/server/services';
 import { notFound } from 'next/navigation';
-import { z } from 'zod';
-
-const paramsSchema = z.object({
-  id: z.string().uuid(),
-});
-
-type Params = z.infer<typeof paramsSchema>;
+import { paramsSchema } from '@/shared/schemas/params.schema';
+import { Params } from '@/shared/dtos/params.dto';
 
 interface Props {
   params: Params;

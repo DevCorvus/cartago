@@ -1,59 +1,18 @@
-'use client';
-import { HiOutlineShoppingCart } from 'react-icons/hi2';
-import ProductCartItem from '@/components/ui/ProductCartItem';
-import { CartProduct } from '@/components/types';
-import { useState } from 'react';
+import ProductCartList from '@/components/ui/ProductCartList';
+import Unauthorized from '@/components/ui/Unauthorized';
+import { nextAuthOptions } from '@/server/auth/next-auth.config';
+import { cartService } from '@/server/services';
+import { getServerSession } from 'next-auth';
+import { notFound } from 'next/navigation';
 
-const productMock: CartProduct = {
-  id: '',
-  image:
-    'https://images.pexels.com/photos/6621857/pexels-photo-6621857.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  title: 'clock',
-  price: 23.1,
-  description:
-    'A car is a vehicle that has wheels, carries a small number of passengers, and is moved by an engine or a motor',
-  stock: 8,
-};
+export default async function Cart() {
+  const session = await getServerSession(nextAuthOptions);
 
-const productsMock: CartProduct[] = new Array(8)
-  .fill(productMock)
-  .map((product: CartProduct, i) => {
-    return { ...product, id: String(i + 1) };
-  });
+  if (!session) return <Unauthorized />;
 
-export default function Cart() {
-  const [cartProducts, setCartProducts] = useState<CartProduct[]>(productsMock);
+  const cartProducts = await cartService.findAllItems(session.user.id);
 
-  const handleCartProductDelete = (id: string) => {
-    setCartProducts((prev) => {
-      return prev.filter((product) => product.id !== id);
-    });
-  };
-  return (
-    <div className="max-w-md flex flex-col gap-6 mx-auto">
-      <div>
-        <h1 className="text-green-800 font-bold text-2xl">
-          Shopping cart ({cartProducts.length})
-        </h1>
-      </div>
-      <div className="w-full flex flex-col gap-4">
-        {cartProducts.map((product, i) => (
-          <ProductCartItem
-            key={i}
-            i={i}
-            product={product}
-            handleDelete={handleCartProductDelete}
-          />
-        ))}
-      </div>
-      <p className="text-right">Total: $ 34</p>
-      <button
-        type="submit"
-        className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg flex items-center justify-center gap-2"
-      >
-        <HiOutlineShoppingCart />
-        Checkout
-      </button>
-    </div>
-  );
+  if (!cartProducts) return notFound();
+
+  return <ProductCartList products={cartProducts} />;
 }

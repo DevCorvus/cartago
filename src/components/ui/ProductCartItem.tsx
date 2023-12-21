@@ -1,17 +1,16 @@
 'use client';
+
 import Image from 'next/image';
-import { CartProduct } from '../types';
 import { HiMinus, HiPlus, HiTrash } from 'react-icons/hi2';
 import { useState } from 'react';
 import Link from 'next/link';
+import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 
 interface Props {
-  product: CartProduct;
-  i: number;
-  handleDelete: (id: string) => void;
+  product: ProductCartItemDto;
 }
 
-export default function ProductCartItem({ product, i, handleDelete }: Props) {
+export default function ProductCartItem({ product }: Props) {
   const [amount, setAmount] = useState(1);
 
   const decrementAmount = () => {
@@ -42,8 +41,8 @@ export default function ProductCartItem({ product, i, handleDelete }: Props) {
         className="relative w-24 bg-neutral-100 rounded-md"
       >
         <Image
-          src={product.image}
-          alt={`${product.title} image #${i + 1}`}
+          src={'/uploads/' + product.images[0].path}
+          alt={`${product.title} image`}
           fill={true}
           className="object-contain"
         />
@@ -53,7 +52,7 @@ export default function ProductCartItem({ product, i, handleDelete }: Props) {
           <Link href={'/items/' + product.id} key={product.id}>
             <strong className="uppercase">{product.title}</strong>
           </Link>
-          <span>{product.price}</span>
+          <span>$ {product.price}</span>
         </div>
         <div className="w-full flex justify-between">
           <div className="flex items-center justify-center gap-2">
@@ -65,7 +64,11 @@ export default function ProductCartItem({ product, i, handleDelete }: Props) {
               <HiPlus />
             </button>
           </div>
-          <button onClick={() => handleDelete(product.id)}>
+          <button
+            onClick={() => {
+              // TODO: Handle delete
+            }}
+          >
             <HiTrash />
           </button>
         </div>

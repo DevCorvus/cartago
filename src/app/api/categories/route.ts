@@ -4,7 +4,7 @@ import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  const searchParams = await req.nextUrl.searchParams;
+  const searchParams = req.nextUrl.searchParams;
   const title = searchParams.get('title');
 
   try {

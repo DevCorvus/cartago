@@ -1,7 +1,18 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
-import { authService } from '../services';
+import { authService, cartService } from '../services';
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      name: string;
+      role: string;
+      cartId: string;
+    };
+  }
+}
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -25,10 +36,13 @@ export const nextAuthOptions: NextAuthOptions = {
 
         if (!loggedUser) throw new Error('Unauthorized');
 
+        const cartId = await cartService.findUserCartId(loggedUser.id);
+
         return {
           id: loggedUser.id,
           name: loggedUser.fullname,
           role: loggedUser.role,
+          cartId,
         };
       },
     }),
@@ -39,7 +53,7 @@ export const nextAuthOptions: NextAuthOptions = {
       return token;
     },
     async session({ token, session }) {
-      session.user = token.user!;
+      session.user = token.user;
       return session;
     },
   },
