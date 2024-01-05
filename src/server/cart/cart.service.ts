@@ -19,24 +19,20 @@ export class CartService {
     await prisma.cartItem.create({ data: { cartId, productId, amount: 1 } });
   }
 
-  async findAllItems(userId: string): Promise<ProductCartItemDto[] | null> {
-    const cartItems = await prisma.cart.findUnique({
-      where: { userId },
+  async findAllItems(cartId: string): Promise<ProductCartItemDto[] | null> {
+    const cartItems = await prisma.cartItem.findMany({
+      where: { cartId },
       include: {
-        items: {
-          include: {
-            product: {
+        product: {
+          select: {
+            title: true,
+            description: true,
+            price: true,
+            stock: true,
+            images: {
+              take: 1,
               select: {
-                title: true,
-                description: true,
-                price: true,
-                stock: true,
-                images: {
-                  take: 1,
-                  select: {
-                    path: true,
-                  },
-                },
+                path: true,
               },
             },
           },
@@ -45,7 +41,7 @@ export class CartService {
     });
 
     const cartProductsWithAmount = cartItems
-      ? cartItems.items.map((item) => {
+      ? cartItems.map((item) => {
           return { id: item.productId, ...item.product, amount: item.amount };
         })
       : null;

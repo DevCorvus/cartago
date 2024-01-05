@@ -10,7 +10,7 @@ export default async function Cart() {
 
   if (!session) return <Unauthorized />;
 
-  const cartProducts = await cartService.findAllItems(session.user.id);
+  const cartProducts = await cartService.findAllItems(session.user.cartId);
 
   if (!cartProducts) return notFound();
 
