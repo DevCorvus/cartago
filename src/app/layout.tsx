@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Merriweather } from 'next/font/google';
 import AuthProviders from '@/components/providers/AuthProviders';
 import NavBar from '@/components/ui/NavBar';
+import CartProvider from '@/components/providers/CartProvider';
 
 const merriweather = Merriweather({
   weight: '400',
@@ -23,9 +24,11 @@ export default function RootLayout({
     <html lang="en" className={merriweather.className}>
       <body className="bg-neutral-50 relative">
         <AuthProviders>
-          <NavBar />
-          <main className="w-full min-h-screen bg-amber-50">{children}</main>
-          <div id="modal-container"></div>
+          <CartProvider>
+            <NavBar />
+            <main className="w-full min-h-screen bg-amber-50">{children}</main>
+            <div id="modal-container"></div>
+          </CartProvider>
         </AuthProviders>
       </body>
     </html>

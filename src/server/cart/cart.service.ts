@@ -53,4 +53,15 @@ export class CartService {
 
     return cartProductsWithAmount;
   }
+
+  async findAllItemIds(cartId: string): Promise<string[] | null> {
+    const cartItems = await prisma.cartItem.findMany({
+      where: { cartId },
+      select: {
+        productId: true,
+      },
+    });
+
+    return cartItems ? cartItems.map((item) => item.productId) : null;
+  }
 }

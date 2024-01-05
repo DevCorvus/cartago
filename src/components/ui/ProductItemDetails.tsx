@@ -7,6 +7,7 @@ import WishProduct from './WishProduct';
 import { ProductDto } from '@/shared/dtos/product.dto';
 import Link from 'next/link';
 import { capitalize } from '@/utils/capitalize';
+import { useCartStore } from '@/stores/useCartStore';
 
 interface Props {
   product: ProductDto;
@@ -14,6 +15,7 @@ interface Props {
 
 export default function ProductItemDetails({ product }: Props) {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
+  const productIds = useCartStore((state) => state.productIds);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,15 +90,25 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </ul>
       </section>
-      <form onSubmit={handleSubmit} className="w-full">
-        <button
-          type="submit"
+      {productIds.includes(product.id) ? (
+        <Link
+          href="/cart"
           className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center"
         >
           <HiShoppingCart />
-          Add to shopping cart
-        </button>
-      </form>
+          View in shopping cart
+        </Link>
+      ) : (
+        <form onSubmit={handleSubmit} className="w-full">
+          <button
+            type="submit"
+            className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center"
+          >
+            <HiShoppingCart />
+            Add to shopping cart
+          </button>
+        </form>
+      )}
     </div>
   );
 }
