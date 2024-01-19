@@ -26,6 +26,15 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
+    const cartItemAlreadyExists = await cartService.cartItemExists(productId);
+
+    if (cartItemAlreadyExists) {
+      return NextResponse.json(
+        { message: 'Product already in the cart' },
+        { status: 409 },
+      );
+    }
+
     await cartService.addItem(cartId, productId);
 
     return NextResponse.json(
@@ -34,8 +43,8 @@ export async function POST(_req: NextRequest, { params }: Props) {
     );
   } catch {
     return NextResponse.json(
-      { message: 'Product already in the cart' },
-      { status: 409 },
+      { message: 'Something went wrong' },
+      { status: 500 },
     );
   }
 }
