@@ -3,10 +3,17 @@
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import SearchForm from './SearchForm';
+import { useRouter } from 'next/navigation';
 
 export default function NavBar() {
   const session = useSession();
+  const router = useRouter();
   const isAuthenticated = session.status === 'authenticated';
+
+  const handleSubmit = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  };
 
   return (
     <div className="bg-white text-green-800 font-semibold py-2 px-4 shadow-md fixed z-50 w-full">
@@ -31,7 +38,7 @@ export default function NavBar() {
           ) : (
             <>
               <li>
-                <button onClick={() => signOut()}>Sign out</button>
+                <button onClick={handleSubmit}>Sign out</button>
               </li>
             </>
           )}
