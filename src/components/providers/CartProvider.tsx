@@ -1,7 +1,7 @@
 'use client';
 
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { useCartStore } from '@/stores/useCartStore';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
 interface Props {
@@ -9,12 +9,12 @@ interface Props {
 }
 
 export default function CartProvider({ children }: Props) {
-  const session = useSession();
+  const isAuthenticated = useIsAuthenticated();
   const setProductIds = useCartStore((state) => state.setProductIds);
 
   useEffect(() => {
     (async () => {
-      if (session.status === 'authenticated') {
+      if (isAuthenticated) {
         const res = await fetch('/api/cart');
         if (res.ok) {
           const data = await res.json();
@@ -22,7 +22,7 @@ export default function CartProvider({ children }: Props) {
         }
       }
     })();
-  }, [session.status, setProductIds]);
+  }, [isAuthenticated, setProductIds]);
 
   return children;
 }

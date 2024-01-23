@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import SearchForm from './SearchForm';
 import { useRouter } from 'next/navigation';
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 
 export default function NavBar() {
-  const session = useSession();
   const router = useRouter();
-  const isAuthenticated = session.status === 'authenticated';
+  const isAuthenticated = useIsAuthenticated();
 
   const handleSubmit = async () => {
     await signOut({ redirect: false });
