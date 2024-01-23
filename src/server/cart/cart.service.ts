@@ -19,8 +19,8 @@ export class CartService {
     await prisma.cartItem.create({ data: { cartId, productId, amount: 1 } });
   }
 
-  async cartItemExists(productId: string): Promise<boolean> {
-    const count = await prisma.cartItem.count({ where: { productId } });
+  async cartItemExists(cartId: number, productId: string): Promise<boolean> {
+    const count = await prisma.cartItem.count({ where: { cartId, productId } });
     return count > 0;
   }
 

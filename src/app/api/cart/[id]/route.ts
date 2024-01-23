@@ -26,7 +26,10 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
-    const cartItemAlreadyExists = await cartService.cartItemExists(productId);
+    const cartItemAlreadyExists = await cartService.cartItemExists(
+      cartId,
+      productId,
+    );
 
     if (cartItemAlreadyExists) {
       return NextResponse.json(
