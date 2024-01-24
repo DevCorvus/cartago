@@ -3,15 +3,24 @@
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import ProductCartItem from './ProductCartItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { localStorageCart } from '@/utils/localStorageCart';
 
 interface Props {
   products: ProductCartItemDto[];
 }
 
 export default function ProductCartList({ products }: Props) {
+  const isAuthenticated = useIsAuthenticated();
   const [cartProducts, setCartProducts] =
     useState<ProductCartItemDto[]>(products);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setCartProducts(localStorageCart.get());
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="max-w-md flex flex-col gap-6 mx-auto">

@@ -8,18 +8,38 @@ import { ProductDto } from '@/shared/dtos/product.dto';
 import Link from 'next/link';
 import { capitalize } from '@/utils/capitalize';
 import { useCartStore } from '@/stores/useCartStore';
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { localStorageCart } from '@/utils/localStorageCart';
 
 interface Props {
   product: ProductDto;
 }
 
 export default function ProductItemDetails({ product }: Props) {
+  const isAuthenticated = useIsAuthenticated();
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
-  const productIds = useCartStore((state) => state.productIds);
+
+  const { productIds, addProductId } = useCartStore(
+    ({ productIds, addProductId }) => ({ productIds, addProductId }),
+  );
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await fetch(`/api/cart/${product.id}`, { method: 'POST' });
+
+    if (isAuthenticated) {
+      await fetch(`/api/cart/${product.id}`, { method: 'POST' });
+    } else {
+      localStorageCart.addItem({
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        stock: product.stock,
+        amount: 1,
+        images: [product.images[0]],
+      });
+      addProductId(product.id);
+    }
   };
 
   return (
