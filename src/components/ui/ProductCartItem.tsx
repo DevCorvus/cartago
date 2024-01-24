@@ -2,37 +2,22 @@
 
 import Image from 'next/image';
 import { HiMinus, HiPlus, HiTrash } from 'react-icons/hi2';
-import { useState } from 'react';
 import Link from 'next/link';
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 
 interface Props {
   product: ProductCartItemDto;
+  incrementAmount(productId: string): void;
+  decrementAmount(productId: string): void;
+  removeItem(productId: string): void;
 }
 
-export default function ProductCartItem({ product }: Props) {
-  const [amount, setAmount] = useState(1);
-
-  const decrementAmount = () => {
-    setAmount((prev) => {
-      if (prev > 0) {
-        return prev - 1;
-      } else {
-        return prev;
-      }
-    });
-  };
-
-  const incrementAmount = () => {
-    setAmount((prev) => {
-      if (prev < product.stock) {
-        return prev + 1;
-      } else {
-        return prev;
-      }
-    });
-  };
-
+export default function ProductCartItem({
+  product,
+  incrementAmount,
+  decrementAmount,
+  removeItem,
+}: Props) {
   return (
     <div className="w-full flex rounded-md shadow-md h-24 bg-white">
       <Link
@@ -56,19 +41,21 @@ export default function ProductCartItem({ product }: Props) {
         </div>
         <div className="w-full flex justify-between">
           <div className="flex items-center justify-center gap-2">
-            <button onClick={decrementAmount}>
+            <button
+              className={product.amount === 1 ? 'invisible' : ''}
+              onClick={() => decrementAmount(product.id)}
+            >
               <HiMinus />
             </button>
-            <span>{amount}</span>
-            <button onClick={incrementAmount}>
+            <span>{product.amount}</span>
+            <button
+              className={product.amount === product.stock ? 'invisible' : ''}
+              onClick={() => incrementAmount(product.id)}
+            >
               <HiPlus />
             </button>
           </div>
-          <button
-            onClick={() => {
-              // TODO: Handle delete
-            }}
-          >
+          <button onClick={() => removeItem(product.id)}>
             <HiTrash />
           </button>
         </div>
