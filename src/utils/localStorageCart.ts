@@ -1,13 +1,7 @@
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 
 class LocalStorageCart {
-  constructor(private key: string = 'cart') {
-    const cart = localStorage.getItem(key);
-
-    if (!cart) {
-      this.set([]);
-    }
-  }
+  constructor(private key: string = 'cart') {}
 
   set(data: ProductCartItemDto[]) {
     localStorage.setItem(this.key, JSON.stringify(data));
@@ -59,7 +53,7 @@ class LocalStorageCart {
   }
 
   reset() {
-    this.set([]);
+    localStorage.removeItem(this.key);
   }
 }
 
