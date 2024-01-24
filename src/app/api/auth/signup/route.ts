@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const result = await createUserSchema.safeParseAsync(json);
 
   if (!result.success) {
-    return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
+    return NextResponse.json(null, { status: 400 });
   }
 
   const data: CreateUserDto = result.data;

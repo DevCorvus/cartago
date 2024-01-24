@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const result = await createUpdateCategorySchema.safeParseAsync(json);
 
   if (!result.success) {
-    return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
+    return NextResponse.json(null, { status: 400 });
   }
 
   const data: CreateUpdateCategoryDto = result.data;

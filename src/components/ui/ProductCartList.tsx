@@ -8,19 +8,20 @@ import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
 
 interface Props {
-  products: ProductCartItemDto[];
+  products: ProductCartItemDto[] | null;
 }
 
 export default function ProductCartList({ products }: Props) {
   const isAuthenticated = useIsAuthenticated();
-  const [cartProducts, setCartProducts] =
-    useState<ProductCartItemDto[]>(products);
+  const [cartProducts, setCartProducts] = useState<ProductCartItemDto[]>(
+    products || [],
+  );
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!products) {
       setCartProducts(localStorageCart.get());
     }
-  }, [isAuthenticated]);
+  }, [products]);
 
   const total = useMemo(
     () =>
@@ -30,29 +31,67 @@ export default function ProductCartList({ products }: Props) {
     [cartProducts],
   );
 
-  const incrementAmount = (productId: string) => {
-    setCartProducts((prev) => {
-      return prev.map((product) => {
-        if (product.id === productId && product.amount < product.stock) {
-          return { ...product, amount: product.amount + 1 };
-        }
-        return product;
+  const incrementAmount = async (productId: string) => {
+    let userIncrementSuccess = false;
+
+    if (isAuthenticated) {
+      const res = await fetch(
+        `/api/cart/${productId}/amount?action=increment`,
+        {
+          method: 'PUT',
+        },
+      );
+
+      userIncrementSuccess = res.ok;
+    } else {
+      localStorageCart.incrementItemAmount(productId);
+    }
+
+    if (!isAuthenticated || userIncrementSuccess) {
+      setCartProducts((prev) => {
+        return prev.map((product) => {
+          if (product.id === productId && product.amount < product.stock) {
+            return { ...product, amount: product.amount + 1 };
+          }
+          return product;
+        });
       });
-    });
+    }
   };
 
-  const decrementAmount = (productId: string) => {
-    setCartProducts((prev) => {
-      return prev.map((product) => {
-        if (product.id === productId && product.amount > 1) {
-          return { ...product, amount: product.amount - 1 };
-        }
-        return product;
+  const decrementAmount = async (productId: string) => {
+    let userDecrementSuccess = false;
+
+    if (isAuthenticated) {
+      const res = await fetch(
+        `/api/cart/${productId}/amount?action=decrement`,
+        {
+          method: 'PUT',
+        },
+      );
+
+      userDecrementSuccess = res.ok;
+    } else {
+      localStorageCart.decrementItemAmount(productId);
+    }
+
+    if (!isAuthenticated || userDecrementSuccess) {
+      setCartProducts((prev) => {
+        return prev.map((product) => {
+          if (product.id === productId && product.amount > 1) {
+            return { ...product, amount: product.amount - 1 };
+          }
+          return product;
+        });
       });
-    });
+    }
   };
 
-  const removeItem = (productId: string) => {
+  const removeItem = async (productId: string) => {
+    if (isAuthenticated) {
+    } else {
+      localStorageCart.remove(productId);
+    }
     setCartProducts((prev) => {
       return prev.filter((product) => product.id !== productId);
     });

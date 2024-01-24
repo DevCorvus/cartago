@@ -13,13 +13,13 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const session = await getServerSession(nextAuthOptions);
 
   if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(null, { status: 401 });
   }
 
   const result = await paramsSchema.safeParseAsync(params);
 
   if (!result.success) {
-    return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
+    return NextResponse.json(null, { status: 400 });
   }
 
   const cartId = session.user.cartId;

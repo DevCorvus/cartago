@@ -7,9 +7,9 @@ import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 
 interface Props {
   product: ProductCartItemDto;
-  incrementAmount(productId: string): void;
-  decrementAmount(productId: string): void;
-  removeItem(productId: string): void;
+  incrementAmount(productId: string): Promise<void>;
+  decrementAmount(productId: string): Promise<void>;
+  removeItem(productId: string): Promise<void>;
 }
 
 export default function ProductCartItem({
@@ -42,14 +42,14 @@ export default function ProductCartItem({
         <div className="w-full flex justify-between">
           <div className="flex items-center justify-center gap-2">
             <button
-              className={product.amount === 1 ? 'invisible' : ''}
+              className={product.amount > 1 ? '' : 'invisible'}
               onClick={() => decrementAmount(product.id)}
             >
               <HiMinus />
             </button>
             <span>{product.amount}</span>
             <button
-              className={product.amount === product.stock ? 'invisible' : ''}
+              className={product.amount < product.stock ? '' : 'invisible'}
               onClick={() => incrementAmount(product.id)}
             >
               <HiPlus />

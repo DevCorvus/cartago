@@ -13,5 +13,5 @@ export default async function Cart() {
     return <ProductCartList products={cartProducts} />;
   }
 
-  return <ProductCartList products={[]} />;
+  return <ProductCartList products={null} />;
 }

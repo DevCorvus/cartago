@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     data = await createProductSchema.parseAsync(input);
   } catch {
-    return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
+    return NextResponse.json(null, { status: 400 });
   }
 
   const imagesDir = path.join(process.cwd(), '/public/uploads');

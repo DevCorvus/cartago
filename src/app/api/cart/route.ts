@@ -7,7 +7,7 @@ export async function GET() {
   const session = await getServerSession(nextAuthOptions);
 
   if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(null, { status: 401 });
   }
 
   const cartId = session.user.cartId;

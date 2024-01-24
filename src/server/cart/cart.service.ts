@@ -64,4 +64,52 @@ export class CartService {
 
     return cartItems ? cartItems.map((item) => item.productId) : null;
   }
+
+  async incrementCartItemAmount(
+    cartId: string,
+    productId: string,
+  ): Promise<boolean> {
+    const cartItem = await prisma.cartItem.findFirst({
+      where: { cartId, productId },
+      select: { id: true, amount: true, product: { select: { stock: true } } },
+    });
+
+    if (cartItem && cartItem.amount < cartItem.product.stock) {
+      await prisma.cartItem.update({
+        where: { id: cartItem.id },
+        data: {
+          amount: {
+            increment: 1,
+          },
+        },
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  async decrementCartItemAmount(
+    cartId: string,
+    productId: string,
+  ): Promise<boolean> {
+    const cartItem = await prisma.cartItem.findFirst({
+      where: { cartId, productId },
+      select: { id: true, amount: true, product: { select: { stock: true } } },
+    });
+
+    if (cartItem && cartItem.amount > 1) {
+      await prisma.cartItem.update({
+        where: { id: cartItem.id },
+        data: {
+          amount: {
+            decrement: 1,
+          },
+        },
+      });
+      return true;
+    }
+
+    return false;
+  }
 }
