@@ -43,6 +43,9 @@ export class CartService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
 
     const cartProductsWithAmount = cartItems
