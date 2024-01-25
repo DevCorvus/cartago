@@ -26,8 +26,11 @@ export default function ProductItemDetails({ product }: Props) {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let success = false;
+
     if (isAuthenticated) {
-      await fetch(`/api/cart/${product.id}`, { method: 'POST' });
+      const res = await fetch(`/api/cart/${product.id}`, { method: 'POST' });
+      success = res.ok;
     } else {
       localStorageCart.addItem({
         id: product.id,
@@ -38,6 +41,9 @@ export default function ProductItemDetails({ product }: Props) {
         amount: 1,
         images: [product.images[0]],
       });
+    }
+
+    if (!isAuthenticated || success) {
       addProductId(product.id);
     }
   };

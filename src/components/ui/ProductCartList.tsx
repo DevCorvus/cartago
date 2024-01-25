@@ -6,6 +6,7 @@ import ProductCartItem from './ProductCartItem';
 import { useMemo, useEffect, useState } from 'react';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
+import { useCartStore } from '@/stores/useCartStore';
 
 interface Props {
   products: ProductCartItemDto[] | null;
@@ -13,9 +14,11 @@ interface Props {
 
 export default function ProductCartList({ products }: Props) {
   const isAuthenticated = useIsAuthenticated();
+
   const [cartProducts, setCartProducts] = useState<ProductCartItemDto[]>(
     products || [],
   );
+  const removeProductId = useCartStore((state) => state.removeProductId);
 
   useEffect(() => {
     if (!products) {
@@ -101,6 +104,7 @@ export default function ProductCartList({ products }: Props) {
     }
 
     if (!isAuthenticated || userRemoveSuccess) {
+      removeProductId(productId);
       setCartProducts((prev) => {
         return prev.filter((product) => product.id !== productId);
       });
