@@ -88,13 +88,23 @@ export default function ProductCartList({ products }: Props) {
   };
 
   const removeItem = async (productId: string) => {
+    let userRemoveSuccess = false;
+
     if (isAuthenticated) {
+      const res = await fetch(`/api/cart/${productId}`, {
+        method: 'DELETE',
+      });
+
+      userRemoveSuccess = res.ok;
     } else {
       localStorageCart.remove(productId);
     }
-    setCartProducts((prev) => {
-      return prev.filter((product) => product.id !== productId);
-    });
+
+    if (!isAuthenticated || userRemoveSuccess) {
+      setCartProducts((prev) => {
+        return prev.filter((product) => product.id !== productId);
+      });
+    }
   };
 
   return (

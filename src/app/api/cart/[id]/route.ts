@@ -51,3 +51,34 @@ export async function POST(_req: NextRequest, { params }: Props) {
     );
   }
 }
+
+export async function DELETE(_req: NextRequest, { params }: Props) {
+  const session = await getServerSession(nextAuthOptions);
+
+  if (!session) {
+    return NextResponse.json(null, { status: 401 });
+  }
+
+  const result = await paramsSchema.safeParseAsync(params);
+
+  if (!result.success) {
+    return NextResponse.json(null, { status: 400 });
+  }
+
+  const cartId = session.user.cartId;
+  const productId = result.data.id;
+
+  try {
+    await cartService.removeItemFromCart(cartId, productId);
+
+    return NextResponse.json(
+      { message: 'Item removed from cart' },
+      { status: 200 },
+    );
+  } catch {
+    return NextResponse.json(
+      { message: 'Something went wrong' },
+      { status: 500 },
+    );
+  }
+}
