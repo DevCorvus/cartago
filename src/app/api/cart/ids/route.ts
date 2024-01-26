@@ -13,8 +13,8 @@ export async function GET() {
   const cartId = session.user.cartId;
 
   try {
-    const cartItem = await cartService.findAllItems(cartId);
-    return NextResponse.json(cartItem, { status: 201 });
+    const cartItemIds = await cartService.findAllItemIds(cartId);
+    return NextResponse.json(cartItemIds, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

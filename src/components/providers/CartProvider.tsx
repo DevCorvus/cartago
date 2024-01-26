@@ -18,7 +18,7 @@ export default function CartProvider({ children }: Props) {
       if (isAuthenticated) {
         localStorageCart.reset();
 
-        const res = await fetch('/api/cart');
+        const res = await fetch('/api/cart/ids');
         if (res.ok) {
           const data = await res.json();
           setProductIds(data);
