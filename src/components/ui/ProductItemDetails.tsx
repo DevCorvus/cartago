@@ -86,7 +86,7 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </div>
         <div className="absolute top-2 right-2 z-10 text-3xl">
-          <WishProduct />
+          <WishProduct id={product.id} />
         </div>
       </div>
       <header className="text-green-800 text-2xl w-full flex justify-between font-bold">
