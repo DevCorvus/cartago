@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
+import { localStorageWished } from '@/utils/localStorageWished';
 
 export interface UserData {
   cartItemIds: string[];
@@ -22,12 +23,13 @@ export default function UserProvider({ children, data }: Props) {
   useEffect(() => {
     if (data) {
       localStorageCart.reset();
+      localStorageWished.reset();
 
       setCartItems(data.cartItemIds);
       setWishedItems(data.wishedItemIds);
     } else {
       setCartItems(localStorageCart.get().map((product) => product.id));
-      // TODO: Local storage for wished items
+      setWishedItems(localStorageWished.get());
     }
   }, [data, setCartItems, setWishedItems]);
 

@@ -1,5 +1,6 @@
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
+import { localStorageWished } from '@/utils/localStorageWished';
 import { FormEvent, useMemo } from 'react';
 import { HiHeart, HiOutlineHeart } from 'react-icons/hi2';
 
@@ -36,7 +37,13 @@ export default function WishProduct({ id }: Props) {
         }
       }
     } else {
-      // TODO: Local storage support
+      if (!isWished) {
+        localStorageWished.addItem(id);
+        addWishedItem(id);
+      } else {
+        localStorageWished.remove(id);
+        removeWishedItem(id);
+      }
     }
   };
 
