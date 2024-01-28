@@ -5,6 +5,7 @@ import { CountryService } from './country/country.service';
 import { PasswordService } from './password/password.service';
 import { ProductService } from './product/product.service';
 import { UserService } from './user/user.service';
+import { WishedItemService } from './wished/wished.service';
 
 export const passwordService = new PasswordService();
 export const countryService = new CountryService();
@@ -13,3 +14,4 @@ export const userService = new UserService(passwordService, cartService);
 export const authService = new AuthService(userService, passwordService);
 export const productService = new ProductService();
 export const categoryService = new CategoryService();
+export const wishedItemService = new WishedItemService();
