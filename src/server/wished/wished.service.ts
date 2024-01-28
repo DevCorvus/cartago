@@ -1,6 +1,15 @@
 import { prisma } from '@/lib/prisma';
 
 export class WishedItemService {
+  async findAllIds(userId: string): Promise<string[] | null> {
+    const wishedItems = await prisma.wishedItem.findMany({
+      where: { userId },
+      select: { productId: true },
+    });
+
+    return wishedItems ? wishedItems.map((item) => item.productId) : null;
+  }
+
   async create(userId: string, productId: string): Promise<boolean> {
     if (await this.exists(userId, productId)) {
       return false;
