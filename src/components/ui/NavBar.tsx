@@ -1,18 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import SearchForm from './SearchForm';
-import { useRouter } from 'next/navigation';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 
 export default function NavBar() {
-  const router = useRouter();
   const isAuthenticated = useIsAuthenticated();
 
   const handleSubmit = async () => {
-    await signOut({ redirect: false });
-    router.push('/');
+    await signOut({ redirect: true, callbackUrl: '/' });
   };
 
   return (
