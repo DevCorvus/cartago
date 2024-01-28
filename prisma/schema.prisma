@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  fullname  String
-  password  String
-  countryId String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  country   Country  @relation(fields: [countryId], references: [id])
-  cart      Cart?
+  id          String       @id @default(uuid())
+  email       String       @unique
+  fullname    String
+  password    String
+  countryId   String
+  role        UserRole     @default(USER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  country     Country      @relation(fields: [countryId], references: [id])
+  cart        Cart?
+  wishedItems WishedItem[]
 
   @@map("users")
 }
@@ -41,6 +42,7 @@ model Product {
   images      ProductImage[]
   categories  Category[]
   cartItems   CartItem[]
+  wishedItems WishedItem[]
 
   @@map("products")
 }
@@ -85,6 +87,16 @@ model Cart {
   items  CartItem[]
 
   @@map("carts")
+}
+
+model WishedItem {
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([userId, productId])
+  @@map("wished_items")
 }
 
 enum UserRole {
