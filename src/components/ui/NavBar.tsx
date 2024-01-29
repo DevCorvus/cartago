@@ -23,6 +23,9 @@ export default function NavBar() {
           <li>
             <Link href="/cart">Cart</Link>
           </li>
+          <li>
+            <Link href="/items/wished">Wish List</Link>
+          </li>
           {!isAuthenticated ? (
             <>
               <li>

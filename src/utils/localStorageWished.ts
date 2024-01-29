@@ -1,31 +1,31 @@
+import { ProductCardDto } from '@/shared/dtos/product.dto';
+
 class LocalStorageWished {
   constructor(private key: string = 'wished') {}
 
-  set(data: string[]) {
+  set(data: ProductCardDto[]) {
     localStorage.setItem(this.key, JSON.stringify(data));
   }
 
-  get(): string[] {
+  get(): ProductCardDto[] {
     const wishedItems = localStorage.getItem(this.key);
     return wishedItems ? JSON.parse(wishedItems) : [];
   }
 
-  addItem(productId: string) {
+  addItem(data: ProductCardDto) {
     const wishedItems = this.get();
 
-    const alreadyWished = wishedItems.some(
-      (wishedItemId) => wishedItemId === productId,
-    );
+    const alreadyWished = wishedItems.some((item) => item.id === data.id);
 
     if (!alreadyWished) {
-      wishedItems.push(productId);
+      wishedItems.push(data);
       this.set(wishedItems);
     }
   }
 
   remove(productId: string) {
     const wishedItems = this.get();
-    this.set(wishedItems.filter((wishedItemId) => wishedItemId !== productId));
+    this.set(wishedItems.filter((item) => item.id !== productId));
   }
 
   reset() {

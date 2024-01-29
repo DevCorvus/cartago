@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { ProductCardDto } from '@/shared/dtos/product.dto';
 
 export class WishedItemService {
   async findAllIds(userId: string): Promise<string[] | null> {
@@ -8,6 +9,30 @@ export class WishedItemService {
     });
 
     return wishedItems ? wishedItems.map((item) => item.productId) : null;
+  }
+
+  async findAllItems(userId: string): Promise<ProductCardDto[]> {
+    const wishedItems = await prisma.wishedItem.findMany({
+      where: { userId },
+      select: {
+        product: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            price: true,
+            images: {
+              take: 1,
+              select: {
+                path: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return wishedItems.map((item) => item.product);
   }
 
   async create(userId: string, productId: string): Promise<boolean> {

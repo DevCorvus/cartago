@@ -29,7 +29,7 @@ export default function UserProvider({ children, data }: Props) {
       setWishedItems(data.wishedItemIds);
     } else {
       setCartItems(localStorageCart.get().map((product) => product.id));
-      setWishedItems(localStorageWished.get());
+      setWishedItems(localStorageWished.get().map((product) => product.id));
     }
   }, [data, setCartItems, setWishedItems]);
 

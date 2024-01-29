@@ -1,14 +1,15 @@
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { ProductCardDto } from '@/shared/dtos/product.dto';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { FormEvent, useMemo } from 'react';
 import { HiHeart, HiOutlineHeart } from 'react-icons/hi2';
 
 interface Props {
-  id: string;
+  product: ProductCardDto;
 }
 
-export default function WishProduct({ id }: Props) {
+export default function WishProduct({ product }: Props) {
   const isAuthenticated = useIsAuthenticated();
 
   const { productIds, removeWishedItem, addWishedItem } = useWishedItemStore(
@@ -19,30 +20,37 @@ export default function WishProduct({ id }: Props) {
     }),
   );
 
-  const isWished = useMemo(() => productIds.includes(id), [productIds, id]);
+  const isWished = useMemo(
+    () => productIds.includes(product.id),
+    [productIds, product.id],
+  );
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isAuthenticated) {
       if (!isWished) {
-        const res = await fetch(`/api/wished/${id}`, { method: 'POST' });
+        const res = await fetch(`/api/wished/${product.id}`, {
+          method: 'POST',
+        });
         if (res.ok) {
-          addWishedItem(id);
+          addWishedItem(product.id);
         }
       } else {
-        const res = await fetch(`/api/wished/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/wished/${product.id}`, {
+          method: 'DELETE',
+        });
         if (res.ok) {
-          removeWishedItem(id);
+          removeWishedItem(product.id);
         }
       }
     } else {
       if (!isWished) {
-        localStorageWished.addItem(id);
-        addWishedItem(id);
+        localStorageWished.addItem(product);
+        addWishedItem(product.id);
       } else {
-        localStorageWished.remove(id);
-        removeWishedItem(id);
+        localStorageWished.remove(product.id);
+        removeWishedItem(product.id);
       }
     }
   };
