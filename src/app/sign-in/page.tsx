@@ -5,11 +5,9 @@ import { loginUserSchema } from '@/shared/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 export default function SignIn() {
-  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -17,17 +15,12 @@ export default function SignIn() {
   } = useForm<LoginUserDto>({ resolver: zodResolver(loginUserSchema) });
 
   const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
-    const res = await signIn('credentials', {
+    await signIn('credentials', {
       email: data.email,
       password: data.password,
-      redirect: false,
+      redirect: true,
+      callbackUrl: '/',
     });
-
-    if (res?.ok && !res.error) {
-      return router.push('/');
-    } else {
-      console.log(res?.error);
-    }
   };
 
   return (
