@@ -56,9 +56,13 @@ export class ProductService {
     return count > 0;
   }
 
-  async create(data: CreateProductInterface): Promise<ProductDto> {
+  async create(
+    userId: string,
+    data: CreateProductInterface,
+  ): Promise<ProductDto> {
     const newProduct = await prisma.product.create({
       data: {
+        userId,
         title: data.title,
         description: data.description,
         price: data.price,

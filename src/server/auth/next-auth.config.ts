@@ -2,13 +2,14 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
 import { authService, cartService } from '../services';
+import { RoleType } from './rbac';
 
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
       name: string;
-      role: string;
+      role: RoleType;
       cartId: string;
     };
   }

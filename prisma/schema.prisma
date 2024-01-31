@@ -13,10 +13,11 @@ model User {
   fullname    String
   password    String
   countryId   String
-  role        UserRole     @default(USER)
+  role        UserRole     @default(CLIENT)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   country     Country      @relation(fields: [countryId], references: [id])
+  products    Product[]
   cart        Cart?
   wishedItems WishedItem[]
 
@@ -33,6 +34,8 @@ model Country {
 
 model Product {
   id          String         @id @default(uuid())
+  user        User           @relation(fields: [userId], references: [id])
+  userId      String
   title       String
   description String
   price       Int
@@ -100,6 +103,7 @@ model WishedItem {
 }
 
 enum UserRole {
-  USER
+  CLIENT
+  SELLER
   ADMIN
 }

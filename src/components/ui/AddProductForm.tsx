@@ -50,7 +50,7 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
         body: formData,
       });
       if (res.ok) {
-        const { data }: { data: ProductDto } = await res.json();
+        const data: ProductDto = await res.json();
         return router.push(`/items/${data.id}`);
       }
     } catch (error) {
