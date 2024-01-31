@@ -12,8 +12,8 @@ export async function GET() {
   const cartId = user.cartId;
 
   try {
-    const cartItem = await cartService.findAllItems(cartId);
-    return NextResponse.json(cartItem, { status: 201 });
+    const cartItems = await cartService.findAllItems(cartId);
+    return NextResponse.json(cartItems, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

@@ -1,3 +1,5 @@
+import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
+import { Permissions } from '@/server/auth/rbac';
 import { categoryService } from '@/server/services';
 import { CreateUpdateCategoryDto } from '@/shared/dtos/category.dto';
 import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
@@ -23,6 +25,21 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const user = await getUserSession();
+
+  if (!user) {
+    return NextResponse.json(null, { status: 401 });
+  }
+
+  const hasPermissions = await checkUserPermissions(
+    [Permissions.CREATE_CATEGORY],
+    user.role,
+  );
+
+  if (!hasPermissions) {
+    return NextResponse.json(null, { status: 403 });
+  }
+
   const json = await req.json();
   const result = await createUpdateCategorySchema.safeParseAsync(json);
 

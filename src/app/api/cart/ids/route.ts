@@ -2,6 +2,7 @@ import { getUserSession } from '@/server/auth/auth.utils';
 import { cartService } from '@/server/services';
 import { NextResponse } from 'next/server';
 
+// TODO: Remove this unnecessary endpoint (?)
 export async function GET() {
   const user = await getUserSession();
 

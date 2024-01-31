@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createUserSchema } from '@/shared/schemas/user.schema';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { countryService, userService } from '@/server/services';
+import { getUserSession } from '@/server/auth/auth.utils';
 
 export async function POST(req: NextRequest) {
+  const user = await getUserSession();
+
+  if (user) {
+    return NextResponse.json(null, { status: 403 });
+  }
+
   const json = await req.json();
   const result = await createUserSchema.safeParseAsync(json);
 
