@@ -50,7 +50,7 @@ export default function AddCategoryFormModal({ handleNewCategory }: Props) {
     });
 
     if (res.ok) {
-      const { data }: { data: CategoryTagDto } = await res.json();
+      const data: CategoryTagDto = await res.json();
       handleNewCategory(data);
       closeModal();
     } else {

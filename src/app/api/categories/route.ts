@@ -18,10 +18,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(categories, { status: 200 });
     }
   } catch {
-    return NextResponse.json(
-      { message: 'Something went wrong' },
-      { status: 500 },
-    );
+    return NextResponse.json(null, { status: 500 });
   }
 }
 
@@ -38,14 +35,8 @@ export async function POST(req: NextRequest) {
   try {
     const newCategoryTag = await categoryService.create(data);
 
-    return NextResponse.json(
-      { message: 'Category created successfully', data: newCategoryTag },
-      { status: 201 },
-    );
+    return NextResponse.json(newCategoryTag, { status: 201 });
   } catch {
-    return NextResponse.json(
-      { message: 'Category already exists' },
-      { status: 409 },
-    );
+    return NextResponse.json(null, { status: 409 });
   }
 }

@@ -1,8 +1,7 @@
-import { nextAuthOptions } from '@/server/auth/next-auth.config';
+import { getUserSession } from '@/server/auth/auth.utils';
 import { wishedItemService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface Props {
@@ -10,9 +9,9 @@ interface Props {
 }
 
 export async function POST(_req: NextRequest, { params }: Props) {
-  const session = await getServerSession(nextAuthOptions);
+  const user = await getUserSession();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.json(null, { status: 401 });
   }
 
@@ -22,7 +21,7 @@ export async function POST(_req: NextRequest, { params }: Props) {
     return NextResponse.json(null, { status: 400 });
   }
 
-  const userId = session.user.id;
+  const userId = user.id;
   const productId = result.data.id;
 
   try {
@@ -34,9 +33,9 @@ export async function POST(_req: NextRequest, { params }: Props) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Props) {
-  const session = await getServerSession(nextAuthOptions);
+  const user = await getUserSession();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.json(null, { status: 401 });
   }
 
@@ -46,7 +45,7 @@ export async function DELETE(_req: NextRequest, { params }: Props) {
     return NextResponse.json(null, { status: 400 });
   }
 
-  const userId = session.user.id;
+  const userId = user.id;
   const productId = result.data.id;
 
   try {

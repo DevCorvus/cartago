@@ -1,8 +1,7 @@
-import { nextAuthOptions } from '@/server/auth/next-auth.config';
+import { getUserSession } from '@/server/auth/auth.utils';
 import { cartService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -15,9 +14,9 @@ interface Props {
 }
 
 export async function PUT(req: NextRequest, { params }: Props) {
-  const session = await getServerSession(nextAuthOptions);
+  const user = await getUserSession();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.json(null, { status: 401 });
   }
 
@@ -38,7 +37,7 @@ export async function PUT(req: NextRequest, { params }: Props) {
   }
 
   const action = searchParamsResult.data.action;
-  const cartId = session.user.cartId;
+  const cartId = user.cartId;
   const productId = paramsResult.data.id;
 
   let success = false;
@@ -55,10 +54,7 @@ export async function PUT(req: NextRequest, { params }: Props) {
   }
 
   if (!success) {
-    return NextResponse.json(
-      { message: 'Something went wrong' },
-      { status: 500 },
-    );
+    return NextResponse.json(null, { status: 500 });
   }
 
   return NextResponse.json(null);

@@ -15,20 +15,13 @@ export async function POST(req: NextRequest) {
 
   const countryExists = await countryService.exists(data.location);
   if (!countryExists) {
-    return NextResponse.json({ message: 'Country not found' }, { status: 404 });
+    return NextResponse.json(null, { status: 404 });
   }
 
   try {
     await userService.create(data);
-
-    return NextResponse.json(
-      { message: 'User created successfully' },
-      { status: 201 },
-    );
+    return NextResponse.json(null, { status: 201 });
   } catch {
-    return NextResponse.json(
-      { message: 'User already exists' },
-      { status: 409 },
-    );
+    return NextResponse.json(null, { status: 409 });
   }
 }

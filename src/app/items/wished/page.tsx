@@ -1,16 +1,16 @@
-import ProductList from '@/components/ui/ProductList';
 import WishList from '@/components/ui/WishList';
-import { nextAuthOptions } from '@/server/auth/next-auth.config';
+import { getUserSession } from '@/server/auth/auth.utils';
 import { wishedItemService } from '@/server/services';
-import { getServerSession } from 'next-auth';
 
 export default async function Wished() {
-  const session = await getServerSession(nextAuthOptions);
+  const user = await getUserSession();
+
   let products = null;
 
-  if (session) {
-    products = await wishedItemService.findAllItems(session.user.id);
+  if (user) {
+    products = await wishedItemService.findAllItems(user.id);
   }
+
   return (
     <div>
       <header>
