@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { CreateUserDto } from '@/shared/dtos/user.dto';
+import { CreateUserDto, UserProfileDto } from '@/shared/dtos/user.dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../password/password.service';
 import { CartService } from '../cart/cart.service';
@@ -63,5 +63,34 @@ export class UserService {
 
   async delete(id: string): Promise<void> {
     await prisma.user.delete({ where: { id } });
+  }
+
+  async getProfile(id: string): Promise<UserProfileDto | null> {
+    const userInfo = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        fullname: true,
+        email: true,
+        role: true,
+        country: {
+          select: {
+            name: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!userInfo) return null;
+
+    return {
+      fullname: userInfo.fullname,
+      email: userInfo.email,
+      role: userInfo.role,
+      country: userInfo.country.name,
+      createdAt: userInfo.createdAt,
+      updatedAt: userInfo.updatedAt,
+    };
   }
 }
