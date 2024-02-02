@@ -67,7 +67,7 @@ export default function SignUpForm({ countries }: Props) {
         className="flex items-center justify-center flex-col gap-10"
       >
         <header className="w-full">
-          <h1 className="text-2xl font-bold text-green-800">Sign Up</h1>
+          <h1 className="text-2xl font-bold text-green-800">Register</h1>
         </header>
         <div className="flex flex-col gap-6 w-full">
           <div className="flex justify-center flex-col gap-2">

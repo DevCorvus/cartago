@@ -30,7 +30,7 @@ export function SignInForm() {
         className="flex items-center justify-center flex-col gap-10 max-w-sm"
       >
         <header className="w-full">
-          <h1 className="text-2xl font-bold text-green-800">Sign In</h1>
+          <h1 className="text-2xl font-bold text-green-800">Login</h1>
         </header>
         <div className="flex flex-col gap-6 w-full">
           <div className="flex justify-center flex-col gap-2">

@@ -6,7 +6,7 @@ export default async function ChangePassword() {
   const user = await getUserSession();
 
   if (!user) {
-    redirect('/sign-in');
+    redirect('/login');
   }
 
   return <ChangePasswordForm />;

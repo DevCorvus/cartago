@@ -29,10 +29,10 @@ export default function NavBar() {
           {!isAuthenticated ? (
             <>
               <li>
-                <Link href="/sign-in">Login</Link>
+                <Link href="/login">Login</Link>
               </li>
               <li>
-                <Link href="/sign-up">Register</Link>
+                <Link href="/register">Register</Link>
               </li>
             </>
           ) : (

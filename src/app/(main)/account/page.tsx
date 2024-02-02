@@ -7,7 +7,7 @@ export default async function Account() {
   const user = await getUserSession();
 
   if (!user) {
-    redirect('/sign-in');
+    redirect('/login');
   }
 
   const profile = await userService.getProfile(user.id);

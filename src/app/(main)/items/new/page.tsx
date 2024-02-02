@@ -8,7 +8,7 @@ export default async function AddProduct() {
   const user = await getUserSession();
 
   if (!user) {
-    redirect('/sign-in');
+    redirect('/login');
   }
 
   const hasPermissions = await checkUserPermissions(
@@ -22,9 +22,5 @@ export default async function AddProduct() {
 
   const categoryTags = await categoryService.findAllTags();
 
-  return (
-    <div className="flex items-center justify-center pt-20 pb-10">
-      <AddProductForm defaultCategoryTags={categoryTags} />
-    </div>
-  );
+  return <AddProductForm defaultCategoryTags={categoryTags} />;
 }
