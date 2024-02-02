@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import {
   CategoryTagDto,
-  CategoryWithProducts,
+  CategoryWithProductsDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
 
@@ -13,7 +13,9 @@ export class CategoryService {
     });
   }
 
-  async findByIdWithProducts(id: number): Promise<CategoryWithProducts | null> {
+  async findByIdWithProducts(
+    id: number,
+  ): Promise<CategoryWithProductsDto | null> {
     return prisma.category.findUnique({
       where: { id },
       include: {

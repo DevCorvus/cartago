@@ -11,7 +11,7 @@ export interface CategoryTagDto {
   title: string;
 }
 
-export interface CategoryWithProducts {
+export interface CategoryWithProductsDto {
   id: number;
   title: string;
   description: string;

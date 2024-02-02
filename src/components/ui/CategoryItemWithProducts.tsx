@@ -1,9 +1,9 @@
-import { CategoryWithProducts } from '@/shared/dtos/category.dto';
+import { CategoryWithProductsDto } from '@/shared/dtos/category.dto';
 import ProductList from './ProductList';
 import { capitalize } from '@/utils/capitalize';
 
 interface Props {
-  categoryWithProducts: CategoryWithProducts;
+  categoryWithProducts: CategoryWithProductsDto;
 }
 
 export default function CategoryItemWithProducts({
