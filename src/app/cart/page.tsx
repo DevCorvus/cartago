@@ -127,11 +127,11 @@ export default function Cart() {
 
   return (
     <div className="max-w-md flex flex-col gap-6 mx-auto">
-      <div>
+      <header>
         <h1 className="text-green-800 font-bold text-2xl">
           Shopping cart ({cartItems.length})
         </h1>
-      </div>
+      </header>
       <div className="w-full flex flex-col gap-4">
         {cartItems.map((product) => (
           <ProductCartItem
