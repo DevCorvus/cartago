@@ -1,5 +1,6 @@
 import { getUserSession } from '@/server/auth/auth.utils';
 import { userService } from '@/server/services';
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
 export default async function Account() {
@@ -16,7 +17,7 @@ export default async function Account() {
   }
 
   return (
-    <div className="max-w-md flex flex-col gap-6 mx-auto">
+    <div className="max-w-md w-full flex flex-col gap-6">
       <header className="w-full">
         <h1 className="text-2xl font-bold text-green-800">Account</h1>
       </header>
@@ -48,6 +49,17 @@ export default async function Account() {
           </tr>
         </tbody>
       </table>
+      <hr />
+      <ul>
+        <li>
+          <Link
+            href="/account/change-password"
+            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+          >
+            Change password
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

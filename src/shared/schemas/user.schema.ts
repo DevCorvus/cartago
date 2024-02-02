@@ -16,11 +16,21 @@ export const createUserSchema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords should match',
+    message: 'Passwords must match',
     path: ['confirmPassword'],
   });
 
-export const updateUserPasswordSchema = z.object({
-  oldPassword: passwordSchema,
-  newPassword: passwordSchema,
-});
+export const updateUserPasswordSchema = z
+  .object({
+    oldPassword: passwordSchema,
+    newPassword: passwordSchema,
+    confirmNewPassword: z.string(),
+  })
+  .refine((data) => data.oldPassword !== data.newPassword, {
+    message: 'New password must be different',
+    path: ['newPassword'],
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: 'Passwords must match',
+    path: ['confirmNewPassword'],
+  });

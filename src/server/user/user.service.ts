@@ -61,6 +61,17 @@ export class UserService {
     });
   }
 
+  async checkPassword(id: string, password: string): Promise<boolean> {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: { password: true },
+    });
+
+    if (!user) return false;
+
+    return this.passwordService.compare(password, user.password);
+  }
+
   async delete(id: string): Promise<void> {
     await prisma.user.delete({ where: { id } });
   }
