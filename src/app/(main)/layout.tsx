@@ -4,8 +4,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pt-20 pb-10 px-5">
-      <div className="container mx-auto">{children}</div>
+    <div className="container pt-24 pb-10 px-5 mx-auto">
+      <div className="flex items-center justify-center">{children}</div>
     </div>
   );
 }
