@@ -1,11 +1,16 @@
 import { prisma } from '@/lib/prisma';
 import {
+  CategoryDto,
   CategoryTagDto,
   CategoryWithProductsDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
 
 export class CategoryService {
+  findAll(): Promise<CategoryDto[]> {
+    return prisma.category.findMany();
+  }
+
   findAllTags(title: string = ''): Promise<CategoryTagDto[]> {
     return prisma.category.findMany({
       where: { title: { startsWith: title } },
@@ -54,6 +59,12 @@ export class CategoryService {
     await prisma.category.update({
       where: { id },
       data,
+    });
+  }
+
+  async delete(id: number) {
+    await prisma.category.delete({
+      where: { id },
     });
   }
 }

@@ -12,6 +12,7 @@ export const Permissions = {
   CREATE_CATEGORY: 'create_category',
   EDIT_CATEGORY: 'edit_category',
   DELETE_CATEGORY: 'delete_category',
+  VIEW_ADMIN_PANEL: 'view_admin_panel',
 } as const;
 
 export type RoleType = (typeof Roles)[keyof typeof Roles];
@@ -33,5 +34,6 @@ export const RolePermissions: Record<RoleType, Set<PermissionType>> = {
     Permissions.CREATE_CATEGORY,
     Permissions.EDIT_CATEGORY,
     Permissions.DELETE_CATEGORY,
+    Permissions.VIEW_ADMIN_PANEL,
   ]),
 } as const;
