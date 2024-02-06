@@ -4,14 +4,21 @@ import { CategoryDto } from '@/shared/dtos/category.dto';
 import { capitalize } from '@/utils/capitalize';
 import { useState } from 'react';
 import { HiTrash, HiChevronDown, HiChevronUp, HiPencil } from 'react-icons/hi2';
+import EditCategoryForm from './EditCategoryForm';
 
 interface Props {
   category: CategoryDto;
+  updateCategory(data: CategoryDto): void;
   deleteCategory(categoryId: number): void;
 }
 
-export default function CategoryItem({ category, deleteCategory }: Props) {
+export default function CategoryItem({
+  category,
+  updateCategory,
+  deleteCategory,
+}: Props) {
   const [showDetails, setShowDetails] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const handleDelete = async (categoryId: number) => {
     const res = await fetch(`/api/categories/${categoryId}`, {
@@ -23,6 +30,16 @@ export default function CategoryItem({ category, deleteCategory }: Props) {
     }
   };
 
+  if (editMode) {
+    return (
+      <EditCategoryForm
+        category={category}
+        updateCategory={updateCategory}
+        close={() => setEditMode(false)}
+      />
+    );
+  }
+
   return (
     <div className="p-4 rounded-md bg-white shadow-md">
       <div className="flex items-center justify-between">
@@ -33,10 +50,18 @@ export default function CategoryItem({ category, deleteCategory }: Props) {
           </button>
         </div>
         <div className="flex items-center gap-3">
-          <button>
+          <button
+            title="Edit category"
+            className="hover:text-green-700 focus:text-green-700 transition"
+            onClick={() => setEditMode(true)}
+          >
             <HiPencil />
           </button>
-          <button onClick={() => handleDelete(category.id)}>
+          <button
+            title="Delete category"
+            className="hover:text-red-600 focus:text-red-600 transition"
+            onClick={() => handleDelete(category.id)}
+          >
             <HiTrash />
           </button>
         </div>

@@ -27,6 +27,17 @@ export default function Categories() {
     setCategories((prev) => [...prev, data]);
   };
 
+  const updateCategory = (data: CategoryDto) => {
+    setCategories((prev) =>
+      prev.map((category) => {
+        if (category.id === data.id) {
+          return data;
+        }
+        return category;
+      }),
+    );
+  };
+
   const deleteCategory = (categoryId: number) => {
     setCategories((prev) =>
       prev.filter((category) => category.id !== categoryId),
@@ -44,7 +55,11 @@ export default function Categories() {
       <ul className="flex flex-col gap-3">
         {categories.map((category) => (
           <li key={category.id}>
-            <CategoryItem category={category} deleteCategory={deleteCategory} />
+            <CategoryItem
+              category={category}
+              updateCategory={updateCategory}
+              deleteCategory={deleteCategory}
+            />
           </li>
         ))}
       </ul>

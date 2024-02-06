@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+a,
+button,
+input,
+textarea {
+  @apply outline-none;
+}
+
+.input {
+  @apply w-full text-black rounded-lg shadow-inner resize-none bg-slate-50 shadow-slate-300 drop-shadow-sm border border-transparent focus:border-green-700 transition;
+}
+
+.textarea {
+  @apply input h-28;
+}

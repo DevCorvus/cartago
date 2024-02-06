@@ -57,8 +57,11 @@ export class CategoryService {
     });
   }
 
-  async update(id: number, data: CreateUpdateCategoryDto): Promise<void> {
-    await prisma.category.update({
+  async update(
+    id: number,
+    data: CreateUpdateCategoryDto,
+  ): Promise<CategoryDto> {
+    return prisma.category.update({
       where: { id },
       data,
     });
