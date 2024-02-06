@@ -48,10 +48,10 @@ export default function AddCategoryForm({ addCategory }: Props) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="w-full p-2 rounded-full shadow-md bg-lime-50 border border-green-700 text-green-800 font-semibold flex items-center justify-center gap-2"
+        className="w-full border border-transparent border-t-gray-100 hover:border-green-700 focus:border-green-700 transition p-3 rounded-full shadow-md bg-white text-green-800 font-semibold flex items-center justify-center gap-2"
       >
         <HiMiniPlus className="text-3xl" />
-        Add new category
+        Add category
       </button>
     );
   }
@@ -59,48 +59,54 @@ export default function AddCategoryForm({ addCategory }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-lime-50 rounded-md shadow-md p-8 flex flex-col gap-3 text-green-800"
+      className="bg-white rounded-md shadow-md p-6 flex flex-col gap-4"
     >
-      <header className="mb-3">
-        <h1 className="text-2xl font-bold">Add category</h1>
+      <header>
+        <h1 className="text-xl font-bold text-green-800">New category</h1>
       </header>
       <div className="flex flex-col gap-2">
-        <label htmlFor="category-title">Title</label>
+        <label htmlFor="category-title" className="text-green-800 opacity-75">
+          Title
+        </label>
         <input
           {...register('title')}
           type="text"
           id="category-title"
           placeholder="Enter category title"
-          className="p-3 rounded-md shadow-md outline-none"
+          className="p-3 input"
         />
         {errors.title && <p className="text-red-400">{errors.title.message}</p>}
         {alreadyExistsError && <p className="text-red-400">Already taken</p>}
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor="category-description">Description (optional)</label>
+        <label
+          htmlFor="category-description"
+          className="text-green-800 opacity-75"
+        >
+          Description (optional)
+        </label>
         <textarea
           {...register('description')}
           name="categoryDescription"
           id="category-description"
-          className="p-3 rounded-md shadow-md outline-none resize-none h-28"
+          className="p-3 textarea"
           placeholder="Enter category description"
-          rows={5}
         ></textarea>
         {errors.description && (
           <p className="text-red-400">{errors.description.message}</p>
         )}
       </div>
-      <div className="flex items-center gap-2 mt-5">
+      <div className="flex items-center gap-2">
         <button
           type="submit"
-          className="px-7 py-3 bg-green-800 rounded-full text-neutral-50"
+          className="px-5 py-2 bg-green-800 rounded-full text-neutral-50"
         >
           Create
         </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}
-          className="px-7 py-3 border border-green-800 rounded-full"
+          className="px-5 py-2 border border-green-800 text-green-800 rounded-full"
         >
           Cancel
         </button>
