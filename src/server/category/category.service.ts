@@ -7,8 +7,10 @@ import {
 } from '@/shared/dtos/category.dto';
 
 export class CategoryService {
-  findAll(): Promise<CategoryDto[]> {
-    return prisma.category.findMany();
+  findAll(title: string = ''): Promise<CategoryDto[]> {
+    return prisma.category.findMany({
+      where: { title: { startsWith: title } },
+    });
   }
 
   findAllTags(title: string = ''): Promise<CategoryTagDto[]> {

@@ -22,5 +22,5 @@ export default async function AddProduct() {
 
   const categoryTags = await categoryService.findAllTags();
 
-  return <AddProductForm defaultCategoryTags={categoryTags} />;
+  return <AddProductForm categoryTags={categoryTags} />;
 }

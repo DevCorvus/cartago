@@ -11,12 +11,12 @@ export async function GET(req: NextRequest) {
 
   try {
     if (title) {
-      const categories = await categoryService.findAllTags(
+      const categories = await categoryService.findAll(
         title.trim().toLowerCase(),
       );
       return NextResponse.json(categories, { status: 200 });
     } else {
-      const categories = await categoryService.findAllTags();
+      const categories = await categoryService.findAll();
       return NextResponse.json(categories, { status: 200 });
     }
   } catch {

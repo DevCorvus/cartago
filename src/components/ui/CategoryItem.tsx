@@ -7,13 +7,20 @@ import { HiTrash, HiChevronDown, HiChevronUp, HiPencil } from 'react-icons/hi2';
 
 interface Props {
   category: CategoryDto;
+  deleteCategory(categoryId: number): void;
 }
 
-export default function CategoryItem({ category }: Props) {
+export default function CategoryItem({ category, deleteCategory }: Props) {
   const [showDetails, setShowDetails] = useState(false);
 
   const handleDelete = async (categoryId: number) => {
-    await fetch(`/api/categories/${categoryId}`, { method: 'DELETE' });
+    const res = await fetch(`/api/categories/${categoryId}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      deleteCategory(categoryId);
+    }
   };
 
   return (
@@ -42,8 +49,8 @@ export default function CategoryItem({ category }: Props) {
             <span className="italic">No description</span>
           )}
           <div className="text-slate-500">
-            <p>Created at {category.createdAt.toDateString()}</p>
-            <p>Last update at {category.updatedAt.toDateString()}</p>
+            <p>Created at {new Date(category.createdAt).toDateString()}</p>
+            <p>Last update at {new Date(category.updatedAt).toDateString()}</p>
           </div>
         </div>
       )}

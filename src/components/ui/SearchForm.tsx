@@ -21,7 +21,9 @@ export default function SearchForm() {
           const searchParams = new URLSearchParams();
           searchParams.append('title', input);
 
-          const res = await fetch(`/api/categories?${searchParams.toString()}`);
+          const res = await fetch(
+            `/api/categories/tags?${searchParams.toString()}`,
+          );
 
           if (res.ok) {
             const data = await res.json();

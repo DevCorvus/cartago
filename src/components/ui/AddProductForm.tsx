@@ -12,10 +12,10 @@ import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
 
 interface Props {
-  defaultCategoryTags: CategoryTagDto[];
+  categoryTags: CategoryTagDto[];
 }
 
-export default function AddProductForm({ defaultCategoryTags }: Props) {
+export default function AddProductForm({ categoryTags }: Props) {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [categoryIds, setCategoryIds] = useState<number[]>([]);
@@ -148,7 +148,7 @@ export default function AddProductForm({ defaultCategoryTags }: Props) {
           </div>
         </div>
         <CategoryTagsInput
-          defaultCategoryTags={defaultCategoryTags}
+          categoryTags={categoryTags}
           setCategoryIds={setCategoryIds}
         />
       </div>

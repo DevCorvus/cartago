@@ -7,23 +7,18 @@ import {
   useEffect,
 } from 'react';
 import { HiXMark } from 'react-icons/hi2';
-import AddCategoryFormModal from './AddCategoryFormModal';
-import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
 import { capitalize } from '@/utils/capitalize';
 
 interface Props {
-  defaultCategoryTags: CategoryTagDto[];
+  categoryTags: CategoryTagDto[];
   setCategoryIds: Dispatch<SetStateAction<number[]>>;
 }
 
 export default function CategoryTagsInput({
-  defaultCategoryTags,
+  categoryTags,
   setCategoryIds,
 }: Props) {
   const [input, setInput] = useState<string>('');
-
-  const [categoryTags, setCategoryTags] =
-    useState<CategoryTagDto[]>(defaultCategoryTags);
 
   const [selectedCategoryTags, setSelectedCategoryTags] = useState<
     CategoryTagDto[]
@@ -32,15 +27,6 @@ export default function CategoryTagsInput({
   const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
     CategoryTagDto[]
   >([]);
-
-  const { creatingCategory, setCreatingCategory, setCategoryTitle } =
-    useCategoryFormStore(
-      ({ creatingCategory, setCreatingCategory, setCategoryTitle }) => ({
-        creatingCategory,
-        setCreatingCategory,
-        setCategoryTitle,
-      }),
-    );
 
   useEffect(() => {
     setCategoryIds(selectedCategoryTags.map((tag) => tag.id));
@@ -97,9 +83,6 @@ export default function CategoryTagsInput({
 
           if (categoryMatch) {
             addSelectedCategoryTag(categoryMatch);
-          } else {
-            setCreatingCategory(true);
-            setCategoryTitle(input);
           }
         }
       } else if (e.key == 'Backspace' && !value) {
@@ -108,11 +91,6 @@ export default function CategoryTagsInput({
         );
       }
     }
-  };
-
-  const handleNewCategory = (data: CategoryTagDto) => {
-    setCategoryTags((prev) => [...prev, data]);
-    addSelectedCategoryTag(data);
   };
 
   return (
@@ -162,9 +140,6 @@ export default function CategoryTagsInput({
           </>
         )}
       </div>
-      {creatingCategory && (
-        <AddCategoryFormModal handleNewCategory={handleNewCategory} />
-      )}
     </div>
   );
 }
