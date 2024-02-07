@@ -8,7 +8,11 @@ import {
   useState,
 } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { HiMiniXCircle, HiOutlineExclamationTriangle } from 'react-icons/hi2';
+import {
+  HiMiniXCircle,
+  HiPlusCircle,
+  HiOutlineExclamationTriangle,
+} from 'react-icons/hi2';
 
 interface ImagePreview {
   filename: string;
@@ -85,6 +89,7 @@ export default function ImageUploader({
   return (
     <div className="w-full h-96 relative flex flex-col gap-1">
       <button
+        title="Upload images"
         {...getRootProps()}
         type="button"
         className="relative h-4/5 input"
@@ -113,6 +118,11 @@ export default function ImageUploader({
               </div>
             )}
           </>
+        )}
+        {selectedImage && (
+          <div className="opacity-0 hover:opacity-100 transition absolute inset-0 w-full h-full bg-green-100 bg-opacity-25 flex flex-col items-center justify-center">
+            <HiPlusCircle className="text-7xl text-green-300 text-opacity-50" />
+          </div>
         )}
       </button>
       <p className="text-sm italic opacity-50">Max 5</p>
