@@ -3,11 +3,15 @@
 import AddCategoryForm from '@/components/ui/AddCategoryForm';
 import CategoryItem from '@/components/ui/CategoryItem';
 import Loading from '@/components/ui/Loading';
+import SearchCategoriesForm from '@/components/ui/SearchCategoriesForm';
 import { CategoryDto } from '@/shared/dtos/category.dto';
 import { useEffect, useState } from 'react';
 
 export default function Categories() {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<CategoryDto[]>(
+    [],
+  );
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,6 +26,17 @@ export default function Categories() {
       setLoading(false);
     })();
   }, []);
+
+  useEffect(() => {
+    setSelectedCategories(categories);
+  }, [categories]);
+
+  const searchCategories = (title: string) => {
+    const input = title.trim().toLowerCase();
+    setSelectedCategories(
+      categories.filter((category) => category.title.includes(input)),
+    );
+  };
 
   const addCategory = (data: CategoryDto) => {
     setCategories((prev) => [...prev, data]);
@@ -52,8 +67,9 @@ export default function Categories() {
         <h1 className="text-green-800 font-bold text-2xl">Categories</h1>
       </header>
       <AddCategoryForm addCategory={addCategory} />
+      <SearchCategoriesForm handleSearch={searchCategories} />
       <ul className="flex flex-col gap-3">
-        {categories.map((category) => (
+        {selectedCategories.map((category) => (
           <li key={category.id}>
             <CategoryItem
               category={category}
