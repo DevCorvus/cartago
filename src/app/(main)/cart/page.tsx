@@ -148,7 +148,7 @@ export default function Cart() {
       </p>
       <button
         type="submit"
-        className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg flex items-center justify-center gap-2"
+        className="p-3 btn flex items-center justify-center gap-2"
       >
         <HiOutlineShoppingCart />
         Checkout

@@ -42,7 +42,7 @@ export function SignInForm() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
@@ -57,18 +57,15 @@ export function SignInForm() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
             />
             {errors.password && (
               <p className="text-red-400">{errors.password.message}</p>
             )}
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
-        >
-          Log In
+        <button type="submit" className="p-3 w-full btn">
+          Sign In
         </button>
       </form>
       <div className="flex items-center justify-center flex-col text-sm text-green-800 opacity-75">

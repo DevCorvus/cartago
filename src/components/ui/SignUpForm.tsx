@@ -79,7 +79,7 @@ export default function SignUpForm({ countries }: Props) {
               id="fullname"
               type="text"
               placeholder="Enter your name"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
             />
             {errors.fullname && (
               <p className="text-red-400">{errors.fullname.message}</p>
@@ -94,7 +94,7 @@ export default function SignUpForm({ countries }: Props) {
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
@@ -107,7 +107,7 @@ export default function SignUpForm({ countries }: Props) {
             <select
               {...register('location')}
               id="location"
-              className="p-4 rounded-lg outline-none shadow-md bg-white"
+              className="p-4 input-alternative"
             >
               <option defaultValue={''} disabled>
                 Select country
@@ -131,7 +131,7 @@ export default function SignUpForm({ countries }: Props) {
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
               onChange={handlePasswordChange}
             />
             {errors.password && (
@@ -154,17 +154,14 @@ export default function SignUpForm({ countries }: Props) {
               id="confirmPassword"
               type="password"
               placeholder="Repeat your password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input-alternative"
             />
             {errors.confirmPassword && (
               <p className="text-red-400">{errors.confirmPassword.message}</p>
             )}
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
-        >
+        <button type="submit" className="p-3 w-full btn">
           Sign Up
         </button>
       </form>

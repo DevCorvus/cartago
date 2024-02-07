@@ -70,7 +70,7 @@ export default function AddProductForm({ categoryTags }: Props) {
   return (
     <form
       onSubmit={submitWrapper}
-      className="flex items-center justify-center flex-col gap-10 max-w-sm"
+      className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-8 shadow-md rounded-lg border-2 border-gray-50"
     >
       <header className="w-full">
         <h1 className="text-2xl font-bold text-green-800">Add Product</h1>
@@ -89,7 +89,7 @@ export default function AddProductForm({ categoryTags }: Props) {
             id="title"
             type="text"
             placeholder="Enter product title"
-            className="rounded-lg p-4 outline-none shadow-md"
+            className="p-4 input"
           />
           {errors.title && (
             <p className="text-red-400">{errors.title.message}</p>
@@ -105,7 +105,7 @@ export default function AddProductForm({ categoryTags }: Props) {
             cols={30}
             rows={5}
             placeholder="Enter product description"
-            className="rounded-lg p-4 outline-none shadow-md resize-none"
+            className="p-4 input"
           />
           {errors.description && (
             <p className="text-red-400">{errors.description.message}</p>
@@ -123,7 +123,7 @@ export default function AddProductForm({ categoryTags }: Props) {
               min={0}
               type="number"
               placeholder="Enter product price"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input"
             />
             {errors.price && (
               <p className="text-red-400">{errors.price.message}</p>
@@ -140,7 +140,7 @@ export default function AddProductForm({ categoryTags }: Props) {
               min={0}
               type="number"
               placeholder="Enter product stock"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input"
             />
             {errors.stock && (
               <p className="text-red-400">{errors.stock.message}</p>
@@ -152,14 +152,9 @@ export default function AddProductForm({ categoryTags }: Props) {
           setCategoryIds={setCategoryIds}
         />
       </div>
-      <div className="w-full">
-        <button
-          type="submit"
-          className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
-        >
-          Add Product
-        </button>
-      </div>
+      <button type="submit" className="p-3 btn w-full">
+        Add Product
+      </button>
     </form>
   );
 }

@@ -98,12 +98,13 @@ export default function CategoryTagsInput({
       <label htmlFor="categories" className="text-green-800 opacity-75">
         Categories
       </label>
-      <div className="bg-white p-1 rounded-md shadow-md">
+      <div className="p-1 input">
         <ul className="flex flex-wrap p-2 gap-1">
           {selectedCategoryTags.map((selectedTag) => (
             <li key={selectedTag.id}>
               <button
-                className="bg-green-800 text-slate-50 rounded-md p-1 flex items-center gap-0.5"
+                title="Remove category"
+                className="p-1 flex items-center gap-0.5 rounded-md bg-green-200 text-green-800 hover:bg-red-200 focus:bg-red-200 hover:text-red-800 focus:text-red-800 transition shadow-sm"
                 type="button"
                 onClick={() => handleDelete(selectedTag.id)}
               >
@@ -116,7 +117,7 @@ export default function CategoryTagsInput({
             <input
               id="categories"
               type="text"
-              className="outline-none p-1 bg-none w-28"
+              className="p-1 bg-transparent w-28"
               placeholder="Add category..."
               autoComplete="off"
               onKeyDown={handleKey}

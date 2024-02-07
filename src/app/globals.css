@@ -5,7 +5,8 @@
 a,
 button,
 input,
-textarea {
+textarea,
+select {
   @apply outline-none;
 }
 
@@ -13,6 +14,18 @@ textarea {
   @apply w-full text-black rounded-lg shadow-inner resize-none bg-slate-50 shadow-slate-300 drop-shadow-sm border border-transparent focus:border-green-700 transition;
 }
 
+.input-alternative {
+  @apply w-full text-black bg-white rounded-lg shadow-md resize-none border border-transparent focus:border-green-700;
+}
+
 .textarea {
   @apply input h-28;
+}
+
+.btn {
+  @apply bg-green-800 rounded-full text-slate-50 shadow-md hover:bg-green-700 focus:bg-green-700 transition;
+}
+
+.btn-alternative {
+  @apply border border-green-800 text-green-800 hover:bg-green-100 focus:bg-green-100 rounded-full transition;
 }

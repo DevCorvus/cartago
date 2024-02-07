@@ -87,7 +87,7 @@ export default function ImageUploader({
       <button
         {...getRootProps()}
         type="button"
-        className="relative h-4/5 bg-white shadow-md rounded-md"
+        className="relative h-4/5 input"
       >
         <input {...getInputProps()} />
         {!selectedImage ? (
@@ -118,38 +118,36 @@ export default function ImageUploader({
       <p className="text-sm italic opacity-50">Max 5</p>
       <div className="flex-1 grid grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
-          <div key={i}>
-            <div className="relative h-full">
-              <button
-                type="button"
-                className={`relative w-20 h-full border rounded bg-neutral-100 ${
-                  image.errors
-                    ? 'border-red-300 hover:border-red-400 focus:border-red-400'
-                    : ''
-                } transition`}
-                onClick={() => {
-                  setSelectedImage(image);
-                }}
-              >
-                {!image.errors ? (
-                  <Image
-                    src={image.url}
-                    alt={`${image.filename} image #${i + 1}`}
-                    fill={true}
-                    className="object-contain"
-                  />
-                ) : (
-                  <HiOutlineExclamationTriangle className="text-red-400 text-3xl mx-auto" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDeleteImage(image.filename)}
-                className="absolute top-0 right-0 text-lg text-red-300 hover:text-red-400 focus:text-red-400 transition"
-              >
-                <HiMiniXCircle />
-              </button>
-            </div>
+          <div key={i} className="relative">
+            <button
+              type="button"
+              className={`relative w-full h-full border rounded bg-neutral-100 ${
+                image.errors
+                  ? 'border-red-300 hover:border-red-400 focus:border-red-400'
+                  : ''
+              } transition`}
+              onClick={() => {
+                setSelectedImage(image);
+              }}
+            >
+              {!image.errors ? (
+                <Image
+                  src={image.url}
+                  alt={`${image.filename} image #${i + 1}`}
+                  fill={true}
+                  className="object-contain"
+                />
+              ) : (
+                <HiOutlineExclamationTriangle className="text-red-400 text-3xl mx-auto" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDeleteImage(image.filename)}
+              className="absolute top-0 right-0 text-xl text-red-300 hover:text-red-400 focus:text-red-400 transition"
+            >
+              <HiMiniXCircle />
+            </button>
           </div>
         ))}
       </div>

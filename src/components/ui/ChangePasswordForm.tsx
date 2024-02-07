@@ -35,7 +35,7 @@ export default function ChangePasswordForm() {
     <div className="flex flex-col gap-12">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center justify-center flex-col gap-10 max-w-sm"
+        className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-10 rounded-lg shadow-md border-2 border-gray-50"
       >
         <header className="w-full">
           <h1 className="text-2xl font-bold text-green-800">Change password</h1>
@@ -50,7 +50,7 @@ export default function ChangePasswordForm() {
               id="oldPassword"
               type="password"
               placeholder="Enter your current password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input"
             />
             {errors.oldPassword && (
               <p className="text-red-400">{errors.oldPassword.message}</p>
@@ -65,7 +65,7 @@ export default function ChangePasswordForm() {
               id="newPassword"
               type="password"
               placeholder="Enter your new password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input"
             />
             {errors.newPassword && (
               <p className="text-red-400">{errors.newPassword.message}</p>
@@ -83,7 +83,7 @@ export default function ChangePasswordForm() {
               id="confirmNewPassword"
               type="password"
               placeholder="Repeat new password"
-              className="rounded-lg p-4 outline-none shadow-md"
+              className="p-4 input"
             />
             {errors.confirmNewPassword && (
               <p className="text-red-400">
@@ -92,10 +92,7 @@ export default function ChangePasswordForm() {
             )}
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-green-800 p-3 w-full rounded-3xl text-slate-50 shadow-lg"
-        >
+        <button type="submit" className="w-full p-3 btn">
           Submit
         </button>
       </form>

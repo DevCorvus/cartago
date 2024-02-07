@@ -57,7 +57,7 @@ export default function EditCategoryForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 rounded-md bg-white shadow-md flex flex-col gap-4"
+      className="p-6 rounded-md bg-white shadow-md flex flex-col gap-4 border-2 border-gray-50"
     >
       <header>
         <span className="text-xl font-bold text-green-800">
@@ -97,16 +97,13 @@ export default function EditCategoryForm({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <button
-          type="submit"
-          className="px-5 py-2 bg-green-800 rounded-full text-neutral-50"
-        >
+        <button type="submit" className="px-5 py-2 btn">
           Apply
         </button>
         <button
           type="button"
           onClick={close}
-          className="px-5 py-2 border border-green-800 text-green-800 rounded-full"
+          className="px-5 py-2 btn-alternative"
         >
           Cancel
         </button>

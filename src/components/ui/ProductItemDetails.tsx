@@ -119,7 +119,7 @@ export default function ProductItemDetails({ product }: Props) {
       {productIds.includes(product.id) ? (
         <Link
           href="/cart"
-          className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center"
+          className="w-full p-4 flex items-center justify-center gap-2 btn"
         >
           <HiShoppingCart />
           View in shopping cart
@@ -128,7 +128,7 @@ export default function ProductItemDetails({ product }: Props) {
         <form onSubmit={handleSubmit} className="w-full">
           <button
             type="submit"
-            className="w-full bg-green-800 text-lime-50 px-4 py-4 rounded-full flex gap-2 items-center justify-center"
+            className="w-full p-4 flex items-center justify-center gap-2 btn"
           >
             <HiShoppingCart />
             Add to shopping cart

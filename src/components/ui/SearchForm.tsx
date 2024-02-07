@@ -46,7 +46,7 @@ export default function SearchForm() {
       <form>
         <input
           type="text"
-          className="text-black p-2 rounded-lg shadow-inner resize-none bg-slate-50 shadow-slate-300 outline-none"
+          className="p-2 input"
           placeholder="Search"
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
