@@ -2,16 +2,11 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
 import { authService, cartService } from '../services';
-import { RoleType } from './rbac';
+import { UserSession } from './auth.types';
 
 declare module 'next-auth' {
   interface Session {
-    user: {
-      id: string;
-      name: string;
-      role: RoleType;
-      cartId: string;
-    };
+    user: UserSession;
   }
 }
 
@@ -54,7 +49,7 @@ export const nextAuthOptions: NextAuthOptions = {
       return token;
     },
     async session({ token, session }) {
-      session.user = token.user;
+      session.user = token.user as UserSession;
       return session;
     },
   },

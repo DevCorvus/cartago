@@ -1,13 +1,8 @@
 import ChangePasswordForm from '@/components/ui/ChangePasswordForm';
-import { getUserSession } from '@/server/auth/auth.utils';
-import { redirect } from 'next/navigation';
+import withAuth from '@/server/middlewares/withAuth';
 
-export default async function ChangePassword() {
-  const user = await getUserSession();
-
-  if (!user) {
-    redirect('/login');
-  }
-
+async function ChangePassword() {
   return <ChangePasswordForm />;
 }
+
+export default withAuth(ChangePassword);
