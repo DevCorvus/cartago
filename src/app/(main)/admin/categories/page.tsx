@@ -39,7 +39,13 @@ export default function Categories() {
   };
 
   const addCategory = (data: CategoryDto) => {
-    setCategories((prev) => [...prev, data]);
+    setCategories((prev) =>
+      [...prev, data].toSorted((a, b) => {
+        if (a.title > b.title) return 1;
+        else if (a.title < b.title) return -1;
+        return 0;
+      }),
+    );
   };
 
   const updateCategory = (data: CategoryDto) => {

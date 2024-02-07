@@ -10,6 +10,9 @@ export class CategoryService {
   findAll(title: string = ''): Promise<CategoryDto[]> {
     return prisma.category.findMany({
       where: { title: { startsWith: title } },
+      orderBy: {
+        title: 'asc',
+      },
     });
   }
 
