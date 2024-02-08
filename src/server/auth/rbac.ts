@@ -12,6 +12,7 @@ export const Permissions = {
   CREATE_CATEGORY: 'create_category',
   EDIT_CATEGORY: 'edit_category',
   DELETE_CATEGORY: 'delete_category',
+  VIEW_SELLER_PANEL: 'view_seller_panel',
   VIEW_ADMIN_PANEL: 'view_admin_panel',
 } as const;
 
@@ -25,6 +26,7 @@ export const RolePermissions: Record<RoleType, Set<PermissionType>> = {
     Permissions.CREATE_PRODUCT,
     Permissions.EDIT_PRODUCT,
     Permissions.DELETE_PRODUCT,
+    Permissions.VIEW_SELLER_PANEL,
   ]),
   ADMIN: new Set([
     Permissions.VIEW_PRODUCT,
@@ -34,6 +36,7 @@ export const RolePermissions: Record<RoleType, Set<PermissionType>> = {
     Permissions.CREATE_CATEGORY,
     Permissions.EDIT_CATEGORY,
     Permissions.DELETE_CATEGORY,
+    Permissions.VIEW_SELLER_PANEL,
     Permissions.VIEW_ADMIN_PANEL,
   ]),
 } as const;

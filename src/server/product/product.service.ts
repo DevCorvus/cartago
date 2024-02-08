@@ -32,6 +32,29 @@ export class ProductService {
     });
   }
 
+  async findAllFromUser(userId: string): Promise<ProductCardDto[]> {
+    return prisma.product.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        images: {
+          take: 1,
+          select: {
+            path: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async findById(id: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
       where: { id },
@@ -51,8 +74,8 @@ export class ProductService {
     });
   }
 
-  async exists(id: string): Promise<boolean> {
-    const count = await prisma.product.count({ where: { id } });
+  async exists(id: string, userId?: string): Promise<boolean> {
+    const count = await prisma.product.count({ where: { id, userId } });
     return count > 0;
   }
 

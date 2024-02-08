@@ -5,6 +5,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/server/auth/rbac';
 
+export async function GET() {
+  const user = await getUserSession();
+
+  if (!user) {
+    return NextResponse.json(null, { status: 401 });
+  }
+
+  try {
+    const products = await productService.findAllFromUser(user.id);
+    return NextResponse.json(products);
+  } catch {
+    return NextResponse.json(null, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   const user = await getUserSession();
 
