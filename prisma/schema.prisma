@@ -34,7 +34,7 @@ model Country {
 
 model Product {
   id          String         @id @default(uuid())
-  user        User           @relation(fields: [userId], references: [id])
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   title       String
   description String
@@ -75,7 +75,7 @@ model CartItem {
   id        String   @id @default(uuid())
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId    String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
   amount    Int
   createdAt DateTime @default(now())
@@ -95,8 +95,8 @@ model Cart {
 model WishedItem {
   userId    String
   productId String
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([userId, productId])
   @@map("wished_items")
