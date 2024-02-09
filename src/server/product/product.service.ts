@@ -9,6 +9,11 @@ interface CreateProductInterface extends Omit<CreateProductDto, 'images'> {
   images: string[];
 }
 
+interface ProductWithOwnerAndImages {
+  userId: string;
+  images: string[];
+}
+
 export class ProductService {
   constructor() {}
 
@@ -58,7 +63,14 @@ export class ProductService {
   async findById(id: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        stock: true,
+        createdAt: true,
+        updatedAt: true,
         images: {
           select: {
             path: true,
@@ -72,6 +84,29 @@ export class ProductService {
         },
       },
     });
+  }
+
+  async findWithOwnerAndImages(
+    id: string,
+  ): Promise<ProductWithOwnerAndImages | null> {
+    const product = await prisma.product.findUnique({
+      where: { id },
+      select: {
+        userId: true,
+        images: {
+          select: {
+            path: true,
+          },
+        },
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      userId: product.userId,
+      images: product.images.map((image) => image.path),
+    };
   }
 
   async exists(id: string, userId?: string): Promise<boolean> {

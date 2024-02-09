@@ -1,6 +1,6 @@
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/server/auth/rbac';
-import { productService } from '@/server/services';
+import { productService, storageService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -34,14 +34,20 @@ export async function DELETE(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
-    const isOwner = await productService.exists(productId, user.id);
+    const product = await productService.findWithOwnerAndImages(productId);
 
-    if (!isOwner) {
+    if (!product) {
+      return NextResponse.json(null, { status: 404 });
+    }
+
+    if (product.userId !== user.id) {
       return NextResponse.json(null, { status: 403 });
     }
 
+    await storageService.deleteMany(product.images);
+
     await productService.delete(productId);
-    // TODO: Delete product images from storage
+
     return NextResponse.json(null, { status: 200 });
   } catch {
     return NextResponse.json(null, { status: 500 });

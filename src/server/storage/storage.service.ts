@@ -44,11 +44,7 @@ export class StorageService {
       );
     } catch (err1) {
       try {
-        await Promise.all(
-          filenames.map(async (filename) => {
-            await unlink(path.join(this.outDir, filename));
-          }),
-        );
+        this.deleteMany(filenames);
       } catch (err2) {
         throw err2;
       }
@@ -56,5 +52,13 @@ export class StorageService {
     }
 
     return filenames;
+  }
+
+  async deleteMany(filenames: string[]) {
+    await Promise.all(
+      filenames.map(async (filename) => {
+        await unlink(path.join(this.outDir, filename));
+      }),
+    );
   }
 }
