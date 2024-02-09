@@ -45,6 +45,7 @@ model Product {
   images      ProductImage[]
   categories  Category[]
   cartItems   CartItem[]
+  orderItems  OrderItem[]
   wishedItems WishedItem[]
 
   @@map("products")
@@ -71,6 +72,16 @@ model Category {
   @@map("categories")
 }
 
+model WishedItem {
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@map("wished_items")
+}
+
 model CartItem {
   id        String   @id @default(uuid())
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
@@ -92,18 +103,61 @@ model Cart {
   @@map("carts")
 }
 
-model WishedItem {
-  userId    String
-  productId String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+model Order {
+  id        String      @id @default(uuid())
+  total     Int
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+  payment   Payment?
 
-  @@id([userId, productId])
-  @@map("wished_items")
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  amount    Int
+  price     Int
+  orderId   String
+  productId String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Payment {
+  id        String        @id @default(uuid())
+  total     Int
+  status    PaymentStatus @default(PENDING)
+  method    PaymentMethod
+  orderId   String        @unique
+  createdAt DateTime      @default(now())
+  order     Order         @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
 }
 
 enum UserRole {
   CLIENT
   SELLER
   ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+}
+
+enum PaymentMethod {
+  BISON
+  HUMBLECARD
+  PAYMATE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }
