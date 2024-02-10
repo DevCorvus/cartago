@@ -1,8 +1,8 @@
 import { SignInForm } from '@/components/ui/SignInForm';
-import withAuth from '@/server/middlewares/withAuth';
+import withoutAuth from '@/server/middlewares/withoutAuth';
 
 async function SignIn() {
   return <SignInForm />;
 }
 
-export default withAuth(SignIn);
+export default withoutAuth(SignIn);
