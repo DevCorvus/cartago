@@ -8,11 +8,18 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
 ];
 
+const priceInCentsSchema = z.number().int().min(100);
+
+const priceSchema = z
+  .string()
+  .transform((price) => Math.round(parseFloat(price) * 100))
+  .pipe(priceInCentsSchema);
+
 export const createPartialProductSchema = z.object({
   title: z.string().min(10).max(150).trim(),
   description: z.string().max(200).trim(),
-  price: z.number().int().min(0),
-  stock: z.number().int().min(0),
+  price: priceSchema,
+  stock: z.number().int().min(1),
 });
 
 export const productImageSchema = z
@@ -27,6 +34,7 @@ export const productImageSchema = z
 export const productCategorySchema = z.number().int().positive();
 
 export const createProductSchema = createPartialProductSchema.extend({
+  price: priceInCentsSchema,
   images: z.array(productImageSchema).max(5),
   categories: z.array(productCategorySchema).max(5),
 });

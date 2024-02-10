@@ -1,7 +1,7 @@
 'use client';
 
 import { CreatePartialProductDto, ProductDto } from '@/shared/dtos/product.dto';
-import { FormEvent, useState } from 'react';
+import { FocusEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,7 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createPartialProductSchema } from '@/shared/schemas/product.schema';
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
-import { useCategoryFormStore } from '@/stores/useCategoryFormStore';
 
 interface Props {
   categoryTags: CategoryTagDto[];
@@ -21,19 +20,18 @@ export default function AddProductForm({ categoryTags }: Props) {
   const [categoryIds, setCategoryIds] = useState<number[]>([]);
   const [imageUploadError, setImageUploadError] = useState<boolean>(false);
 
-  const creatingCategory = useCategoryFormStore(
-    (state) => state.creatingCategory,
-  );
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CreatePartialProductDto>({
     resolver: zodResolver(createPartialProductSchema),
   });
 
   const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
+    if (imageUploadError) return;
+
     const formData = new FormData();
 
     formData.set('title', data.title);
@@ -58,18 +56,26 @@ export default function AddProductForm({ categoryTags }: Props) {
     }
   };
 
-  const submitWrapper = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
+    const price = Number(e.target.value);
+    if (price <= 1) {
+      // TODO: Fix price type
+      // Price has to be validated as a string and then transformed to a number
+      // but types are messed up and I have a skill issue going on right now
+      setValue('price', '1.00' as unknown as number, { shouldValidate: true });
+    }
+  };
 
-    if (!creatingCategory && !imageUploadError) {
-      const cb = handleSubmit(onSubmit);
-      await cb(e);
+  const handleStockBlur = (e: FocusEvent<HTMLInputElement>) => {
+    const stock = Number(e.target.value);
+    if (stock < 1) {
+      setValue('stock', 1, { shouldValidate: true });
     }
   };
 
   return (
     <form
-      onSubmit={submitWrapper}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-8 shadow-md rounded-lg border-2 border-gray-50"
     >
       <header className="w-full">
@@ -114,13 +120,14 @@ export default function AddProductForm({ categoryTags }: Props) {
         <div className="flex justify-between">
           <div className="flex flex-col gap-2 w-[45%]">
             <label htmlFor="price" className="text-green-800 opacity-75">
-              Price
+              Price (USD)
             </label>
             <input
-              {...register('price', { valueAsNumber: true })}
+              {...register('price', { onBlur: handlePriceBlur })}
               id="price"
-              defaultValue={0}
-              min={0}
+              defaultValue="1.00"
+              min={1}
+              step=".01"
               type="number"
               placeholder="Enter product price"
               className="p-4 input"
@@ -134,10 +141,13 @@ export default function AddProductForm({ categoryTags }: Props) {
               Stock
             </label>
             <input
-              {...register('stock', { valueAsNumber: true })}
+              {...register('stock', {
+                valueAsNumber: true,
+                onBlur: handleStockBlur,
+              })}
               id="stock"
-              defaultValue={0}
-              min={0}
+              defaultValue={1}
+              min={1}
               type="number"
               placeholder="Enter product stock"
               className="p-4 input"
