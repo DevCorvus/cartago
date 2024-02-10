@@ -40,9 +40,6 @@ export default function AddProductForm({ categoryTags }: Props) {
     const noImages = images.length === 0;
     const noCategories = categoryIds.length === 0;
 
-    setNotEnoughImagesError(noImages);
-    setNotEnoughCategoriesError(noCategories);
-
     if (noImages || noCategories || imageUploadError) return;
 
     const formData = new FormData();
@@ -67,6 +64,16 @@ export default function AddProductForm({ categoryTags }: Props) {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const submitWrapper = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setNotEnoughImagesError(images.length === 0);
+    setNotEnoughCategoriesError(categoryIds.length === 0);
+
+    const cb = handleSubmit(onSubmit);
+    await cb(e);
   };
 
   const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -102,7 +109,7 @@ export default function AddProductForm({ categoryTags }: Props) {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={submitWrapper}
       className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-8 shadow-md rounded-lg border-2 border-gray-50"
     >
       <header className="w-full">
