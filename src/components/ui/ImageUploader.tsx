@@ -21,13 +21,17 @@ interface ImagePreview {
 }
 
 interface Props {
-  setImages: Dispatch<SetStateAction<File[]>>;
+  addImage: (file: File) => void;
+  removeImage: (name: string) => void;
   setImageUploadError: Dispatch<SetStateAction<boolean>>;
+  notEnoughImagesError: boolean;
 }
 
 export default function ImageUploader({
-  setImages,
+  addImage,
+  removeImage,
   setImageUploadError,
+  notEnoughImagesError,
 }: Props) {
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
   const [selectedImage, setSelectedImage] = useState<ImagePreview | null>(null);
@@ -56,7 +60,7 @@ export default function ImageUploader({
                 : validation.error.errors.map((err) => err.message),
             };
 
-            setImages((prev) => [...prev, file]);
+            addImage(file);
             setImagePreviews((prev) => [...prev, imagePreview]);
           }
         };
@@ -64,7 +68,7 @@ export default function ImageUploader({
         reader.readAsArrayBuffer(file);
       });
     },
-    [imagePreviews, setImages],
+    [imagePreviews, addImage],
   );
 
   useEffect(() => {
@@ -74,7 +78,7 @@ export default function ImageUploader({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteImage = (name: string) => {
-    setImages((prev) => prev.filter((image) => image.name !== name));
+    removeImage(name);
     setImagePreviews((prev) => prev.filter((image) => image.filename !== name));
   };
 
@@ -125,7 +129,10 @@ export default function ImageUploader({
           </div>
         )}
       </button>
-      <p className="text-sm italic opacity-50">Max 5</p>
+      <span className="text-sm italic opacity-50">Max 5</span>
+      {notEnoughImagesError && (
+        <p className="text-red-400 mt-1">At least one image is required</p>
+      )}
       <div className="flex-1 grid grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i} className="relative">

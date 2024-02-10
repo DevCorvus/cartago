@@ -35,6 +35,6 @@ export const productCategorySchema = z.number().int().positive();
 
 export const createProductSchema = createPartialProductSchema.extend({
   price: priceInCentsSchema,
-  images: z.array(productImageSchema).max(5),
-  categories: z.array(productCategorySchema).max(5),
+  images: z.array(productImageSchema).min(1).max(5),
+  categories: z.array(productCategorySchema).min(1).max(5),
 });

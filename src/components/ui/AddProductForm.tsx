@@ -1,7 +1,7 @@
 'use client';
 
 import { CreatePartialProductDto, ProductDto } from '@/shared/dtos/product.dto';
-import { FocusEvent, useState } from 'react';
+import { FocusEvent, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,11 +14,18 @@ interface Props {
   categoryTags: CategoryTagDto[];
 }
 
+// TODO: Validation refactor
 export default function AddProductForm({ categoryTags }: Props) {
   const router = useRouter();
+
   const [images, setImages] = useState<File[]>([]);
-  const [categoryIds, setCategoryIds] = useState<number[]>([]);
+  const [notEnoughImagesError, setNotEnoughImagesError] =
+    useState<boolean>(false);
   const [imageUploadError, setImageUploadError] = useState<boolean>(false);
+
+  const [categoryIds, setCategoryIds] = useState<number[]>([]);
+  const [notEnoughCategoriesError, setNotEnoughCategoriesError] =
+    useState<boolean>(false);
 
   const {
     register,
@@ -30,7 +37,13 @@ export default function AddProductForm({ categoryTags }: Props) {
   });
 
   const onSubmit: SubmitHandler<CreatePartialProductDto> = async (data) => {
-    if (imageUploadError) return;
+    const noImages = images.length === 0;
+    const noCategories = categoryIds.length === 0;
+
+    setNotEnoughImagesError(noImages);
+    setNotEnoughCategoriesError(noCategories);
+
+    if (noImages || noCategories || imageUploadError) return;
 
     const formData = new FormData();
 
@@ -73,6 +86,18 @@ export default function AddProductForm({ categoryTags }: Props) {
     }
   };
 
+  const addImage = (file: File) => {
+    setImages((prev) => [...prev, file]);
+    setNotEnoughImagesError(false);
+  };
+
+  const removeImage = (name: string) => {
+    if (images.length === 1) {
+      setNotEnoughImagesError(true);
+    }
+    setImages((prev) => prev.filter((image) => image.name !== name));
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -83,8 +108,10 @@ export default function AddProductForm({ categoryTags }: Props) {
       </header>
       <div className="flex flex-col gap-6 w-full">
         <ImageUploader
-          setImages={setImages}
+          addImage={addImage}
+          removeImage={removeImage}
           setImageUploadError={setImageUploadError}
+          notEnoughImagesError={notEnoughImagesError}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="title" className="text-green-800 opacity-75">
@@ -160,6 +187,8 @@ export default function AddProductForm({ categoryTags }: Props) {
         <CategoryTagsInput
           categoryTags={categoryTags}
           setCategoryIds={setCategoryIds}
+          notEnoughCategoriesError={notEnoughCategoriesError}
+          setNotEnoughCategoriesError={setNotEnoughCategoriesError}
         />
       </div>
       <button type="submit" className="p-3 btn w-full">

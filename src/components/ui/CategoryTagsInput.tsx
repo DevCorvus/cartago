@@ -12,11 +12,15 @@ import { capitalize } from '@/utils/capitalize';
 interface Props {
   categoryTags: CategoryTagDto[];
   setCategoryIds: Dispatch<SetStateAction<number[]>>;
+  notEnoughCategoriesError: boolean;
+  setNotEnoughCategoriesError: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CategoryTagsInput({
   categoryTags,
   setCategoryIds,
+  notEnoughCategoriesError,
+  setNotEnoughCategoriesError,
 }: Props) {
   const [input, setInput] = useState<string>('');
 
@@ -55,9 +59,13 @@ export default function CategoryTagsInput({
     setSelectedCategoryTags((prev) => [...prev, { ...tag }]);
     setAutocompleteCategoryTags([]);
     setInput('');
+    setNotEnoughCategoriesError(false);
   };
 
   const handleDelete = (id: number) => {
+    if (selectedCategoryTags.length === 1) {
+      setNotEnoughCategoriesError(true);
+    }
     setSelectedCategoryTags((prev) => prev.filter((tag) => tag.id !== id));
   };
 
@@ -86,6 +94,9 @@ export default function CategoryTagsInput({
           }
         }
       } else if (e.key == 'Backspace' && !value) {
+        if (selectedCategoryTags.length === 1) {
+          setNotEnoughCategoriesError(true);
+        }
         setSelectedCategoryTags((prev) =>
           selectedCategoryTags.filter((_, i) => i !== prev.length - 1),
         );
@@ -141,6 +152,9 @@ export default function CategoryTagsInput({
           </>
         )}
       </div>
+      {notEnoughCategoriesError && (
+        <p className="text-red-400">At least one category is required</p>
+      )}
     </div>
   );
 }
