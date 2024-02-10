@@ -71,10 +71,12 @@ export default function AddProductForm({ categoryTags }: Props) {
 
   const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
     const price = Number(e.target.value);
-    if (price <= 1) {
+    if (price > 1) {
       // TODO: Fix price type
       // Price has to be validated as a string and then transformed to a number
       // but types are messed up and I have a skill issue going on right now
+      setValue('price', price.toFixed(2) as unknown as number);
+    } else {
       setValue('price', '1.00' as unknown as number, { shouldValidate: true });
     }
   };
