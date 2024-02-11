@@ -7,6 +7,7 @@ import { ProductCardDto } from '@/shared/dtos/product.dto';
 import { HiOutlinePhoto, HiPencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
 import SearchInput from './SearchInput';
+import Dinero from 'dinero.js';
 
 export default function ProductCardList() {
   const [products, setProducts] = useState<ProductCardDto[]>([]);
@@ -77,7 +78,7 @@ export default function ProductCardList() {
               <section className="p-4 relative flex flex-col gap-2">
                 <header className="flex flex-wrap justify-between uppercase font-bold text-green-800 text-sm md:text-lg gap-2">
                   <h2>{product.title}</h2>
-                  <span>$ {product.price}</span>
+                  <span>{Dinero({ amount: product.price }).toFormat()}</span>
                 </header>
                 <p className="line-clamp-2 font-sans">{product.description}</p>
                 <div className="flex items-center gap-2 text-sm">

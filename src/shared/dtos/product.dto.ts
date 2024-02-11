@@ -5,7 +5,7 @@ import {
 } from '../schemas/product.schema';
 import { CategoryTagDto } from './category.dto';
 
-interface ProductImageDto {
+export interface ProductImageDto {
   path: string;
 }
 
