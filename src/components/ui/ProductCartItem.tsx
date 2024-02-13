@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { HiMinus, HiPlus, HiTrash } from 'react-icons/hi2';
 import Link from 'next/link';
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
-import Dinero from 'dinero.js';
+import { formatMoney } from '@/lib/dinero';
 
 interface Props {
   product: ProductCartItemDto;
@@ -38,7 +38,7 @@ export default function ProductCartItem({
           <Link href={'/items/' + product.id} key={product.id}>
             <strong className="uppercase">{product.title}</strong>
           </Link>
-          <span>{Dinero({ amount: product.price }).toFormat()}</span>
+          <span>{formatMoney(product.price)}</span>
         </div>
         <div className="w-full flex justify-between">
           <div className="flex items-center justify-center gap-2">

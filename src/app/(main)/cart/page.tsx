@@ -10,8 +10,8 @@ import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
 import OrderDetailsModal from '@/components/ui/OrderDetailsModal';
 import { ImSpinner8 } from 'react-icons/im';
-import Dinero from 'dinero.js';
 import { OrderDto } from '@/shared/dtos/order.dto';
+import { formatMoney, getTotalMoney } from '@/lib/dinero';
 
 // I had to fetch the data in the old-fashioned client-side way
 // Server-component methods to always fetch data dynamically didn't work for me
@@ -46,18 +46,7 @@ export default function Cart() {
     }
   }, [isAuthenticated]);
 
-  const total = useMemo(
-    () =>
-      cartItems.reduce(
-        (total, product) => {
-          return total.add(
-            Dinero({ amount: product.price }).multiply(product.amount),
-          );
-        },
-        Dinero({ amount: 0 }),
-      ),
-    [cartItems],
-  );
+  const total = useMemo(() => getTotalMoney(cartItems), [cartItems]);
 
   const incrementAmount = async (productId: string) => {
     let userIncrementSuccess = false;
@@ -173,7 +162,7 @@ export default function Cart() {
           ))}
         </div>
         <p className="text-right">
-          Total: <span className="text-xl">{total.toFormat()}</span>
+          Total: <span className="text-xl">{formatMoney(total)}</span>
         </p>
         <form onSubmit={handleCheckout}>
           <button

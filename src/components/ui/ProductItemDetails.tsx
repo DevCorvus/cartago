@@ -10,7 +10,7 @@ import { capitalize } from '@/utils/capitalize';
 import { useCartStore } from '@/stores/useCartStore';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
-import Dinero from 'dinero.js';
+import { formatMoney } from '@/lib/dinero';
 
 interface Props {
   product: ProductDto;
@@ -92,9 +92,7 @@ export default function ProductItemDetails({ product }: Props) {
       </div>
       <header className="text-green-800 text-2xl w-full flex justify-between font-bold">
         <h1 className="uppercase">{product.title}</h1>
-        <p className="justify-start align-top">
-          {Dinero({ amount: product.price }).toFormat()}
-        </p>
+        <p className="justify-start align-top">{formatMoney(product.price)}</p>
       </header>
       <section className="w-full flex flex-col justify-between gap-6">
         {product.description ? (

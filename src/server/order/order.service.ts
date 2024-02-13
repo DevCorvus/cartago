@@ -1,6 +1,6 @@
-import Dinero from 'dinero.js';
 import { prisma } from '@/lib/prisma';
 import { OrderDto, OrderItemDto } from '@/shared/dtos/order.dto';
+import { getTotalMoney } from '@/lib/dinero';
 
 interface CreateOrderItem {
   price: number;
@@ -32,16 +32,11 @@ export class OrderService {
       };
     });
 
-    const total = orderItems.reduce(
-      (total, item) => {
-        return total.add(Dinero({ amount: item.price }).multiply(item.amount));
-      },
-      Dinero({ amount: 0 }),
-    );
+    const total = getTotalMoney(orderItems);
 
     const newOrder = await prisma.order.create({
       data: {
-        total: total.getAmount(),
+        total,
         items: {
           createMany: {
             data: orderItems,
