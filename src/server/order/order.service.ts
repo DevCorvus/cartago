@@ -1,11 +1,19 @@
 import { prisma } from '@/lib/prisma';
 import { OrderDto, OrderItemDto } from '@/shared/dtos/order.dto';
 import { getTotalMoney } from '@/lib/dinero';
+import { OrderStatus } from './order.types';
 
 interface CreateOrderItem {
   price: number;
   amount: number;
   productId: string;
+}
+
+interface Order {
+  id: string;
+  total: number;
+  status: OrderStatus;
+  createdAt: Date;
 }
 
 export class OrderService {
@@ -86,5 +94,12 @@ export class OrderService {
       items: newOrderItems,
       createdAt: newOrder.createdAt,
     };
+  }
+
+  async findById(id: string): Promise<Order | null> {
+    return prisma.order.findUnique({
+      where: { id },
+      select: { id: true, total: true, status: true, createdAt: true },
+    });
   }
 }

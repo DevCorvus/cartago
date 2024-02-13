@@ -7,6 +7,11 @@ import { HiOutlineQuestionMarkCircle } from 'react-icons/hi2';
 import { OrderStatus } from '@/server/order/order.types';
 import Image from 'next/image';
 import { formatMoney } from '@/lib/dinero';
+import { CreatePaymentDto } from '@/shared/dtos/payment.dto';
+import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createPaymentSchema } from '@/shared/schemas/payment.schema';
 
 function padtoTwoDigits(x: number) {
   return x.toString().padStart(2, '0');
@@ -40,13 +45,35 @@ interface Props {
 }
 
 export default function OrderDetailsModal({ order, close }: Props) {
-  const ref = useClickOutside<HTMLDivElement>(close);
+  const ref = useClickOutside<HTMLFormElement>(close);
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreatePaymentDto>({
+    resolver: zodResolver(createPaymentSchema),
+  });
+
+  const onSubmit: SubmitHandler<CreatePaymentDto> = async (data) => {
+    const res = await fetch(`/api/orders/${order.id}/payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      router.push(`/orders/${order.id}`);
+    }
+  };
 
   return (
     <Portal id="modal-container">
       <div className="z-50 absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
-        <div
+        <form
           ref={ref}
+          onSubmit={handleSubmit(onSubmit)}
           className="w-full lg:container overflow-y-auto bg-white shadow-md lg:rounded-lg p-10 lg:p-12 border-2 border-gray-50 flex flex-col lg:flex-row gap-10"
         >
           <div className="flex-1 flex flex-col gap-10">
@@ -90,11 +117,14 @@ export default function OrderDetailsModal({ order, close }: Props) {
                 <h3>Payment method</h3>
               </header>
               <div>
-                <select className="input p-3">
+                <select className="input p-3" {...register('method')}>
                   <option value="BISON">BISON</option>
                   <option value="HUMBLECARD">HumbleCard</option>
                   <option value="PAYMATE">PayMate</option>
                 </select>
+                {errors.method && (
+                  <p className="text-red-400">{errors.method.message}</p>
+                )}
               </div>
             </section>
             <section className="flex flex-col gap-2">
@@ -162,13 +192,19 @@ export default function OrderDetailsModal({ order, close }: Props) {
               </div>
             </section>
             <div className="flex items-center gap-2">
-              <button className="px-3 py-2 btn">Place order</button>
-              <button onClick={close} className="px-3 py-2 btn-alternative">
+              <button type="submit" className="px-3 py-2 btn">
+                Place order
+              </button>
+              <button
+                type="button"
+                onClick={close}
+                className="px-3 py-2 btn-alternative"
+              >
                 Cancel
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </Portal>
   );
