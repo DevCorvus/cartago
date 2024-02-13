@@ -8,11 +8,6 @@ import { OrderStatus } from '@/server/order/order.types';
 import Image from 'next/image';
 import { formatMoney } from '@/lib/dinero';
 
-interface Props {
-  order: OrderDto;
-  close(): void;
-}
-
 function padtoTwoDigits(x: number) {
   return x.toString().padStart(2, '0');
 }
@@ -37,6 +32,11 @@ function getStatusColor(status: OrderStatus) {
       return 'bg-green-100 text-green-500';
     }
   }
+}
+
+interface Props {
+  order: OrderDto;
+  close(): void;
 }
 
 export default function OrderDetailsModal({ order, close }: Props) {
