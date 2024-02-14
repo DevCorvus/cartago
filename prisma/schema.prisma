@@ -42,6 +42,7 @@ model Product {
   stock       Int
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
   images      ProductImage[]
   categories  Category[]
   cartItems   CartItem[]

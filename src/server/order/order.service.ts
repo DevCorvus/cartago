@@ -24,7 +24,7 @@ export class OrderService {
     });
 
     const items = await prisma.cartItem.findMany({
-      where: { cartId },
+      where: { cartId, product: { deletedAt: null } },
       select: {
         productId: true,
         amount: true,

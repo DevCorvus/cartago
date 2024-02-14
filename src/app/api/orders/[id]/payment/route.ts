@@ -1,5 +1,5 @@
+import { prisma } from '@/lib/prisma';
 import { getUserSession } from '@/server/auth/auth.utils';
-import { paymentService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { createPaymentSchema } from '@/shared/schemas/payment.schema';
@@ -33,7 +33,49 @@ export async function POST(req: NextRequest, { params }: Props) {
   const data = jsonResult.data;
 
   try {
-    await paymentService.create(orderId, data);
+    await prisma.$transaction(async (tx) => {
+      const order = await tx.order.findUniqueOrThrow({
+        where: { id: orderId },
+        select: {
+          total: true,
+          items: { select: { productId: true, amount: true } },
+        },
+      });
+
+      await tx.payment.create({
+        data: {
+          orderId,
+          method: data.method,
+          total: order.total,
+        },
+      });
+
+      await tx.cartItem.deleteMany({ where: { cartId: user.cartId } });
+
+      for (const item of order.items) {
+        const product = await tx.product.findUniqueOrThrow({
+          where: { id: item.productId, deletedAt: null },
+          select: {
+            stock: true,
+          },
+        });
+
+        if (product.stock > item.amount) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.amount } },
+          });
+        } else if (product.stock === item.amount) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { deletedAt: new Date() },
+          });
+        } else {
+          throw new Error('Product stock does not fulfill order');
+        }
+      }
+    });
+
     return NextResponse.json(null, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });

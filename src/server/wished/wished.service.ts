@@ -13,7 +13,7 @@ export class WishedItemService {
 
   async findAllItems(userId: string): Promise<ProductCardDto[]> {
     const wishedItems = await prisma.wishedItem.findMany({
-      where: { userId },
+      where: { userId, product: { deletedAt: null } },
       select: {
         product: {
           select: {

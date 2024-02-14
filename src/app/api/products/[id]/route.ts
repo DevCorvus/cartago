@@ -44,8 +44,6 @@ export async function DELETE(_req: NextRequest, { params }: Props) {
       return NextResponse.json(null, { status: 403 });
     }
 
-    await storageService.deleteMany(product.images);
-
     await productService.delete(productId);
 
     return NextResponse.json(null, { status: 200 });

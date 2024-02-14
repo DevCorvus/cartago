@@ -19,6 +19,9 @@ export class ProductService {
 
   async findAll(): Promise<ProductCardDto[]> {
     return prisma.product.findMany({
+      where: {
+        deletedAt: null,
+      },
       select: {
         id: true,
         title: true,
@@ -41,6 +44,7 @@ export class ProductService {
     return prisma.product.findMany({
       where: {
         userId,
+        deletedAt: null,
       },
       select: {
         id: true,
@@ -62,7 +66,7 @@ export class ProductService {
 
   async findById(id: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       select: {
         id: true,
         title: true,
@@ -90,7 +94,7 @@ export class ProductService {
     id: string,
   ): Promise<ProductWithOwnerAndImages | null> {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       select: {
         userId: true,
         images: {
@@ -110,7 +114,9 @@ export class ProductService {
   }
 
   async exists(id: string, userId?: string): Promise<boolean> {
-    const count = await prisma.product.count({ where: { id, userId } });
+    const count = await prisma.product.count({
+      where: { id, userId, deletedAt: null },
+    });
     return count > 0;
   }
 
@@ -148,6 +154,9 @@ export class ProductService {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.product.delete({ where: { id } });
+    await prisma.product.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }

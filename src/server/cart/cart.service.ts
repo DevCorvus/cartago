@@ -1,7 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
+import { ProductService } from '../product/product.service';
 
 export class CartService {
+  constructor(private productService: ProductService) {}
+
   async create(userId: string): Promise<void> {
     await prisma.cart.create({ data: { userId } });
   }
@@ -16,6 +19,10 @@ export class CartService {
   }
 
   async addItem(cartId: string, productId: string): Promise<void> {
+    const productExists = await this.productService.exists(productId);
+
+    if (!productExists) throw new Error('Product does not exist');
+
     await prisma.cartItem.create({ data: { cartId, productId, amount: 1 } });
   }
 
@@ -26,7 +33,7 @@ export class CartService {
 
   async findAllItems(cartId: string): Promise<ProductCartItemDto[] | null> {
     const cartItems = await prisma.cartItem.findMany({
-      where: { cartId },
+      where: { cartId, product: { deletedAt: null } },
       include: {
         product: {
           select: {
@@ -73,7 +80,7 @@ export class CartService {
     productId: string,
   ): Promise<boolean> {
     const cartItem = await prisma.cartItem.findFirst({
-      where: { cartId, productId },
+      where: { cartId, productId, product: { deletedAt: null } },
       select: { id: true, amount: true, product: { select: { stock: true } } },
     });
 
@@ -97,7 +104,7 @@ export class CartService {
     productId: string,
   ): Promise<boolean> {
     const cartItem = await prisma.cartItem.findFirst({
-      where: { cartId, productId },
+      where: { cartId, productId, product: { deletedAt: null } },
       select: { id: true, amount: true, product: { select: { stock: true } } },
     });
 
