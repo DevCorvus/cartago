@@ -24,6 +24,8 @@ export default function ProductItemDetails({ product }: Props) {
     ({ productIds, addProductId }) => ({ productIds, addProductId }),
   );
 
+  const noStock = product.stock === 0;
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -100,8 +102,14 @@ export default function ProductItemDetails({ product }: Props) {
         ) : (
           <p className="italic text-amber-800 opacity-50">No description</p>
         )}
-        <div className="w-full flex justify-between text-green-950 opacity-60">
-          <p>{product.stock} in stock</p>
+        <div className="w-full flex justify-between items-center text-green-950 opacity-60">
+          {noStock ? (
+            <p className="text-red-600 bg-red-100 border border-red-600 rounded-md px-2 py-1">
+              Out of stock
+            </p>
+          ) : (
+            <p>{product.stock} in stock</p>
+          )}
           <p>Created at {product.createdAt.toDateString()}</p>
         </div>
         <ul className="w-full flex flex-wrap gap-2">
@@ -129,7 +137,10 @@ export default function ProductItemDetails({ product }: Props) {
         <form onSubmit={handleSubmit} className="w-full">
           <button
             type="submit"
-            className="w-full p-4 flex items-center justify-center gap-2 btn"
+            disabled={noStock}
+            className={`w-full p-4 flex items-center justify-center gap-2 ${
+              noStock ? 'btn-disabled' : 'btn'
+            }`}
           >
             <HiShoppingCart />
             Add to shopping cart

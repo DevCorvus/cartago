@@ -26,6 +26,10 @@ select {
   @apply bg-green-800 rounded-full text-slate-50 shadow-md hover:bg-green-700 focus:bg-green-700 transition;
 }
 
+.btn-disabled {
+  @apply bg-gray-500 rounded-full text-slate-50 shadow-md;
+}
+
 .btn-alternative {
   @apply border border-green-800 text-green-800 hover:bg-green-100 focus:bg-green-100 rounded-full transition;
 }
