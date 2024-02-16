@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { Params } from '@/shared/dtos/params.dto';
-import { cartService } from '@/server/services';
+import { cartService, productService } from '@/server/services';
 import { getUserSession } from '@/server/auth/auth.utils';
 
 interface Props {
@@ -25,6 +25,12 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
+    const productHasStock = await productService.hasStock(productId);
+
+    if (!productHasStock) {
+      return NextResponse.json(null, { status: 409 });
+    }
+
     const cartItemAlreadyExists = await cartService.cartItemExists(
       cartId,
       productId,

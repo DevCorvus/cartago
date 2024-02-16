@@ -120,6 +120,13 @@ export class ProductService {
     return count > 0;
   }
 
+  async hasStock(id: string) {
+    const count = await prisma.product.count({
+      where: { id, deletedAt: null, stock: { gt: 0 } },
+    });
+    return count > 0;
+  }
+
   async create(
     userId: string,
     data: CreateProductInterface,
