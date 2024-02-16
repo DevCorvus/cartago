@@ -60,15 +60,10 @@ export async function POST(req: NextRequest, { params }: Props) {
           },
         });
 
-        if (product.stock > item.amount) {
+        if (product.stock >= item.amount) {
           await tx.product.update({
             where: { id: item.productId },
             data: { stock: { decrement: item.amount } },
-          });
-        } else if (product.stock === item.amount) {
-          await tx.product.update({
-            where: { id: item.productId },
-            data: { deletedAt: new Date() },
           });
         } else {
           throw new Error('Product stock does not fulfill order');
