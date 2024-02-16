@@ -2,13 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { CreateUserDto, UserProfileDto } from '@/shared/dtos/user.dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../password/password.service';
-import { CartService } from '../cart/cart.service';
 
 export class UserService {
-  constructor(
-    private passwordService: PasswordService,
-    private cartService: CartService,
-  ) {}
+  constructor(private passwordService: PasswordService) {}
 
   async find(id: string): Promise<User | null> {
     return prisma.user.findUnique({
@@ -36,18 +32,20 @@ export class UserService {
     const encryptedPassword = await this.passwordService.encrypt(data.password);
     data.password = encryptedPassword;
 
-    const newUser = await prisma.user.create({
-      data: {
-        email: data.email,
-        fullname: data.fullname,
-        password: data.password,
-        countryId: data.location,
-      },
+    return prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          email: data.email,
+          fullname: data.fullname,
+          password: data.password,
+          countryId: data.location,
+        },
+      });
+
+      await tx.cart.create({ data: { userId: newUser.id } });
+
+      return newUser;
     });
-
-    await this.cartService.create(newUser.id);
-
-    return newUser;
   }
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
