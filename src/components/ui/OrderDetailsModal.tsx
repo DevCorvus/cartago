@@ -1,10 +1,9 @@
 'use client';
 
-import { OrderDto } from '@/shared/dtos/order.dto';
+import { NewOrderDto } from '@/shared/dtos/order.dto';
 import Portal from './Portal';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { HiOutlineQuestionMarkCircle } from 'react-icons/hi2';
-import { OrderStatus } from '@/server/order/order.types';
 import Image from 'next/image';
 import { formatMoney } from '@/lib/dinero';
 import { CreatePaymentDto } from '@/shared/dtos/payment.dto';
@@ -13,35 +12,11 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPaymentSchema } from '@/shared/schemas/payment.schema';
 import { ImSpinner8 } from 'react-icons/im';
-
-function padtoTwoDigits(x: number) {
-  return x.toString().padStart(2, '0');
-}
-
-function formatDate(date: Date) {
-  return [
-    padtoTwoDigits(date.getMonth() + 1),
-    padtoTwoDigits(date.getDate()),
-    date.getFullYear(),
-  ].join('/');
-}
-
-function getStatusColor(status: OrderStatus) {
-  switch (status) {
-    case 'PENDING': {
-      return 'bg-orange-100 text-orange-500';
-    }
-    case 'SHIPPED': {
-      return 'bg-sky-100 text-sky-500';
-    }
-    case 'DELIVERED': {
-      return 'bg-green-100 text-green-500';
-    }
-  }
-}
+import { formatDate } from '@/utils/formatDate';
+import OrderStatusTag from './OrderStatusTag';
 
 interface Props {
-  order: OrderDto;
+  order: NewOrderDto;
   close(): void;
 }
 
@@ -65,7 +40,7 @@ export default function OrderDetailsModal({ order, close }: Props) {
     });
 
     if (res.ok) {
-      router.push(`/orders/${order.id}`);
+      router.push(`/account/orders/${order.id}`);
     }
   };
 
@@ -81,13 +56,7 @@ export default function OrderDetailsModal({ order, close }: Props) {
             <header className="text-green-800 font-bold text-2xl">
               <h2 className="flex items-center gap-2">
                 Placing order
-                <span
-                  className={`${getStatusColor(
-                    order.status,
-                  )} px-1.5 py-0.5 rounded-md text-lg border border-gray-100`}
-                >
-                  {order.status}
-                </span>
+                <OrderStatusTag status={order.status} className="text-lg" />
               </h2>
             </header>
             <section className="text-sm flex flex-col gap-1">

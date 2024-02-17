@@ -6,6 +6,7 @@ import { UserSession } from '../auth/auth.types';
 interface WithAuthProps {
   user: UserSession;
   children: React.ReactNode;
+  params: any;
 }
 
 type WithAuthComponent = React.FC<WithAuthProps>;

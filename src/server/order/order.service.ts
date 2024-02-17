@@ -1,7 +1,11 @@
 import { prisma } from '@/lib/prisma';
-import { OrderDto, OrderItemDto } from '@/shared/dtos/order.dto';
+import {
+  NewOrderDto,
+  OrderCardDto,
+  OrderDto,
+  OrderItemDto,
+} from '@/shared/dtos/order.dto';
 import { getTotalMoney } from '@/lib/dinero';
-import { OrderStatus } from './order.types';
 
 interface CreateOrderItem {
   price: number;
@@ -9,15 +13,108 @@ interface CreateOrderItem {
   productId: string;
 }
 
-interface Order {
-  id: string;
-  total: number;
-  status: OrderStatus;
-  createdAt: Date;
-}
-
 export class OrderService {
-  async create(userId: string, cartId: string): Promise<OrderDto> {
+  async findAll(userId: string): Promise<OrderCardDto[]> {
+    const orders = await prisma.order.findMany({
+      where: { userId, payment: { isNot: null } },
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        items: {
+          select: {
+            product: {
+              select: {
+                images: {
+                  take: 1,
+                  select: {
+                    path: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment: {
+          select: { status: true },
+        },
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return orders.map((order) => {
+      return {
+        id: order.id,
+        total: order.total,
+        status: order.status,
+        image: order.items[0].product.images[0],
+        payment: order.payment!,
+        createdAt: order.createdAt,
+      };
+    });
+  }
+
+  async findById(id: string, userId: string): Promise<OrderDto | null> {
+    const order = await prisma.order.findUnique({
+      where: { id, userId, payment: { isNot: null } },
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        items: {
+          select: {
+            price: true,
+            amount: true,
+            product: {
+              select: {
+                title: true,
+                description: true,
+                images: {
+                  take: 1,
+                  select: {
+                    path: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment: {
+          select: {
+            status: true,
+            method: true,
+          },
+        },
+        createdAt: true,
+      },
+    });
+
+    if (!order) return null;
+
+    const items: OrderItemDto[] = order.items.map((item) => {
+      return {
+        title: item.product.title,
+        description: item.product.description,
+        price: item.price,
+        amount: item.amount,
+        image: item.product.images[0],
+      };
+    });
+
+    return {
+      id: order.id,
+      total: order.total,
+      status: order.status,
+      items,
+      payment: order.payment!,
+      createdAt: order.createdAt,
+    };
+  }
+
+  async create(userId: string, cartId: string): Promise<NewOrderDto> {
     // Delete "Ephimeral" orders
     await prisma.order.deleteMany({
       where: { status: 'PENDING', payment: { is: null } },
@@ -97,10 +194,12 @@ export class OrderService {
     };
   }
 
-  async findById(id: string): Promise<Order | null> {
-    return prisma.order.findUnique({
-      where: { id },
-      select: { id: true, total: true, status: true, createdAt: true },
-    });
+  async exists(id: string, userId?: string): Promise<boolean> {
+    const count = await prisma.order.count({ where: { id, userId } });
+    return count > 0;
+  }
+
+  async confirmDelivery(id: string): Promise<void> {
+    await prisma.order.update({ where: { id }, data: { status: 'DELIVERED' } });
   }
 }

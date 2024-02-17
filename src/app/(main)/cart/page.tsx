@@ -10,7 +10,7 @@ import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
 import OrderDetailsModal from '@/components/ui/OrderDetailsModal';
 import { ImSpinner8 } from 'react-icons/im';
-import { OrderDto } from '@/shared/dtos/order.dto';
+import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
 
 // I had to fetch the data in the old-fashioned client-side way
@@ -26,7 +26,7 @@ export default function Cart() {
   const removeProductId = useCartStore((state) => state.removeProductId);
 
   const [isLoadingOrder, setLoadingOrder] = useState(false);
-  const [order, setOrder] = useState<OrderDto | null>(null);
+  const [order, setOrder] = useState<NewOrderDto | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -133,7 +133,7 @@ export default function Cart() {
     const res = await fetch('/api/orders', { method: 'POST' });
 
     if (res.ok) {
-      const data: OrderDto = await res.json();
+      const data: NewOrderDto = await res.json();
       setOrder(data);
     }
 
