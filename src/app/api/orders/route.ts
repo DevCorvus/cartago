@@ -10,7 +10,7 @@ export async function POST() {
   }
 
   try {
-    const newOrder = await orderService.create(user.cartId);
+    const newOrder = await orderService.create(user.id, user.cartId);
     return NextResponse.json(newOrder, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });

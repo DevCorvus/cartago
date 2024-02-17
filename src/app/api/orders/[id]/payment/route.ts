@@ -45,6 +45,7 @@ export async function POST(req: NextRequest, { params }: Props) {
 
       const newPayment = await tx.payment.create({
         data: {
+          userId: user.id,
           orderId,
           method: data.method,
           total: order.total,

@@ -17,7 +17,7 @@ interface Order {
 }
 
 export class OrderService {
-  async create(cartId: string): Promise<OrderDto> {
+  async create(userId: string, cartId: string): Promise<OrderDto> {
     // Delete "Ephimeral" orders
     await prisma.order.deleteMany({
       where: { status: 'PENDING', payment: { is: null } },
@@ -44,6 +44,7 @@ export class OrderService {
 
     const newOrder = await prisma.order.create({
       data: {
+        userId,
         total,
         items: {
           createMany: {

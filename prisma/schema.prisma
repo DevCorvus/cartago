@@ -17,9 +17,11 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   country     Country      @relation(fields: [countryId], references: [id])
-  products    Product[]
   cart        Cart?
+  products    Product[]
   wishedItems WishedItem[]
+  orders      Order[]
+  payments    Payment[]
 
   @@map("users")
 }
@@ -106,10 +108,12 @@ model Cart {
 
 model Order {
   id        String      @id @default(uuid())
+  userId    String
   total     Int
   status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   items     OrderItem[]
+  user      User        @relation(fields: [userId], references: [id])
   payment   Payment?
 
   @@map("orders")
@@ -129,11 +133,13 @@ model OrderItem {
 
 model Payment {
   id        String        @id @default(uuid())
+  userId    String
+  orderId   String        @unique
   total     Int
   status    PaymentStatus @default(PENDING)
   method    PaymentMethod
-  orderId   String        @unique
   createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id])
   order     Order         @relation(fields: [orderId], references: [id])
 
   @@map("payments")
