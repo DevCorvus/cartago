@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPaymentSchema } from '@/shared/schemas/payment.schema';
+import { ImSpinner8 } from 'react-icons/im';
 
 function padtoTwoDigits(x: number) {
   return x.toString().padStart(2, '0');
@@ -51,7 +52,7 @@ export default function OrderDetailsModal({ order, close }: Props) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<CreatePaymentDto>({
     resolver: zodResolver(createPaymentSchema),
   });
@@ -192,7 +193,12 @@ export default function OrderDetailsModal({ order, close }: Props) {
               </div>
             </section>
             <div className="flex items-center gap-2">
-              <button type="submit" className="px-3 py-2 btn">
+              <button
+                type="submit"
+                className="px-3 py-2 flex items-center gap-2 btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting && <ImSpinner8 className="animate-spin" />}
                 Place order
               </button>
               <button

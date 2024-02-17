@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getUserSession } from '@/server/auth/auth.utils';
+import { fakePaymentGateway } from '@/server/payment/utils/fakePaymentGateway';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { createPaymentSchema } from '@/shared/schemas/payment.schema';
@@ -42,11 +43,14 @@ export async function POST(req: NextRequest, { params }: Props) {
         },
       });
 
-      await tx.payment.create({
+      const newPayment = await tx.payment.create({
         data: {
           orderId,
           method: data.method,
           total: order.total,
+        },
+        select: {
+          id: true,
         },
       });
 
@@ -69,6 +73,36 @@ export async function POST(req: NextRequest, { params }: Props) {
           throw new Error('Product stock does not fulfill order');
         }
       }
+
+      fakePaymentGateway().then((success) => {
+        // Maybe it's better to use an api endpoint or web worker (?)
+        (async () => {
+          await prisma.payment.update({
+            where: { id: newPayment.id },
+            data: {
+              status: success ? 'COMPLETED' : 'FAILED',
+            },
+          });
+
+          if (success) {
+            // Ship order automatically
+            await prisma.order.update({
+              where: {
+                id: orderId,
+              },
+              data: { status: 'SHIPPED' },
+            });
+          } else {
+            // Rollback product stocks
+            for (const item of order.items) {
+              await prisma.product.update({
+                where: { id: item.productId },
+                data: { stock: { increment: item.amount } },
+              });
+            }
+          }
+        })();
+      });
     });
 
     return NextResponse.json(null, { status: 201 });
