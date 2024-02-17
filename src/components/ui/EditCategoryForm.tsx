@@ -65,13 +65,16 @@ export default function EditCategoryForm({
         </span>
       </header>
       <div className="flex flex-col gap-2">
-        <label htmlFor="category-title" className="text-green-800 opacity-75">
+        <label
+          htmlFor={`title-${category.id}`}
+          className="text-green-800 opacity-75"
+        >
           Title
         </label>
         <input
           {...register('title')}
           type="text"
-          id="category-title"
+          id={`title-${category.id}`}
           placeholder="Enter category title"
           className="p-3 input"
         />
@@ -80,15 +83,14 @@ export default function EditCategoryForm({
       </div>
       <div className="flex flex-col gap-2">
         <label
-          htmlFor="category-description"
+          htmlFor={`description-${category.id}`}
           className="text-green-800 opacity-75"
         >
           Description (optional)
         </label>
         <textarea
           {...register('description')}
-          name="categoryDescription"
-          id="category-description"
+          id={`description-${category.id}`}
           className="p-3 textarea"
           placeholder="Enter category description"
         ></textarea>

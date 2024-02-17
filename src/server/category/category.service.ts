@@ -50,12 +50,15 @@ export class CategoryService {
     });
   }
 
-  create(data: CreateUpdateCategoryDto): Promise<CategoryTagDto> {
+  create(data: CreateUpdateCategoryDto): Promise<CategoryDto> {
     return prisma.category.create({
       data,
       select: {
         id: true,
         title: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
   }

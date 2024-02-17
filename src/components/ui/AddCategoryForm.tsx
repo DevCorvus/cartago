@@ -65,13 +65,13 @@ export default function AddCategoryForm({ addCategory }: Props) {
         <h1 className="text-xl font-bold text-green-800">New category</h1>
       </header>
       <div className="flex flex-col gap-2">
-        <label htmlFor="category-title" className="text-green-800 opacity-75">
+        <label htmlFor="title" className="text-green-800 opacity-75">
           Title
         </label>
         <input
           {...register('title')}
           type="text"
-          id="category-title"
+          id="title"
           placeholder="Enter category title"
           className="p-3 input"
         />
@@ -79,16 +79,12 @@ export default function AddCategoryForm({ addCategory }: Props) {
         {alreadyExistsError && <p className="text-red-400">Already taken</p>}
       </div>
       <div className="flex flex-col gap-2">
-        <label
-          htmlFor="category-description"
-          className="text-green-800 opacity-75"
-        >
+        <label htmlFor="description" className="text-green-800 opacity-75">
           Description (optional)
         </label>
         <textarea
           {...register('description')}
-          name="categoryDescription"
-          id="category-description"
+          id="description"
           className="p-3 textarea"
           placeholder="Enter category description"
         ></textarea>
