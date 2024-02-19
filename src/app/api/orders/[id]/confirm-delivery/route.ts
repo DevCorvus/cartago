@@ -28,6 +28,12 @@ export async function PUT(_req: NextRequest, { params }: Props) {
 
     if (!userHasOrder) return NextResponse.json(null, { status: 403 });
 
+    const orderStatus = await orderService.getStatus(orderId);
+
+    if (orderStatus !== 'SHIPPED') {
+      return NextResponse.json(null, { status: 400 });
+    }
+
     await orderService.confirmDelivery(orderId);
     return NextResponse.json(null, { status: 200 });
   } catch {

@@ -6,6 +6,7 @@ import {
   OrderItemDto,
 } from '@/shared/dtos/order.dto';
 import { getTotalMoney } from '@/lib/dinero';
+import { OrderStatus } from './order.types';
 
 interface CreateOrderItem {
   price: number;
@@ -201,6 +202,17 @@ export class OrderService {
   async exists(id: string, userId?: string): Promise<boolean> {
     const count = await prisma.order.count({ where: { id, userId } });
     return count > 0;
+  }
+
+  async getStatus(id: string): Promise<OrderStatus | null> {
+    const order = await prisma.order.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+
+    if (!order) return null;
+
+    return order.status;
   }
 
   async confirmDelivery(id: string): Promise<void> {

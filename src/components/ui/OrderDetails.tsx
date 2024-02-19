@@ -135,7 +135,7 @@ export default function OrderDetails({ order }: Props) {
           </p>
         </div>
       </section>
-      {order.status !== 'DELIVERED' && (
+      {order.status === 'SHIPPED' && (
         <form onSubmit={handleSubmit}>
           <button
             type="submit"
