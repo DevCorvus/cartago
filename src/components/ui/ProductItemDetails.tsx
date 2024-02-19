@@ -11,6 +11,7 @@ import { useCartStore } from '@/stores/useCartStore';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { formatMoney } from '@/lib/dinero';
+import ProductReviewList from './ProductReviewList';
 
 interface Props {
   product: ProductDto;
@@ -147,6 +148,7 @@ export default function ProductItemDetails({ product }: Props) {
           </button>
         </form>
       )}
+      <ProductReviewList productId={product.id} />
     </div>
   );
 }

@@ -1,0 +1,104 @@
+import { CreateReviewDto, ReviewDto } from '@/shared/dtos/review.dto';
+import { createReviewSchema } from '@/shared/schemas/review.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { HiMiniPlus } from 'react-icons/hi2';
+
+interface Props {
+  productId: string;
+  addReview(data: ReviewDto): void;
+}
+
+export default function AddReviewForm({ productId, addReview }: Props) {
+  const [showForm, setShowForm] = useState(false);
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<CreateReviewDto>({ resolver: zodResolver(createReviewSchema) });
+
+  const onSubmit: SubmitHandler<CreateReviewDto> = async (data) => {
+    const res = await fetch(`/api/products/${productId}/reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      const data: ReviewDto = await res.json();
+      addReview(data);
+    }
+  };
+
+  if (!showForm) {
+    return (
+      <button
+        onClick={() => setShowForm(true)}
+        className="w-full border border-transparent border-t-gray-100 hover:border-green-700 focus:border-green-700 transition p-3 rounded-full shadow-md bg-white text-green-800 font-semibold flex items-center justify-center gap-2"
+      >
+        <HiMiniPlus className="text-3xl" />
+        Write review
+      </button>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 bg-white p-4 rounded-lg shadow-md border-2 border-gray-50"
+    >
+      <header className="flex items-center justify-between">
+        <h3 className="text-green-800 text-lg font-semibold">New review</h3>
+        <div className="flex items-center gap-2">
+          <label htmlFor="rating" className="text-green-800 opacity-75">
+            Rating
+          </label>
+          <input
+            {...register('rating', { valueAsNumber: true })}
+            type="number"
+            id="content"
+            className="input p-2"
+            placeholder="Enter rating"
+            min={1}
+            max={5}
+            defaultValue={1}
+          />
+          {errors.rating && (
+            <p className="text-red-400">{errors.rating.message}</p>
+          )}
+        </div>
+      </header>
+      <div className="flex flex-col gap-1">
+        <label hidden htmlFor="content" className="text-green-800 opacity-75">
+          Content
+        </label>
+        <textarea
+          {...register('content')}
+          id="content"
+          className="textarea p-3"
+          placeholder="Enter content"
+          autoFocus
+        ></textarea>
+        {errors.content && (
+          <p className="text-red-400">{errors.content.message}</p>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button type="submit" className="btn px-5 py-2">
+          Send
+        </button>
+        <button
+          type="button"
+          className="btn-alternative px-3 py-2"
+          onClick={() => setShowForm(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+}
