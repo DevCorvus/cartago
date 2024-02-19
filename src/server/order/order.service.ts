@@ -70,6 +70,7 @@ export class OrderService {
             amount: true,
             product: {
               select: {
+                id: true,
                 title: true,
                 description: true,
                 images: {
@@ -96,6 +97,7 @@ export class OrderService {
 
     const items: OrderItemDto[] = order.items.map((item) => {
       return {
+        id: item.product.id,
         title: item.product.title,
         description: item.product.description,
         price: item.price,
@@ -159,6 +161,7 @@ export class OrderService {
             amount: true,
             product: {
               select: {
+                id: true,
                 title: true,
                 description: true,
                 images: {
@@ -177,6 +180,7 @@ export class OrderService {
 
     const newOrderItems: OrderItemDto[] = newOrder.items.map((item) => {
       return {
+        id: item.product.id,
         title: item.product.title,
         description: item.product.description,
         price: item.price,

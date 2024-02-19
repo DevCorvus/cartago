@@ -12,6 +12,7 @@ import { formatMoney } from '@/lib/dinero';
 import { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import PaymentStatusTag from './PaymentStatusTag';
+import Link from 'next/link';
 
 interface Props {
   order: OrderDto;
@@ -78,14 +79,17 @@ export default function OrderDetails({ order }: Props) {
         </header>
         {order.items.map((item, i) => (
           <div key={i} className="flex gap-2 bg-white rounded-md shadow-md">
-            <div className="relative w-20 h-20 bg-slate-100 rounded-l-md">
+            <Link
+              href={`/items/${item.id}`}
+              className="relative w-20 h-20 bg-slate-100 rounded-l-md"
+            >
               <Image
                 src={'/uploads/' + item.image.path}
                 alt={item.title}
                 fill={true}
                 className="rounded-md object-contain"
               />
-            </div>
+            </Link>
             <section className="flex-1 p-1 flex flex-col justify-around">
               <div>
                 <p>{item.title}</p>

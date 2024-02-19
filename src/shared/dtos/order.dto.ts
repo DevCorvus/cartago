@@ -4,6 +4,7 @@ import { PaymentStatus } from '@/server/payment/payment.types';
 import { PaymentMethod } from './payment.dto';
 
 export interface OrderItemDto {
+  id: string;
   title: string;
   description: string;
   amount: number;
