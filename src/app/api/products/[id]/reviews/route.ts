@@ -2,7 +2,7 @@ import { getUserSession } from '@/server/auth/auth.utils';
 import { productService, reviewService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { createReviewSchema } from '@/shared/schemas/review.schema';
+import { createUpdateReviewSchema } from '@/shared/schemas/review.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface Props {
@@ -21,7 +21,8 @@ export async function GET(_req: NextRequest, { params }: Props) {
 
     if (!exists) return NextResponse.json(null, { status: 404 });
 
-    const reviews = await reviewService.findAll(productId);
+    const user = await getUserSession();
+    const reviews = await reviewService.findAll(productId, user?.id);
 
     return NextResponse.json(reviews, { status: 200 });
   } catch {
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest, { params }: Props) {
   if (!paramsResult.success) return NextResponse.json(null, { status: 400 });
 
   const json = await req.json();
-  const jsonResult = await createReviewSchema.safeParseAsync(json);
+  const jsonResult = await createUpdateReviewSchema.safeParseAsync(json);
 
   if (!jsonResult.success) return NextResponse.json(null, { status: 400 });
 
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest, { params }: Props) {
 
   try {
     const newReview = await reviewService.create(productId, user.id, data);
-    return NextResponse.json(newReview, { status: 200 });
+    return NextResponse.json(newReview, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

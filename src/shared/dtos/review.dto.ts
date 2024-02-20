@@ -1,12 +1,17 @@
 import { z } from 'zod';
-import { createReviewSchema } from '../schemas/review.schema';
+import { createUpdateReviewSchema } from '../schemas/review.schema';
 
-export type CreateReviewDto = z.infer<typeof createReviewSchema>;
+export type CreateUpdateReviewDto = z.infer<typeof createUpdateReviewSchema>;
 
 export interface ReviewDto {
+  id: string;
   content: string;
   rating: number;
   edited: boolean;
   createdAt: Date;
   updatedAt: Date;
+  isOwner: boolean;
+  user: {
+    fullname: string;
+  };
 }
