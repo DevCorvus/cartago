@@ -1,5 +1,5 @@
 import { getUserSession } from '@/server/auth/auth.utils';
-import { productService, reviewService } from '@/server/services';
+import { orderService, productService, reviewService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { createUpdateReviewSchema } from '@/shared/schemas/review.schema';
@@ -24,7 +24,24 @@ export async function GET(_req: NextRequest, { params }: Props) {
     const user = await getUserSession();
     const reviews = await reviewService.findAll(productId, user?.id);
 
-    return NextResponse.json(reviews, { status: 200 });
+    let canReview = false;
+
+    if (user) {
+      const productHasBeenOrderedAndDelivered =
+        await orderService.productHasBeenOrderedAndDelivered(
+          user.id,
+          productId,
+        );
+
+      if (productHasBeenOrderedAndDelivered) {
+        const userAlreadyHasProductReview =
+          await reviewService.userHasProductReview(user.id, productId);
+
+        canReview = !userAlreadyHasProductReview;
+      }
+    }
+
+    return NextResponse.json({ canReview, reviews }, { status: 200 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }
@@ -48,6 +65,18 @@ export async function POST(req: NextRequest, { params }: Props) {
   const data = jsonResult.data;
 
   try {
+    const productHasBeenOrderedAndDelivered =
+      await orderService.productHasBeenOrderedAndDelivered(user.id, productId);
+
+    if (!productHasBeenOrderedAndDelivered)
+      return NextResponse.json(null, { status: 403 });
+
+    const userAlreadyHasProductReview =
+      await reviewService.userHasProductReview(user.id, productId);
+
+    if (userAlreadyHasProductReview)
+      return NextResponse.json(null, { status: 409 });
+
     const newReview = await reviewService.create(productId, user.id, data);
     return NextResponse.json(newReview, { status: 201 });
   } catch {

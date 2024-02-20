@@ -218,4 +218,15 @@ export class OrderService {
   async confirmDelivery(id: string): Promise<void> {
     await prisma.order.update({ where: { id }, data: { status: 'DELIVERED' } });
   }
+
+  async productHasBeenOrderedAndDelivered(userId: string, productId: string) {
+    const count = await prisma.order.count({
+      where: {
+        userId,
+        status: 'DELIVERED',
+        items: { some: { productId } },
+      },
+    });
+    return count > 0;
+  }
 }

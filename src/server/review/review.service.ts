@@ -54,11 +54,6 @@ export class ReviewService {
     return { ...newReview, isOwner: true };
   }
 
-  async exists(id: string, userId: string): Promise<boolean> {
-    const count = await prisma.productReview.count({ where: { id, userId } });
-    return count > 0;
-  }
-
   async update(id: string, data: CreateUpdateReviewDto): Promise<ReviewDto> {
     const updatedReview = await prisma.productReview.update({
       where: { id },
@@ -79,5 +74,17 @@ export class ReviewService {
     });
 
     return { ...updatedReview, isOwner: true };
+  }
+
+  async exists(id: string, userId: string): Promise<boolean> {
+    const count = await prisma.productReview.count({ where: { id, userId } });
+    return count > 0;
+  }
+
+  async userHasProductReview(userId: string, productId: string) {
+    const count = await prisma.productReview.count({
+      where: { userId, productId },
+    });
+    return count > 0;
   }
 }

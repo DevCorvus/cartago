@@ -12,6 +12,7 @@ interface Props {
 
 export default function ProductReviewList({ productId }: Props) {
   const [reviews, setReviews] = useState<ReviewDto[]>([]);
+  const [canReview, setCanReview] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,8 +20,11 @@ export default function ProductReviewList({ productId }: Props) {
       const res = await fetch(`/api/products/${productId}/reviews`);
 
       if (res.ok) {
-        const data: ReviewDto[] = await res.json();
-        setReviews(data);
+        const data: { canReview: boolean; reviews: ReviewDto[] } =
+          await res.json();
+
+        setReviews(data.reviews);
+        setCanReview(data.canReview);
       }
 
       setLoading(false);
@@ -29,6 +33,7 @@ export default function ProductReviewList({ productId }: Props) {
 
   const addReview = useCallback((newReview: ReviewDto) => {
     setReviews((prev) => [newReview, ...prev]);
+    setCanReview(false);
   }, []);
 
   const updateReview = useCallback((updatedReview: ReviewDto) => {
@@ -49,7 +54,9 @@ export default function ProductReviewList({ productId }: Props) {
           Reviews ({reviews.length})
         </h2>
       </header>
-      <AddReviewForm productId={productId} addReview={addReview} />
+      {canReview && (
+        <AddReviewForm productId={productId} addReview={addReview} />
+      )}
       <ul className="flex flex-col gap-2">
         {reviews.map((review, i) => (
           <li key={i}>
