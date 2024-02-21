@@ -12,7 +12,7 @@ export default function CategoryList({ categories, skip }: Props) {
   return (
     <>
       {!isEmpty && (
-        <ul className="mb-6 w-full flex flex-wrap gap-1.5">
+        <ul className="mb-6 w-full flex flex-wrap gap-1.5 ">
           {categories.map(
             (category) =>
               category.id !== skip && (

@@ -49,7 +49,7 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
             </button>
           )}
         </div>
-        <p>{review.content}</p>
+        <p className="whitespace-pre-line">{review.content}</p>
       </div>
     </div>
   );

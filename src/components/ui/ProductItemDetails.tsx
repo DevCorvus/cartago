@@ -89,9 +89,6 @@ export default function ProductItemDetails({ product }: Props) {
             </button>
           ))}
         </div>
-        <div className="absolute top-2 right-2 z-10 text-3xl">
-          <WishProduct product={product} />
-        </div>
       </div>
       <header className="text-green-800 text-2xl w-full flex justify-between font-bold">
         <h1 className="uppercase">{product.title}</h1>
@@ -99,7 +96,9 @@ export default function ProductItemDetails({ product }: Props) {
       </header>
       <section className="w-full flex flex-col justify-between gap-6">
         {product.description ? (
-          <p>{product.description}</p>
+          <p className="font-sans text-md opacity-75 whitespace-pre-line">
+            {product.description}
+          </p>
         ) : (
           <p className="italic text-amber-800 opacity-50">No description</p>
         )}
@@ -126,28 +125,33 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </ul>
       </section>
-      {productIds.includes(product.id) ? (
-        <Link
-          href="/cart"
-          className="w-full p-4 flex items-center justify-center gap-2 btn"
-        >
-          <HiShoppingCart />
-          View in shopping cart
-        </Link>
-      ) : (
-        <form onSubmit={handleSubmit} className="w-full">
-          <button
-            type="submit"
-            disabled={noStock}
-            className={`w-full p-4 flex items-center justify-center gap-2 ${
-              noStock ? 'btn-disabled' : 'btn'
-            }`}
+      <div className="w-full flex gap-3 justify-center items-center flex-row-reverse">
+        <div className=" text-4xl">
+          <WishProduct product={product} />
+        </div>
+        {productIds.includes(product.id) ? (
+          <Link
+            href="/cart"
+            className="w-full p-4 flex items-center justify-center gap-2 btn flex-1"
           >
             <HiShoppingCart />
-            Add to shopping cart
-          </button>
-        </form>
-      )}
+            View in shopping cart
+          </Link>
+        ) : (
+          <form onSubmit={handleSubmit} className="w-full flex-1">
+            <button
+              type="submit"
+              disabled={noStock}
+              className={`w-full p-4 flex items-center justify-center gap-2 ${
+                noStock ? 'btn-disabled' : 'btn'
+              }`}
+            >
+              <HiShoppingCart />
+              Add to shopping cart
+            </button>
+          </form>
+        )}
+      </div>
       <ProductReviewList productId={product.id} />
     </div>
   );

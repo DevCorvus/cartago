@@ -121,7 +121,9 @@ export default function OrderDetailsModal({ order, close }: Props) {
                   <section className="flex-1 p-1 flex flex-col justify-around">
                     <div>
                       <p>{item.title}</p>
-                      <p>{item.description}</p>
+                      <p className="line-clamp-1 font-sans text-sm opacity-70">
+                        {item.description}
+                      </p>
                     </div>
                     <div className="text-sm flex items-center justify-between">
                       <p>

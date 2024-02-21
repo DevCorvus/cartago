@@ -36,7 +36,9 @@ export default function ProductList({ products }: Props) {
               <h2>{product.title}</h2>
               <span>{formatMoney(product.price)}</span>
             </header>
-            <p className="line-clamp-2 font-sans">{product.description}</p>
+            <p className="line-clamp-2 font-sans text-sm opacity-75">
+              {product.description}
+            </p>
           </section>
         </Link>
       ))}

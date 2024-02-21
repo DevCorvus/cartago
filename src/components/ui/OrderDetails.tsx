@@ -90,10 +90,12 @@ export default function OrderDetails({ order }: Props) {
                 className="rounded-md object-contain"
               />
             </Link>
-            <section className="flex-1 p-1 flex flex-col justify-around">
+            <section className="flex-1 p-1 pr-3 flex flex-col justify-around">
               <div>
                 <p>{item.title}</p>
-                <p>{item.description}</p>
+                <p className="line-clamp-1 font-sans text-sm opacity-70">
+                  {item.description}
+                </p>
               </div>
               <div className="text-sm flex items-center justify-between">
                 <p>

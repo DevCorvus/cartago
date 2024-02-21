@@ -69,9 +69,13 @@ export default function CategoryItem({
       {showDetails && (
         <div className="text-sm flex flex-col gap-4 mt-4">
           {category.description ? (
-            <p>{category.description}</p>
+            <p className="font-sans text-md opacity-75 whitespace-pre-line">
+              {category.description}
+            </p>
           ) : (
-            <span className="italic">No description</span>
+            <span className="italic font-sans text-md opacity-50">
+              No description
+            </span>
           )}
           <div className="text-slate-500">
             <p>Created at {new Date(category.createdAt).toDateString()}</p>
