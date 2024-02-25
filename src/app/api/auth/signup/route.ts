@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createUserSchema } from '@/shared/schemas/user.schema';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
-import { countryService, userService } from '@/server/services';
+import { userService } from '@/server/services';
 import { getUserSession } from '@/server/auth/auth.utils';
 
 export async function POST(req: NextRequest) {
@@ -19,11 +19,6 @@ export async function POST(req: NextRequest) {
   }
 
   const data: CreateUserDto = result.data;
-
-  const countryExists = await countryService.exists(data.location);
-  if (!countryExists) {
-    return NextResponse.json(null, { status: 404 });
-  }
 
   try {
     await userService.create(data);

@@ -4,17 +4,12 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
-import { CountryDto } from '@/shared/dtos/country.dto';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUserSchema } from '@/shared/schemas/user.schema';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
 
-interface Props {
-  countries: CountryDto[];
-}
-
-export default function SignUpForm({ countries }: Props) {
+export default function SignUpForm() {
   const router = useRouter();
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
   const {
@@ -98,28 +93,6 @@ export default function SignUpForm({ countries }: Props) {
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="location" className="text-green-800 opacity-75">
-              Location
-            </label>
-            <select
-              {...register('location')}
-              id="location"
-              className="p-4 input-alternative"
-            >
-              <option defaultValue={''} disabled>
-                Select country
-              </option>
-              {countries.map((country) => (
-                <option key={country.id} value={country.id}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-            {errors.location && (
-              <p className="text-red-400">{errors.location.message}</p>
             )}
           </div>
           <div className="flex justify-center flex-col gap-2">

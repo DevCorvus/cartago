@@ -14,7 +14,6 @@ export interface UserProfileDto {
   fullname: string;
   email: string;
   role: RoleType;
-  country: string;
   createdAt: Date;
   updatedAt: Date;
 }

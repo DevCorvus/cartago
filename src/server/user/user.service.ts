@@ -38,7 +38,6 @@ export class UserService {
           email: data.email,
           fullname: data.fullname,
           password: data.password,
-          countryId: data.location,
         },
       });
 
@@ -81,11 +80,6 @@ export class UserService {
         fullname: true,
         email: true,
         role: true,
-        country: {
-          select: {
-            name: true,
-          },
-        },
         createdAt: true,
         updatedAt: true,
       },
@@ -97,7 +91,6 @@ export class UserService {
       fullname: userInfo.fullname,
       email: userInfo.email,
       role: userInfo.role,
-      country: userInfo.country.name,
       createdAt: userInfo.createdAt,
       updatedAt: userInfo.updatedAt,
     };

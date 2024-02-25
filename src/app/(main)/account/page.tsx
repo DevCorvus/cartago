@@ -35,10 +35,6 @@ async function Account({ user }: Props) {
             <td className="text-green-700 font-bold">{profile.role}</td>
           </tr>
           <tr>
-            <th>Country</th>
-            <td>{profile.country}</td>
-          </tr>
-          <tr>
             <th>Created at</th>
             <td>{profile.createdAt.toDateString()}</td>
           </tr>
