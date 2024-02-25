@@ -12,11 +12,10 @@ model User {
   email       String          @unique
   fullname    String
   password    String
-  countryId   String
   role        UserRole        @default(CLIENT)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  country     Country         @relation(fields: [countryId], references: [id])
+  addresses   Address[]
   cart        Cart?
   products    Product[]
   wishedItems WishedItem[]
@@ -28,11 +27,43 @@ model User {
 }
 
 model Country {
-  id    String @id @db.VarChar(2)
-  name  String @unique
-  users User[]
+  id        String  @id @db.VarChar(2)
+  name      String  @unique
+  phoneCode String
+  states    State[]
 
   @@map("countries")
+}
+
+model State {
+  id        Int       @id @default(autoincrement())
+  countryId String
+  name      String
+  country   Country   @relation(fields: [countryId], references: [id])
+  addresses Address[]
+
+  @@map("states")
+}
+
+model Address {
+  id            String   @id @default(uuid())
+  userId        String
+  stateId       Int
+  contactName   String
+  phoneCode     String
+  phoneNumber   String
+  city          String
+  postalCode    Int
+  street        String
+  streetDetails String
+  default       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  state         State    @relation(fields: [stateId], references: [id])
+  orders        Order[]
+
+  @@map("addresses")
 }
 
 model Product {
@@ -126,12 +157,15 @@ model Cart {
 model Order {
   id        String      @id @default(uuid())
   userId    String
+  addressId String?
   total     Int
   status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   items     OrderItem[]
   user      User        @relation(fields: [userId], references: [id])
+  address   Address?    @relation(fields: [addressId], references: [id])
   payment   Payment?
+  shipment  Shipment?
 
   @@map("orders")
 }
@@ -149,17 +183,27 @@ model OrderItem {
 }
 
 model Payment {
-  id        String        @id @default(uuid())
+  id        String         @id @default(uuid())
   userId    String
-  orderId   String        @unique
+  orderId   String         @unique
   total     Int
-  status    PaymentStatus @default(PENDING)
-  method    PaymentMethod
-  createdAt DateTime      @default(now())
-  user      User          @relation(fields: [userId], references: [id])
-  order     Order         @relation(fields: [orderId], references: [id])
+  status    PaymentStatus  @default(PENDING)
+  method    PaymentMethod?
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id])
+  order     Order          @relation(fields: [orderId], references: [id])
 
   @@map("payments")
+}
+
+model Shipment {
+  id        String         @id @default(uuid())
+  orderId   String         @unique
+  status    ShipmentStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+  order     Order          @relation(fields: [orderId], references: [id])
+
+  @@map("shipments")
 }
 
 enum UserRole {
@@ -170,8 +214,10 @@ enum UserRole {
 
 enum OrderStatus {
   PENDING
+  PROCESSING
   SHIPPED
   DELIVERED
+  CANCELLED
 }
 
 enum PaymentMethod {
@@ -182,6 +228,22 @@ enum PaymentMethod {
 
 enum PaymentStatus {
   PENDING
+  PROCESSING
   COMPLETED
+  REFUNDED
+  FAILED
+}
+
+enum ShipmentStatus {
+  PENDING
+  PRE_TRANSIT
+  IN_TRANSIT
+  DELAYED
+  OUT_FOR_DELIVERY
+  FAILED_ATTEMPT
+  DELIVERED
+  PICKUP_READY
+  RETURNED
+  EXCEPTION
   FAILED
 }
