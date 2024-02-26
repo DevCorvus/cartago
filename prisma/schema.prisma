@@ -53,7 +53,7 @@ model Address {
   phoneCode     String
   phoneNumber   String
   city          String
-  postalCode    Int
+  postalCode    String
   street        String
   streetDetails String
   default       Boolean  @default(false)
