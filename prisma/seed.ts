@@ -4036,8 +4036,28 @@ async function seedCountryStates() {
   });
 }
 
+// TODO: There must be a better approach (skill issue)
+async function seedMissingCountryStates() {
+  await prisma.$transaction(async (tx) => {
+    const countries = await tx.country.findMany({
+      where: { states: { none: {} } },
+      select: { id: true },
+    });
+
+    for (const country of countries) {
+      await tx.state.create({
+        data: {
+          name: '',
+          countryId: country.id,
+        },
+      });
+    }
+  });
+}
+
 (async () => {
   await seedCountries();
   await seedCountryStates();
+  await seedMissingCountryStates();
   await prisma.$disconnect();
 })();
