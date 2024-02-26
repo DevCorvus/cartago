@@ -9,7 +9,7 @@ export const createAddressSchema = z.object({
   phoneCode: z.string().nonempty().trim(),
   phoneNumber: z.string().trim(),
   city: z.string().nonempty().trim(),
-  postalCode: z.string().nonempty().trim(),
+  postalCode: z.string().trim(),
   street: z.string().nonempty().trim(),
   streetDetails: z.string().trim(),
   default: z.boolean(),

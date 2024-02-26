@@ -55,6 +55,9 @@ export function AddAddressForm({ close }: Props) {
       if (res.ok) {
         const data: CountryDto[] = await res.json();
         setCountries(data);
+
+        const america = data.find((country) => country.id === 'US') || null;
+        setSelectedPhoneCountry(america);
       }
 
       setLoading(false);
@@ -79,7 +82,7 @@ export function AddAddressForm({ close }: Props) {
 
     if (res.ok) {
       const data: AddressDto = await res.json();
-      console.log(data);
+      // TODO: Handle incoming data
     }
   };
 
@@ -136,61 +139,63 @@ export function AddAddressForm({ close }: Props) {
               >
                 Phone number
               </label>
-              <div className="relative flex items-center gap-1">
-                <div className="w-20">
-                  <button
-                    ref={phoneCodesRef}
-                    type="button"
-                    className="px-2 py-4 input flex items-center gap-1 text-xs"
-                    onClick={() => setShowPhoneCodes((prev) => !prev)}
-                  >
-                    <>
-                      {selectedPhoneCountry ? (
-                        <Image
-                          src={`https://flagcdn.com/${selectedPhoneCountry.id.toLowerCase()}.svg`}
-                          alt={selectedPhoneCountry.name + ' Flag'}
-                          width={24}
-                          height={20}
-                        />
-                      ) : (
-                        <span>Select</span>
-                      )}
-                      {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
-                    </>
-                  </button>
-                  {showPhoneCodes && (
-                    <ul className="z-10 absolute top-14 bg-slate-50 p-2 rounded-md shadow-md w-32 h-80 overflow-y-auto">
-                      {countryPhones.map((country) => (
-                        <li key={country.id}>
-                          <button
-                            type="button"
-                            className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
-                            onClick={() => handleSelectCountryPhone(country)}
-                          >
-                            <Image
-                              src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
-                              alt={country.name + ' Flag'}
-                              width={20}
-                              height={16}
-                            />
-                            <span className="line-clamp-1">
-                              +{country.phoneCode}
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+              <div className="relative">
+                <div className="flex items-center gap-2 input p-3 focus-within:border-green-800">
+                  <div>
+                    <button
+                      ref={phoneCodesRef}
+                      type="button"
+                      className="flex items-center gap-1 text-sm"
+                      onClick={() => setShowPhoneCodes((prev) => !prev)}
+                    >
+                      <>
+                        {selectedPhoneCountry && (
+                          <Image
+                            src={`https://flagcdn.com/${selectedPhoneCountry.id.toLowerCase()}.svg`}
+                            alt={selectedPhoneCountry.name + ' Flag'}
+                            width={0}
+                            height={0}
+                            className="w-6 h-auto"
+                          />
+                        )}
+                        {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
+                      </>
+                    </button>
+                  </div>
+                  <div>
+                    <input
+                      {...register('phoneNumber')}
+                      type="text"
+                      id="phone-number"
+                      placeholder="Enter phone number"
+                      className="w-full bg-transparent"
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <input
-                    {...register('phoneNumber')}
-                    type="text"
-                    id="phone-number"
-                    placeholder="Enter phone number"
-                    className="p-3 input"
-                  />
-                </div>
+                {showPhoneCodes && (
+                  <ul className="z-10 absolute top-14 left-0 bg-slate-50 p-2 rounded-md shadow-md w-32 h-80 overflow-y-auto">
+                    {countryPhones.map((country) => (
+                      <li key={country.id}>
+                        <button
+                          type="button"
+                          className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
+                          onClick={() => handleSelectCountryPhone(country)}
+                        >
+                          <Image
+                            src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
+                            alt={country.name + ' Flag'}
+                            width={0}
+                            height={0}
+                            className="w-6 h-auto"
+                          />
+                          <span className="line-clamp-1">
+                            +{country.phoneCode}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               {errors.phoneCode && (
                 <p className="text-red-400">{errors.phoneCode.message}</p>
@@ -213,12 +218,13 @@ export function AddAddressForm({ close }: Props) {
               >
                 <>
                   {selectedCountry ? (
-                    <div className="flex-grow-0 flex items-center gap-1">
+                    <div className="flex items-center gap-1">
                       <Image
                         src={`https://flagcdn.com/${selectedCountry.id.toLowerCase()}.svg`}
                         alt={selectedCountry.name + ' Flag'}
-                        width={24}
-                        height={20}
+                        width={0}
+                        height={0}
+                        className="w-6 h-auto"
                       />
                       <span className="line-clamp-1">
                         {selectedCountry.name}
@@ -242,8 +248,9 @@ export function AddAddressForm({ close }: Props) {
                         <Image
                           src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
                           alt={country.name + ' Flag'}
-                          width={20}
-                          height={16}
+                          width={0}
+                          height={0}
+                          className="w-6 h-auto"
                         />
                         <span className="line-clamp-1 text-left">
                           {country.name}
@@ -265,6 +272,8 @@ export function AddAddressForm({ close }: Props) {
                 {...register('stateId', { valueAsNumber: true })}
                 id="state"
                 className="p-3 input"
+                disabled={!selectedCountry}
+                defaultValue=""
               >
                 <option value="" disabled>
                   Select state
@@ -273,7 +282,7 @@ export function AddAddressForm({ close }: Props) {
                   <>
                     {selectedCountry.states.map((state) => (
                       <option key={state.id} value={state.id}>
-                        {state.name}
+                        {state.name || '(No state)'}
                       </option>
                     ))}
                   </>
@@ -311,11 +320,11 @@ export function AddAddressForm({ close }: Props) {
                 {...register('postalCode')}
                 type="text"
                 id="postal-code"
-                placeholder="Enter zip/postal code"
+                placeholder="Enter zip/postal code if available"
                 className="p-3 input"
               />
-              {errors.city && (
-                <p className="text-red-400">{errors.city.message}</p>
+              {errors.postalCode && (
+                <p className="text-red-400">{errors.postalCode.message}</p>
               )}
             </div>
           </div>
@@ -327,7 +336,7 @@ export function AddAddressForm({ close }: Props) {
               {...register('street')}
               type="text"
               id="street"
-              placeholder="Enter street"
+              placeholder="Street address"
               className="p-3 input"
             />
             {errors.street && (
