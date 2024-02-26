@@ -70,8 +70,11 @@ async function seedCountries() {
       { id: 'DK', name: 'Denmark', phoneCode: '45' },
       { id: 'DJ', name: 'Djibouti', phoneCode: '253' },
       { id: 'DM', name: 'Dominica', phoneCode: '1-767' },
-      // Dominican Republic have three phone codes. To keep things simple only one is being used
-      { id: 'DO', name: 'Dominican Republic', phoneCode: '1-809' },
+      {
+        id: 'DO',
+        name: 'Dominican Republic',
+        phoneCode: '1-809, 1-829, 1-849',
+      },
       { id: 'EC', name: 'Ecuador', phoneCode: '593' },
       { id: 'EG', name: 'Egypt', phoneCode: '20' },
       { id: 'SV', name: 'El Salvador', phoneCode: '503' },
@@ -187,7 +190,7 @@ async function seedCountries() {
       { id: 'PN', name: 'Pitcairn', phoneCode: '64' },
       { id: 'PL', name: 'Poland', phoneCode: '48' },
       { id: 'PT', name: 'Portugal', phoneCode: '351' },
-      { id: 'PR', name: 'Puerto Rico', phoneCode: '1-787, 1-939' },
+      { id: 'PR', name: 'Puerto Rico', phoneCode: '1-787' },
       { id: 'QA', name: 'Qatar', phoneCode: '974' },
       { id: 'RE', name: 'Reunion', phoneCode: '262' },
       { id: 'RO', name: 'Romania', phoneCode: '40' },
