@@ -45,7 +45,23 @@ async function Account({ user }: Props) {
         </tbody>
       </table>
       <hr />
-      <ul>
+      <ul className="space-y-1">
+        <li>
+          <Link
+            href="/account/addresses"
+            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+          >
+            Addresses
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/account/orders"
+            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+          >
+            Orders
+          </Link>
+        </li>
         <li>
           <Link
             href="/account/change-password"

@@ -1,3 +1,4 @@
+import { AddressService } from './address/address.service';
 import { AuthService } from './auth/auth.service';
 import { CartService } from './cart/cart.service';
 import { CategoryService } from './category/category.service';
@@ -20,6 +21,7 @@ export const authService = new AuthService(userService, passwordService);
 export const storageService = new StorageService('/public/uploads');
 export const categoryService = new CategoryService();
 export const wishedItemService = new WishedItemService();
+export const addressService = new AddressService();
 export const orderService = new OrderService();
 export const paymentService = new PaymentService(orderService);
 export const reviewService = new ReviewService();

@@ -7,6 +7,13 @@ export class CountryService {
       select: {
         id: true,
         name: true,
+        phoneCode: true,
+        states: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
   }
