@@ -50,7 +50,6 @@ model Address {
   userId        String
   stateId       Int
   contactName   String
-  phoneCode     String
   phoneNumber   String
   city          String
   postalCode    String
