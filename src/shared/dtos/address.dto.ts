@@ -10,7 +10,6 @@ export type CreateAddressDto = z.infer<typeof createAddressSchema>;
 export interface AddressDto {
   id: string;
   contactName: string;
-  phoneCode: string;
   phoneNumber: string;
   city: string;
   postalCode: string;

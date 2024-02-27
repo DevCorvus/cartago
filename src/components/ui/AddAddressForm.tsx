@@ -48,6 +48,15 @@ export function AddAddressForm({ close }: Props) {
     setShowCountries(false),
   );
 
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+  } = useForm<CreateAddressForm>({
+    resolver: zodResolver(createAddressFormSchema),
+  });
+
   useEffect(() => {
     (async () => {
       const res = await fetch('/api/countries');
@@ -57,21 +66,16 @@ export function AddAddressForm({ close }: Props) {
         setCountries(data);
 
         const america = data.find((country) => country.id === 'US') || null;
-        setSelectedPhoneCountry(america);
+
+        if (america) {
+          setSelectedPhoneCountry(america);
+          setValue('phoneCountryCode', america.id);
+        }
       }
 
       setLoading(false);
     })();
-  }, []);
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-  } = useForm<CreateAddressForm>({
-    resolver: zodResolver(createAddressFormSchema),
-  });
+  }, [setValue]);
 
   const onSubmit: SubmitHandler<CreateAddressForm> = async (data) => {
     const res = await fetch('/api/addresses', {
@@ -88,7 +92,6 @@ export function AddAddressForm({ close }: Props) {
 
   const handleSelectCountryPhone = (country: CountryDto) => {
     setValue('phoneCountryCode', country.id, { shouldValidate: true });
-    setValue('phoneCode', country.phoneCode, { shouldValidate: true });
     setSelectedPhoneCountry(country);
     setShowPhoneCodes(false);
   };
@@ -197,9 +200,6 @@ export function AddAddressForm({ close }: Props) {
                   </ul>
                 )}
               </div>
-              {errors.phoneCode && (
-                <p className="text-red-400">{errors.phoneCode.message}</p>
-              )}
               {errors.phoneNumber && (
                 <p className="text-red-400">{errors.phoneNumber.message}</p>
               )}

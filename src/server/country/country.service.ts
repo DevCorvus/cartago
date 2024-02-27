@@ -22,4 +22,11 @@ export class CountryService {
     const count = await prisma.country.count({ where: { id } });
     return count > 0;
   }
+
+  async stateExists(stateId: number, countryId?: string): Promise<boolean> {
+    const count = await prisma.state.count({
+      where: { id: stateId, countryId },
+    });
+    return count > 0;
+  }
 }

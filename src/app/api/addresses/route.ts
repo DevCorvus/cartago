@@ -1,6 +1,10 @@
+import { formatPhoneNumber } from '@/lib/phone';
 import { getUserSession } from '@/server/auth/auth.utils';
-import { addressService } from '@/server/services';
-import { createAddressSchema } from '@/shared/schemas/address.schema';
+import { addressService, countryService } from '@/server/services';
+import {
+  createAddressFormSchema,
+  createAddressSchema,
+} from '@/shared/schemas/address.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -9,19 +13,27 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json(null, { status: 401 });
 
   const json = await req.json();
-  const jsonResult = await createAddressSchema.safeParseAsync(json);
+  const jsonResult = await createAddressFormSchema.safeParseAsync(json);
 
   if (!jsonResult.success) return NextResponse.json(null, { status: 400 });
 
   const data = jsonResult.data;
 
-  // TODO: There is a lot to check
-
   try {
-    const newAddress = await addressService.create(user.id, data);
+    const stateExists = await countryService.stateExists(data.stateId);
+
+    if (!stateExists) return NextResponse.json(null, { status: 400 });
+
+    data.phoneNumber = formatPhoneNumber(
+      data.phoneNumber,
+      data.phoneCountryCode,
+    );
+
+    const refinedData = await createAddressSchema.parseAsync(data);
+
+    const newAddress = await addressService.create(user.id, refinedData);
     return NextResponse.json(newAddress, { status: 201 });
-  } catch (err) {
-    console.log(err);
+  } catch {
     return NextResponse.json(null, { status: 500 });
   }
 }
