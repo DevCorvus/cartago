@@ -7,6 +7,7 @@ export class AddressService {
       where: { userId },
       select: {
         id: true,
+        nickname: true,
         contactName: true,
         phoneNumber: true,
         state: {
@@ -36,6 +37,7 @@ export class AddressService {
     return addresses.map((address) => {
       return {
         id: address.id,
+        nickname: address.nickname,
         contactName: address.contactName,
         phoneNumber: address.phoneNumber,
         country: address.state.country,
@@ -64,6 +66,7 @@ export class AddressService {
         data: { userId, ...data },
         select: {
           id: true,
+          nickname: true,
           contactName: true,
           phoneNumber: true,
           state: {
@@ -90,6 +93,7 @@ export class AddressService {
 
     return {
       id: newAddress.id,
+      nickname: newAddress.nickname,
       contactName: newAddress.contactName,
       phoneNumber: newAddress.phoneNumber,
       country: newAddress.state.country,

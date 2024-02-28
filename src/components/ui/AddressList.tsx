@@ -66,6 +66,12 @@ export function AddressList() {
                   <HiMiniCheckCircle /> This is your default address
                 </p>
               )}
+              <div className="space-y-1 col-span-2">
+                <span className="text-green-800 opacity-75">
+                  Address nickname
+                </span>
+                <p>{address.nickname}</p>
+              </div>
               <div className="space-y-1">
                 <span className="text-green-800 opacity-75">Contact name</span>
                 <p>{address.contactName}</p>

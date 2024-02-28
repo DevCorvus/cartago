@@ -119,6 +119,21 @@ export function AddAddressForm({ addAddress, close }: Props) {
           <header>
             <h2 className="text-xl font-bold text-green-800">New address</h2>
           </header>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="nickname" className="text-green-800 opacity-75">
+              Nickname
+            </label>
+            <input
+              {...register('nickname')}
+              type="text"
+              id="nickname"
+              placeholder="Address nickname"
+              className="p-3 input"
+            />
+            {errors.nickname && (
+              <p className="text-red-400">{errors.nickname.message}</p>
+            )}
+          </div>
           <div className="flex justify-between gap-10">
             <div className="flex-1 flex flex-col gap-2">
               <label
