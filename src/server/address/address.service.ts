@@ -2,6 +2,55 @@ import { prisma } from '@/lib/prisma';
 import { AddressDto, CreateAddressDto } from '@/shared/dtos/address.dto';
 
 export class AddressService {
+  async findAll(userId: string): Promise<AddressDto[]> {
+    const addresses = await prisma.address.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        contactName: true,
+        phoneNumber: true,
+        state: {
+          select: {
+            name: true,
+            country: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        city: true,
+        postalCode: true,
+        street: true,
+        streetDetails: true,
+        default: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return addresses.map((address) => {
+      return {
+        id: address.id,
+        contactName: address.contactName,
+        phoneNumber: address.phoneNumber,
+        country: address.state.country,
+        state: address.state,
+        city: address.city,
+        postalCode: address.postalCode,
+        street: address.street,
+        streetDetails: address.streetDetails,
+        default: address.default,
+        createdAt: address.createdAt,
+        updatedAt: address.updatedAt,
+      };
+    });
+  }
+
   async create(userId: string, data: CreateAddressDto): Promise<AddressDto> {
     const newAddress = await prisma.$transaction(async (tx) => {
       if (data.default) {

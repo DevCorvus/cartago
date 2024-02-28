@@ -7,6 +7,19 @@ import {
 } from '@/shared/schemas/address.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
+export async function GET() {
+  const user = await getUserSession();
+
+  if (!user) return NextResponse.json(null, { status: 401 });
+
+  try {
+    const addresses = await addressService.findAll(user.id);
+    return NextResponse.json(addresses, { status: 200 });
+  } catch {
+    return NextResponse.json(null, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   const user = await getUserSession();
 

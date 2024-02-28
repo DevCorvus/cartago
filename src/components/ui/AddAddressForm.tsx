@@ -9,15 +9,17 @@ import Loading from './Loading';
 import Image from 'next/image';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { ImSpinner8 } from 'react-icons/im';
 
 interface Props {
+  addAddress(newAddress: AddressDto): void;
   close(): void;
 }
 
 const EXCLUDED_COUNTRY_PHONES = ['UM'];
 
 // TODO: Refactor (It's bloated)
-export function AddAddressForm({ close }: Props) {
+export function AddAddressForm({ addAddress, close }: Props) {
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -50,7 +52,7 @@ export function AddAddressForm({ close }: Props) {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     setValue,
   } = useForm<CreateAddressForm>({
@@ -86,7 +88,8 @@ export function AddAddressForm({ close }: Props) {
 
     if (res.ok) {
       const data: AddressDto = await res.json();
-      // TODO: Handle incoming data
+      addAddress(data);
+      close();
     }
   };
 
@@ -374,7 +377,14 @@ export function AddAddressForm({ close }: Props) {
             </label>
           </div>
           <div className="flex items-center gap-2">
-            <button type="submit" className="px-5 py-2 btn">
+            <button
+              type="submit"
+              className={`px-5 py-2 flex items-center gap-2 ${
+                isSubmitting ? 'btn-disabled' : 'btn'
+              }`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting && <ImSpinner8 className="animate-spin" />}
               Submit
             </button>
             <button
