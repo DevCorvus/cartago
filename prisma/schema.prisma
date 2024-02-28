@@ -49,6 +49,7 @@ model Address {
   id            String   @id @default(uuid())
   userId        String
   stateId       Int
+  nickname      String
   contactName   String
   phoneNumber   String
   city          String
