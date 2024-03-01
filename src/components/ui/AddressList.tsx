@@ -57,7 +57,7 @@ export function AddressList() {
         {addresses.map((address) => (
           <li key={address.id}>
             <div
-              className={`grid grid-cols-2 gap-2 bg-white p-8 rounded-md shadow-md border-2 border-gray-50 ring ${
+              className={`grid grid-cols-2 gap-4 bg-white p-8 rounded-md shadow-md border-2 border-gray-50 ring ${
                 address.default ? 'ring-green-700' : 'ring-transparent'
               }`}
             >
@@ -72,17 +72,17 @@ export function AddressList() {
                 </span>
                 <p>{address.nickname}</p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">Contact name</span>
                 <p>{address.contactName}</p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">Phone number</span>
                 <p className="flex items-center gap-1">
                   <HiMiniPhone /> {address.phoneNumber}
                 </p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">Country</span>
                 <p className="flex items-center gap-1">
                   <Image
@@ -95,7 +95,7 @@ export function AddressList() {
                   {address.country.name}
                 </p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">State</span>
                 {address.state.name ? (
                   <p>{address.state.name}</p>
@@ -103,11 +103,11 @@ export function AddressList() {
                   <p className="italic text-slate-400">No state</p>
                 )}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">City</span>
                 <p>{address.city}</p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">
                   Zip/Postal code
                 </span>
@@ -126,11 +126,11 @@ export function AddressList() {
                   <p className="italic text-slate-400">No more details</p>
                 )}
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">Created at</span>
                 <p>{new Date(address.createdAt).toDateString()}</p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 col-span-2 sm:col-span-1">
                 <span className="text-green-800 opacity-75">Last update</span>
                 <p>{new Date(address.updatedAt).toDateString()}</p>
               </div>
