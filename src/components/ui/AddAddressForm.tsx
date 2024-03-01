@@ -114,12 +114,12 @@ export function AddAddressForm({ addAddress, close }: Props) {
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-8 shadow-md rounded-md space-y-4"
+          className="w-full lg:container overflow-y-auto bg-white shadow-md lg:rounded-lg p-10 lg:p-12 border-2 border-gray-50 grid grid-cols-2 gap-4 lg:gap-6"
         >
           <header>
             <h2 className="text-xl font-bold text-green-800">New address</h2>
           </header>
-          <div className="flex flex-col gap-2">
+          <div className="col-span-2 space-y-2">
             <label htmlFor="nickname" className="text-green-800 opacity-75">
               Nickname
             </label>
@@ -134,134 +134,66 @@ export function AddAddressForm({ addAddress, close }: Props) {
               <p className="text-red-400">{errors.nickname.message}</p>
             )}
           </div>
-          <div className="flex justify-between gap-10">
-            <div className="flex-1 flex flex-col gap-2">
-              <label
-                htmlFor="contact-name"
-                className="text-green-800 opacity-75"
-              >
-                Contact name
-              </label>
-              <input
-                {...register('contactName')}
-                type="text"
-                id="contact-name"
-                placeholder="Enter contact name"
-                className="p-3 input"
-              />
-              {errors.contactName && (
-                <p className="text-red-400">{errors.contactName.message}</p>
-              )}
-            </div>
-            <div className="flex-1 flex flex-col gap-2">
-              <label
-                htmlFor="phone-number"
-                className="text-green-800 opacity-75"
-              >
-                Phone number
-              </label>
-              <div className="relative">
-                <div className="flex items-center gap-2 input p-3 focus-within:border-green-800">
-                  <div>
-                    <button
-                      ref={phoneCodesRef}
-                      type="button"
-                      className="flex items-center gap-1 text-sm"
-                      onClick={() => setShowPhoneCodes((prev) => !prev)}
-                    >
-                      <>
-                        {selectedPhoneCountry && (
-                          <Image
-                            src={`https://flagcdn.com/${selectedPhoneCountry.id.toLowerCase()}.svg`}
-                            alt={selectedPhoneCountry.name + ' Flag'}
-                            width={0}
-                            height={0}
-                            className="w-6 h-auto"
-                          />
-                        )}
-                        {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
-                      </>
-                    </button>
-                  </div>
-                  <div>
-                    <input
-                      {...register('phoneNumber')}
-                      type="text"
-                      id="phone-number"
-                      placeholder="Enter phone number"
-                      className="w-full bg-transparent"
-                    />
-                  </div>
-                </div>
-                {showPhoneCodes && (
-                  <ul className="z-10 absolute top-14 left-0 bg-slate-50 p-2 rounded-md shadow-md w-32 h-80 overflow-y-auto">
-                    {countryPhones.map((country) => (
-                      <li key={country.id}>
-                        <button
-                          type="button"
-                          className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
-                          onClick={() => handleSelectCountryPhone(country)}
-                        >
-                          <Image
-                            src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
-                            alt={country.name + ' Flag'}
-                            width={0}
-                            height={0}
-                            className="w-6 h-auto"
-                          />
-                          <span className="line-clamp-1">
-                            +{country.phoneCode}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              {errors.phoneNumber && (
-                <p className="text-red-400">{errors.phoneNumber.message}</p>
-              )}
-            </div>
+          <div className="col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="contact-name" className="text-green-800 opacity-75">
+              Contact name
+            </label>
+            <input
+              {...register('contactName')}
+              type="text"
+              id="contact-name"
+              placeholder="Enter contact name"
+              className="p-3 input"
+            />
+            {errors.contactName && (
+              <p className="text-red-400">{errors.contactName.message}</p>
+            )}
           </div>
-          <div className="flex justify-between gap-10">
-            <div className="relative flex-1 flex flex-col gap-2">
-              <label htmlFor="country" className="text-green-800 opacity-75">
-                Country
-              </label>
-              <button
-                ref={countriesRef}
-                type="button"
-                className="p-3 input flex items-center justify-between"
-                onClick={() => setShowCountries((prev) => !prev)}
-              >
-                <>
-                  {selectedCountry ? (
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src={`https://flagcdn.com/${selectedCountry.id.toLowerCase()}.svg`}
-                        alt={selectedCountry.name + ' Flag'}
-                        width={0}
-                        height={0}
-                        className="w-6 h-auto"
-                      />
-                      <span className="line-clamp-1">
-                        {selectedCountry.name}
-                      </span>
-                    </div>
-                  ) : (
-                    <span>Select country</span>
-                  )}
-                  {!showCountries ? <HiChevronDown /> : <HiChevronUp />}
-                </>
-              </button>
-              {showCountries && (
-                <ul className="z-10 absolute top-[5.5rem] bg-slate-50 p-2 rounded-md shadow-md w-full h-80 overflow-y-auto">
-                  {countries.map((country) => (
+          <div className="col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="phone-number" className="text-green-800 opacity-75">
+              Phone number
+            </label>
+            <div className="relative">
+              <div className="flex items-center gap-2 input p-3 focus-within:border-green-800">
+                <div>
+                  <button
+                    ref={phoneCodesRef}
+                    type="button"
+                    className="flex items-center gap-1 text-sm"
+                    onClick={() => setShowPhoneCodes((prev) => !prev)}
+                  >
+                    <>
+                      {selectedPhoneCountry && (
+                        <Image
+                          src={`https://flagcdn.com/${selectedPhoneCountry.id.toLowerCase()}.svg`}
+                          alt={selectedPhoneCountry.name + ' Flag'}
+                          width={0}
+                          height={0}
+                          className="w-6 h-auto"
+                        />
+                      )}
+                      {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
+                    </>
+                  </button>
+                </div>
+                <div>
+                  <input
+                    {...register('phoneNumber')}
+                    type="text"
+                    id="phone-number"
+                    placeholder="Enter phone number"
+                    className="w-full bg-transparent"
+                  />
+                </div>
+              </div>
+              {showPhoneCodes && (
+                <ul className="z-10 absolute top-14 left-0 bg-slate-50 p-2 rounded-md shadow-md w-32 h-80 overflow-y-auto">
+                  {countryPhones.map((country) => (
                     <li key={country.id}>
                       <button
                         type="button"
                         className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
-                        onClick={() => handleSelectCountry(country)}
+                        onClick={() => handleSelectCountryPhone(country)}
                       >
                         <Image
                           src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
@@ -270,83 +202,134 @@ export function AddAddressForm({ addAddress, close }: Props) {
                           height={0}
                           className="w-6 h-auto"
                         />
-                        <span className="line-clamp-1 text-left">
-                          {country.name}
+                        <span className="line-clamp-1">
+                          +{country.phoneCode}
                         </span>
                       </button>
                     </li>
                   ))}
                 </ul>
               )}
-              {errors.countryId && (
-                <p className="text-red-400">{errors.countryId.message}</p>
-              )}
             </div>
-            <div className="flex-1 flex flex-col gap-2">
-              <label htmlFor="state" className="text-green-800 opacity-75">
-                State
-              </label>
-              <select
-                {...register('stateId', { valueAsNumber: true })}
-                id="state"
-                className="p-3 input"
-                disabled={!selectedCountry}
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  Select state
-                </option>
-                {selectedCountry && (
-                  <>
-                    {selectedCountry.states.map((state) => (
-                      <option key={state.id} value={state.id}>
-                        {state.name || '(No state)'}
-                      </option>
-                    ))}
-                  </>
+            {errors.phoneNumber && (
+              <p className="text-red-400">{errors.phoneNumber.message}</p>
+            )}
+          </div>
+          <div className="relative col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="country" className="text-green-800 opacity-75">
+              Country
+            </label>
+            <button
+              ref={countriesRef}
+              type="button"
+              className="p-3 input flex items-center justify-between"
+              onClick={() => setShowCountries((prev) => !prev)}
+            >
+              <>
+                {selectedCountry ? (
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={`https://flagcdn.com/${selectedCountry.id.toLowerCase()}.svg`}
+                      alt={selectedCountry.name + ' Flag'}
+                      width={0}
+                      height={0}
+                      className="w-6 h-auto"
+                    />
+                    <span className="line-clamp-1">{selectedCountry.name}</span>
+                  </div>
+                ) : (
+                  <span>Select country</span>
                 )}
-              </select>
-              {errors.stateId && (
-                <p className="text-red-400">{errors.stateId.message}</p>
-              )}
-            </div>
+                {!showCountries ? <HiChevronDown /> : <HiChevronUp />}
+              </>
+            </button>
+            {showCountries && (
+              <ul className="z-10 absolute top-[5.5rem] bg-slate-50 p-2 rounded-md shadow-md w-full h-80 overflow-y-auto">
+                {countries.map((country) => (
+                  <li key={country.id}>
+                    <button
+                      type="button"
+                      className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
+                      onClick={() => handleSelectCountry(country)}
+                    >
+                      <Image
+                        src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
+                        alt={country.name + ' Flag'}
+                        width={0}
+                        height={0}
+                        className="w-6 h-auto"
+                      />
+                      <span className="line-clamp-1 text-left">
+                        {country.name}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {errors.countryId && (
+              <p className="text-red-400">{errors.countryId.message}</p>
+            )}
           </div>
-          <div className="flex justify-between gap-10">
-            <div className="flex-1 flex flex-col gap-2">
-              <label htmlFor="city" className="text-green-800 opacity-75">
-                City
-              </label>
-              <input
-                {...register('city')}
-                type="text"
-                id="city"
-                placeholder="Enter city"
-                className="p-3 input"
-              />
-              {errors.city && (
-                <p className="text-red-400">{errors.city.message}</p>
+          <div className="col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="state" className="text-green-800 opacity-75">
+              State
+            </label>
+            <select
+              {...register('stateId', { valueAsNumber: true })}
+              id="state"
+              className="p-3 input"
+              disabled={!selectedCountry}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select state
+              </option>
+              {selectedCountry && (
+                <>
+                  {selectedCountry.states.map((state) => (
+                    <option key={state.id} value={state.id}>
+                      {state.name || '(No state)'}
+                    </option>
+                  ))}
+                </>
               )}
-            </div>
-            <div className="flex-1 flex flex-col gap-2">
-              <label
-                htmlFor="postal-code"
-                className="text-green-800 opacity-75"
-              >
-                Zip/Postal code
-              </label>
-              <input
-                {...register('postalCode')}
-                type="text"
-                id="postal-code"
-                placeholder="Enter zip/postal code if available"
-                className="p-3 input"
-              />
-              {errors.postalCode && (
-                <p className="text-red-400">{errors.postalCode.message}</p>
-              )}
-            </div>
+            </select>
+            {errors.stateId && (
+              <p className="text-red-400">{errors.stateId.message}</p>
+            )}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="city" className="text-green-800 opacity-75">
+              City
+            </label>
+            <input
+              {...register('city')}
+              type="text"
+              id="city"
+              placeholder="Enter city"
+              className="p-3 input"
+            />
+            {errors.city && (
+              <p className="text-red-400">{errors.city.message}</p>
+            )}
+          </div>
+          <div className="col-span-2 lg:col-span-1 space-y-2">
+            <label htmlFor="postal-code" className="text-green-800 opacity-75">
+              Zip/Postal code
+            </label>
+            <input
+              {...register('postalCode')}
+              type="text"
+              id="postal-code"
+              placeholder="Enter zip/postal code if available"
+              className="p-3 input"
+            />
+            {errors.postalCode && (
+              <p className="text-red-400">{errors.postalCode.message}</p>
+            )}
+          </div>
+          <div className="col-span-2 space-y-2">
             <label htmlFor="street" className="text-green-800 opacity-75">
               Street
             </label>
@@ -361,7 +344,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
               <p className="text-red-400">{errors.street.message}</p>
             )}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="col-span-2 space-y-2">
             <label
               hidden
               htmlFor="street-details"
@@ -380,7 +363,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
               <p className="text-red-400">{errors.streetDetails.message}</p>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="col-span-2 flex items-center gap-2">
             <input
               {...register('default')}
               type="checkbox"
@@ -391,7 +374,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
               Set as default
             </label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="col-span-2 flex items-center gap-2">
             <button
               type="submit"
               className={`px-5 py-2 flex items-center gap-2 ${
