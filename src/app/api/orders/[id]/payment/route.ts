@@ -43,6 +43,21 @@ export async function POST(req: NextRequest, { params }: Props) {
         },
       });
 
+      // Check if user has address
+      await tx.address.findUniqueOrThrow({
+        where: {
+          id: data.address,
+          userId: user.id,
+        },
+      });
+
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          addressId: data.address,
+        },
+      });
+
       const newPayment = await tx.payment.create({
         data: {
           userId: user.id,

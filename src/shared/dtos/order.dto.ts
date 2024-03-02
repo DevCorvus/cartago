@@ -34,6 +34,9 @@ export interface OrderDto {
   total: number;
   status: OrderStatus;
   items: OrderItemDto[];
+  address: {
+    nickname: string;
+  };
   payment: {
     status: PaymentStatus;
     method: PaymentMethod;

@@ -6,15 +6,41 @@ import {
   createAddressSchema,
 } from '@/shared/schemas/address.schema';
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-export async function GET() {
+const searchParamsSchema = z.object({
+  minimal: z
+    .string()
+    .toLowerCase()
+    .transform((x) => x === 'true')
+    .pipe(z.boolean())
+    .nullable(),
+});
+
+export async function GET(req: NextRequest) {
   const user = await getUserSession();
 
   if (!user) return NextResponse.json(null, { status: 401 });
 
+  const searchParams = req.nextUrl.searchParams;
+
+  const searchParamsResult = await searchParamsSchema.safeParseAsync({
+    minimal: searchParams.get('minimal'),
+  });
+
+  if (!searchParamsResult.success)
+    return NextResponse.json(null, { status: 400 });
+
+  const minimal = searchParamsResult.data.minimal;
+
   try {
-    const addresses = await addressService.findAll(user.id);
-    return NextResponse.json(addresses, { status: 200 });
+    if (minimal) {
+      const addresses = await addressService.findAllMinimal(user.id);
+      return NextResponse.json(addresses, { status: 200 });
+    } else {
+      const addresses = await addressService.findAll(user.id);
+      return NextResponse.json(addresses, { status: 200 });
+    }
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

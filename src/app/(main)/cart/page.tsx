@@ -8,10 +8,10 @@ import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
-import OrderDetailsModal from '@/components/ui/OrderDetailsModal';
 import { ImSpinner8 } from 'react-icons/im';
 import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
+import AddOrderForm from '@/components/ui/AddOrderForm.tsx';
 
 // I had to fetch the data in the old-fashioned client-side way
 // Server-component methods to always fetch data dynamically didn't work for me
@@ -184,9 +184,7 @@ export default function Cart() {
           </button>
         </form>
       </div>
-      {order && (
-        <OrderDetailsModal order={order} close={() => setOrder(null)} />
-      )}
+      {order && <AddOrderForm order={order} close={() => setOrder(null)} />}
     </>
   );
 }

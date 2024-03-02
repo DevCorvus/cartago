@@ -27,3 +27,9 @@ export interface AddressDto {
     name: string;
   };
 }
+
+export interface AddressMinimalDto {
+  id: string;
+  nickname: string;
+  default: boolean;
+}

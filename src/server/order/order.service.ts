@@ -7,6 +7,7 @@ import {
 } from '@/shared/dtos/order.dto';
 import { getTotalMoney } from '@/lib/dinero';
 import { OrderStatus } from './order.types';
+import { PaymentMethod } from '@/shared/dtos/payment.dto';
 
 interface CreateOrderItem {
   price: number;
@@ -34,6 +35,11 @@ export class OrderService {
                 },
               },
             },
+          },
+        },
+        address: {
+          select: {
+            nickname: true,
           },
         },
         payment: {
@@ -84,6 +90,11 @@ export class OrderService {
             },
           },
         },
+        address: {
+          select: {
+            nickname: true,
+          },
+        },
         payment: {
           select: {
             status: true,
@@ -112,7 +123,11 @@ export class OrderService {
       total: order.total,
       status: order.status,
       items,
-      payment: order.payment!,
+      address: order.address!,
+      payment: {
+        status: order.payment!.status,
+        method: order.payment!.method as PaymentMethod,
+      },
       createdAt: order.createdAt,
     };
   }

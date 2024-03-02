@@ -61,7 +61,7 @@ export default function OrderDetails({ order }: Props) {
           <h3>Shipping address</h3>
         </header>
         <div>
-          <p>Your location</p>
+          <p className="input-alternative p-3">{order.address.nickname}</p>
         </div>
       </section>
       <section className="flex flex-col gap-2">

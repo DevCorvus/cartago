@@ -1,5 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import { AddressDto, CreateAddressDto } from '@/shared/dtos/address.dto';
+import {
+  AddressDto,
+  AddressMinimalDto,
+  CreateAddressDto,
+} from '@/shared/dtos/address.dto';
 
 export class AddressService {
   async findAll(userId: string): Promise<AddressDto[]> {
@@ -50,6 +54,17 @@ export class AddressService {
         createdAt: address.createdAt,
         updatedAt: address.updatedAt,
       };
+    });
+  }
+
+  async findAllMinimal(userId: string): Promise<AddressMinimalDto[]> {
+    return prisma.address.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        nickname: true,
+        default: true,
+      },
     });
   }
 
