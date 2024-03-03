@@ -1,11 +1,13 @@
 import { z } from 'zod';
 import {
-  createAddressFormSchema,
-  createAddressSchema,
+  createUpdateAddressFormSchema,
+  createUpdateAddressSchema,
 } from '../schemas/address.schema';
 
-export type CreateAddressForm = z.infer<typeof createAddressFormSchema>;
-export type CreateAddressDto = z.infer<typeof createAddressSchema>;
+export type CreateUpdateAddressForm = z.infer<
+  typeof createUpdateAddressFormSchema
+>;
+export type CreateUpdateAddressDto = z.infer<typeof createUpdateAddressSchema>;
 
 export interface AddressDto {
   id: string;
@@ -20,6 +22,7 @@ export interface AddressDto {
   updatedAt: Date;
   default: boolean;
   state: {
+    id: number;
     name: string;
   };
   country: {

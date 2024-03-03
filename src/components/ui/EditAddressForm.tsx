@@ -11,14 +11,16 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
+import { getCountryCodeFromPhoneNumber } from '@/lib/phone';
 
 interface Props {
-  addAddress(newAddress: AddressDto): void;
+  address: AddressDto;
+  updateAddress(data: AddressDto): void;
   close(): void;
 }
 
 // TODO: Refactor (It's bloated)
-export function AddAddressForm({ addAddress, close }: Props) {
+export function EditAddressForm({ address, updateAddress, close }: Props) {
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -56,6 +58,19 @@ export function AddAddressForm({ addAddress, close }: Props) {
     setValue,
   } = useForm<CreateUpdateAddressForm>({
     resolver: zodResolver(createUpdateAddressFormSchema),
+    defaultValues: {
+      nickname: address.nickname,
+      contactName: address.contactName,
+      phoneNumber: address.phoneNumber.replace(/\+[0-9]+ /, ''),
+      phoneCountryCode: getCountryCodeFromPhoneNumber(address.phoneNumber),
+      countryId: address.country.id,
+      stateId: address.state.id,
+      city: address.city,
+      postalCode: address.postalCode,
+      street: address.street,
+      streetDetails: address.streetDetails,
+      default: address.default,
+    },
   });
 
   useEffect(() => {
@@ -66,28 +81,41 @@ export function AddAddressForm({ addAddress, close }: Props) {
         const data: CountryDto[] = await res.json();
         setCountries(data);
 
-        const america = data.find((country) => country.id === 'US') || null;
+        const phoneCountryCode = getCountryCodeFromPhoneNumber(
+          address.phoneNumber,
+        )!;
 
-        if (america) {
-          setSelectedPhoneCountry(america);
-          setValue('phoneCountryCode', america.id);
+        const phoneCountry =
+          data.find((country) => country.id === phoneCountryCode) || null;
+
+        if (phoneCountry) {
+          setSelectedPhoneCountry(phoneCountry);
+          setValue('phoneCountryCode', phoneCountry.id);
+        }
+
+        const country =
+          data.find((country) => country.id === address.country.id) || null;
+
+        if (country) {
+          setSelectedCountry(country);
+          setValue('countryId', country.id);
         }
       }
 
       setLoading(false);
     })();
-  }, [setValue]);
+  }, [setValue, address.phoneNumber, address.country.id]);
 
   const onSubmit: SubmitHandler<CreateUpdateAddressForm> = async (data) => {
-    const res = await fetch('/api/addresses', {
-      method: 'POST',
+    const res = await fetch(`/api/addresses/${address.id}`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
 
     if (res.ok) {
       const data: AddressDto = await res.json();
-      addAddress(data);
+      updateAddress(data);
       close();
     }
   };
@@ -113,7 +141,9 @@ export function AddAddressForm({ addAddress, close }: Props) {
         className="w-full lg:container overflow-y-auto bg-white shadow-md lg:rounded-lg p-10 lg:p-12 border-2 border-gray-50 grid grid-cols-2 gap-4 lg:gap-6"
       >
         <header>
-          <h2 className="text-xl font-bold text-green-800">New address</h2>
+          <h2 className="text-xl font-bold text-green-800">
+            Edit {address.nickname}
+          </h2>
         </header>
         <div className="col-span-2 space-y-2">
           <label htmlFor="nickname" className="text-green-800 opacity-75">
@@ -274,7 +304,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             id="state"
             className="p-3 input"
             disabled={!selectedCountry}
-            defaultValue=""
+            defaultValue={address.state.id}
           >
             <option value="" disabled>
               Select state
@@ -375,7 +405,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             disabled={isSubmitting}
           >
             {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            Create
+            Update
           </button>
           <button
             type="button"

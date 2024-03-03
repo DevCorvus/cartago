@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const countryCodeSchema = z.string().length(2).trim();
 
-export const createAddressSchema = z.object({
+export const createUpdateAddressSchema = z.object({
   stateId: z.number().int().positive(),
   nickname: z.string().nonempty().trim(),
   contactName: z.string().min(4).trim(),
@@ -15,7 +15,7 @@ export const createAddressSchema = z.object({
   default: z.boolean(),
 });
 
-export const createAddressFormSchema = createAddressSchema
+export const createUpdateAddressFormSchema = createUpdateAddressSchema
   .extend({
     countryId: countryCodeSchema,
     phoneCountryCode: countryCodeSchema,

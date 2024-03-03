@@ -14,3 +14,7 @@ export function formatPhoneNumber(input: string, countryCode: string) {
     countryCode as CountryCode,
   ).formatInternational();
 }
+
+export function getCountryCodeFromPhoneNumber(input: string) {
+  return parsePhoneNumber(input).country;
+}
