@@ -26,11 +26,11 @@ export const nextAuthOptions: NextAuthOptions = {
       },
       async authorize(credentials, _req) {
         const result = await loginUserSchema.safeParseAsync(credentials);
-        if (!result.success) throw new Error('Invalid input');
+        if (!result.success) return null;
 
         const loggedUser = await authService.login(result.data);
 
-        if (!loggedUser) throw new Error('Unauthorized');
+        if (!loggedUser) return null;
 
         const cartId = await cartService.findUserCartId(loggedUser.id);
 
