@@ -143,7 +143,10 @@ export default function CategoryTagsInput({
             <ul className="flex flex-wrap gap-2 p-2">
               {autocompleteCategoryTags.map((tag) => (
                 <li key={tag.id}>
-                  <button onClick={() => addSelectedCategoryTag(tag)}>
+                  <button
+                    className="text-slate-500 hover:text-green-700 focus:text-green-700 transition"
+                    onClick={() => addSelectedCategoryTag(tag)}
+                  >
                     {capitalize(tag.title)}
                   </button>
                 </li>
