@@ -12,6 +12,10 @@ import { CreateUserDto } from '@/shared/dtos/user.dto';
 export default function SignUpForm() {
   const router = useRouter();
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
+
+  const [registerError, setRegisterError] = useState(false);
+  const [somethingWentWrongError, setSomethingWentWrongError] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -21,30 +25,32 @@ export default function SignUpForm() {
   });
 
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
-    try {
-      const signUpRes = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+    setRegisterError(false);
+    setSomethingWentWrongError(false);
 
-      if (!signUpRes.ok) throw new Error('User not created');
+    const signUpRes = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-      const signInRes = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
+    if (!signUpRes.ok) {
+      setRegisterError(true);
+      return;
+    }
 
-      if (signInRes?.ok && !signInRes.error) {
-        return router.push('/');
-      } else {
-        console.log(signInRes?.error);
-      }
-    } catch (err) {
-      console.log(err);
+    const signInRes = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (signInRes?.ok && !signInRes.error) {
+      return router.refresh();
+    } else {
+      setSomethingWentWrongError(true);
     }
   };
 
@@ -131,6 +137,14 @@ export default function SignUpForm() {
             />
             {errors.confirmPassword && (
               <p className="text-red-400">{errors.confirmPassword.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            {registerError && (
+              <p className="text-red-400">User already exists</p>
+            )}
+            {somethingWentWrongError && (
+              <p className="text-red-400">Something went wrong</p>
             )}
           </div>
         </div>
