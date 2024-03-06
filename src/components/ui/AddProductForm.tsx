@@ -52,17 +52,14 @@ export default function AddProductForm({ categoryTags }: Props) {
     images.forEach((image) => formData.append('images', image));
     formData.append('categories', JSON.stringify(categoryIds));
 
-    try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
-        body: formData,
-      });
-      if (res.ok) {
-        const data: ProductDto = await res.json();
-        return router.push(`/items/${data.id}`);
-      }
-    } catch (error) {
-      console.log(error);
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (res.ok) {
+      const data: ProductDto = await res.json();
+      return router.push(`/items/${data.id}`);
     }
   };
 
