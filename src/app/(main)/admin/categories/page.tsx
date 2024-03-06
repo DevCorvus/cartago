@@ -3,7 +3,7 @@
 import AddCategoryForm from '@/components/ui/AddCategoryForm';
 import CategoryItem from '@/components/ui/CategoryItem';
 import Loading from '@/components/ui/Loading';
-import SearchCategoriesForm from '@/components/ui/SearchCategoriesForm';
+import SearchInput from '@/components/ui/SearchInput';
 import { CategoryDto } from '@/shared/dtos/category.dto';
 import { useEffect, useState } from 'react';
 
@@ -73,7 +73,7 @@ export default function Categories() {
         <h1 className="text-green-800 font-bold text-2xl">Categories</h1>
       </header>
       <AddCategoryForm addCategory={addCategory} />
-      <SearchCategoriesForm handleSearch={searchCategories} />
+      <SearchInput term="categories" handleSearch={searchCategories} />
       <ul className="flex flex-col gap-3">
         {selectedCategories.map((category) => (
           <li key={category.id}>
