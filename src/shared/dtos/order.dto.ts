@@ -1,4 +1,4 @@
-import { OrderStatus } from '@/server/order/order.types';
+import { OrderStatus, ShipmentStatus } from '@/server/order/order.types';
 import { ProductImageDto } from './product.dto';
 import { PaymentStatus } from '@/server/payment/payment.types';
 import { PaymentMethod } from './payment.dto';
@@ -29,6 +29,10 @@ export interface OrderCardDto {
   createdAt: Date;
 }
 
+interface Shipment {
+  status: ShipmentStatus;
+}
+
 export interface OrderDto {
   id: string;
   total: number;
@@ -41,5 +45,6 @@ export interface OrderDto {
     status: PaymentStatus;
     method: PaymentMethod;
   };
+  shipment: Shipment | null;
   createdAt: Date;
 }

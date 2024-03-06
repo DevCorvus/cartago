@@ -101,6 +101,11 @@ export class OrderService {
             method: true,
           },
         },
+        shipment: {
+          select: {
+            status: true,
+          },
+        },
         createdAt: true,
       },
     });
@@ -128,6 +133,7 @@ export class OrderService {
         status: order.payment!.status,
         method: order.payment!.method as PaymentMethod,
       },
+      shipment: order.shipment,
       createdAt: order.createdAt,
     };
   }

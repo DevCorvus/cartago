@@ -73,6 +73,19 @@ export default function OrderDetails({ order }: Props) {
           <PaymentStatusTag status={order.payment.status} />
         </p>
       </section>
+      {order.shipment && (
+        <section className="flex flex-col gap-2">
+          <header className="text-lg font-bold text-green-800">
+            <h3>Shipment</h3>
+          </header>
+          <p className="input-alternative p-2.5 flex justify-between items-center">
+            Status
+            <span className="bg-green-100 text-green-500 px-1.5 py-0.5 rounded-md border border-gray-100">
+              {order.shipment.status.replace(/_/g, ' ')}
+            </span>
+          </p>
+        </section>
+      )}
       <section className="flex flex-col gap-2">
         <header className="text-lg font-bold text-green-800">
           <h3>Items</h3>

@@ -5,11 +5,17 @@ function getStatusColor(status: PaymentStatus) {
     case 'PENDING': {
       return 'bg-orange-100 text-orange-500';
     }
-    case 'FAILED': {
-      return 'bg-red-100 text-red-500';
+    case 'PROCESSING': {
+      return 'bg-orange-100 text-orange-500';
     }
     case 'COMPLETED': {
       return 'bg-green-100 text-green-500';
+    }
+    case 'REFUNDED': {
+      return 'bg-lime-100 text-lime-500';
+    }
+    case 'FAILED': {
+      return 'bg-red-100 text-red-500';
     }
   }
 }

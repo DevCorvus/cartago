@@ -101,12 +101,16 @@ export async function POST(req: NextRequest, { params }: Props) {
           });
 
           if (success) {
-            // Ship order automatically
+            // Fake order shipment
             await prisma.order.update({
               where: {
                 id: orderId,
               },
               data: { status: 'SHIPPED' },
+            });
+
+            await prisma.shipment.create({
+              data: { orderId, status: 'OUT_FOR_DELIVERY' },
             });
           } else {
             // Rollback product stocks
