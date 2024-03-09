@@ -15,7 +15,7 @@ const priceSchema = z
   .transform((price) => Math.round(parseFloat(price) * 100))
   .pipe(priceInCentsSchema);
 
-export const createPartialProductSchema = z.object({
+export const createUpdatePartialProductSchema = z.object({
   title: z.string().min(10).max(150).trim(),
   description: z.string().max(200).trim(),
   price: priceSchema,
@@ -33,8 +33,9 @@ export const productImageSchema = z
 
 export const productCategorySchema = z.number().int().positive();
 
-export const createProductSchema = createPartialProductSchema.extend({
-  price: priceInCentsSchema,
-  images: z.array(productImageSchema).min(1).max(5),
-  categories: z.array(productCategorySchema).min(1).max(5),
-});
+export const createUpdateProductSchema =
+  createUpdatePartialProductSchema.extend({
+    price: priceInCentsSchema,
+    images: z.array(productImageSchema).min(1).max(5),
+    categories: z.array(productCategorySchema).min(1).max(5),
+  });

@@ -1,11 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import {
   ProductDto,
-  CreateProductDto,
+  CreateUpdateProductDto,
   ProductCardDto,
 } from '@/shared/dtos/product.dto';
 
-interface CreateProductInterface extends Omit<CreateProductDto, 'images'> {
+interface CreateUpdateProductInterface
+  extends Omit<CreateUpdateProductDto, 'images'> {
   images: string[];
 }
 
@@ -64,9 +65,9 @@ export class ProductService {
     });
   }
 
-  async findById(id: string): Promise<ProductDto | null> {
+  async findById(id: string, userId?: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
-      where: { id, deletedAt: null },
+      where: { id, userId, deletedAt: null },
       select: {
         id: true,
         title: true,
@@ -129,7 +130,7 @@ export class ProductService {
 
   async create(
     userId: string,
-    data: CreateProductInterface,
+    data: CreateUpdateProductInterface,
   ): Promise<ProductDto> {
     const newProduct = await prisma.product.create({
       data: {
@@ -160,10 +161,64 @@ export class ProductService {
     return newProduct;
   }
 
+  async update(
+    id: string,
+    userId: string,
+    data: CreateUpdateProductInterface,
+  ): Promise<ProductDto> {
+    const updatedProduct = await prisma.product.update({
+      where: { id, userId },
+      data: {
+        userId,
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
+        images: {
+          createMany: {
+            data: data.images.map((path) => ({
+              path,
+            })),
+          },
+        },
+        categories: {
+          connect: data.categories.map((categoryId) => ({
+            id: categoryId,
+          })),
+        },
+      },
+      include: {
+        images: true,
+        categories: true,
+      },
+    });
+
+    return updatedProduct;
+  }
+
   async delete(id: string): Promise<void> {
     await prisma.product.update({
       where: { id },
       data: { deletedAt: new Date() },
+    });
+  }
+
+  async deleteImages(id: string): Promise<void> {
+    await prisma.productImage.deleteMany({
+      where: { productId: id },
+    });
+  }
+
+  async deleteCategories(id: string): Promise<void> {
+    await prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        categories: {
+          set: [],
+        },
+      },
     });
   }
 }

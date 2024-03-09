@@ -13,6 +13,9 @@ import {
   HiPlusCircle,
   HiOutlineExclamationTriangle,
 } from 'react-icons/hi2';
+import { extname } from 'path';
+import Loading from './Loading';
+import { ProductImageDto } from '@/shared/dtos/product.dto';
 
 interface ImagePreview {
   filename: string;
@@ -21,6 +24,7 @@ interface ImagePreview {
 }
 
 interface Props {
+  defaultImages?: ProductImageDto[];
   addImage: (file: File) => void;
   removeImage: (name: string) => void;
   setImageUploadError: Dispatch<SetStateAction<boolean>>;
@@ -28,6 +32,7 @@ interface Props {
 }
 
 export default function ImageUploader({
+  defaultImages,
   addImage,
   removeImage,
   setImageUploadError,
@@ -35,6 +40,62 @@ export default function ImageUploader({
 }: Props) {
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
   const [selectedImage, setSelectedImage] = useState<ImagePreview | null>(null);
+  const [isLoading, setLoading] = useState(false);
+
+  const addImagePreview = (imagePreview: ImagePreview) => {
+    setImagePreviews((prev) => {
+      if (!prev.some((preview) => preview.filename === imagePreview.filename)) {
+        return [...prev, imagePreview];
+      } else {
+        return prev;
+      }
+    });
+  };
+
+  const handleNewImage = useCallback(
+    (file: File) => {
+      const validation = productImageSchema.safeParse(file);
+
+      const imagePreview: ImagePreview = {
+        filename: file.name,
+        url: URL.createObjectURL(file),
+        errors: validation.success
+          ? undefined
+          : validation.error.errors.map((err) => err.message),
+      };
+
+      addImage(file);
+      addImagePreview(imagePreview);
+    },
+    [addImage],
+  );
+
+  const handleDeleteImage = (name: string) => {
+    removeImage(name);
+    setImagePreviews((prev) => prev.filter((image) => image.filename !== name));
+  };
+
+  useEffect(() => {
+    if (defaultImages) {
+      (async () => {
+        setLoading(true);
+
+        for (const { path } of defaultImages) {
+          const res = await fetch(`/uploads/${path}`);
+
+          if (res.ok) {
+            const imageBlob = await res.blob();
+            const imageType = `image/${extname(path).replace(/\./, '')}`;
+            const imageFile = new File([imageBlob], path, { type: imageType });
+
+            handleNewImage(imageFile);
+          }
+        }
+
+        setLoading(false);
+      })();
+    }
+  }, [defaultImages, handleNewImage]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -50,25 +111,14 @@ export default function ImageUploader({
         reader.onerror = () => console.log('File reading has failed');
         reader.onload = () => {
           if (!imagePreviews.some((image) => image.filename === file.name)) {
-            const validation = productImageSchema.safeParse(file);
-
-            const imagePreview: ImagePreview = {
-              filename: file.name,
-              url: URL.createObjectURL(file),
-              errors: validation.success
-                ? undefined
-                : validation.error.errors.map((err) => err.message),
-            };
-
-            addImage(file);
-            setImagePreviews((prev) => [...prev, imagePreview]);
+            handleNewImage(file);
           }
         };
 
         reader.readAsArrayBuffer(file);
       });
     },
-    [imagePreviews, addImage],
+    [imagePreviews, handleNewImage],
   );
 
   useEffect(() => {
@@ -76,11 +126,6 @@ export default function ImageUploader({
   }, [imagePreviews, setImageUploadError]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  const handleDeleteImage = (name: string) => {
-    removeImage(name);
-    setImagePreviews((prev) => prev.filter((image) => image.filename !== name));
-  };
 
   useEffect(() => {
     if (imagePreviews.length > 0) {
@@ -99,34 +144,42 @@ export default function ImageUploader({
         className="relative h-4/5 input"
       >
         <input {...getInputProps()} />
-        {!selectedImage ? (
-          <span className="h-full flex justify-center items-center w-60 mx-auto opacity-50">
-            Drag and drop some files here or click to select files
-          </span>
+        {isLoading ? (
+          <Loading />
         ) : (
           <>
-            {!selectedImage.errors ? (
-              <Image
-                src={selectedImage.url}
-                fill={true}
-                alt={`${selectedImage.filename} selected image`}
-                className="rounded-md p-1 object-contain"
-              />
+            {!selectedImage ? (
+              <span className="h-full flex justify-center items-center w-60 mx-auto opacity-50">
+                {isDragActive
+                  ? 'Drop your files here'
+                  : 'Drag and drop some files here or click to select files'}
+              </span>
             ) : (
-              <div className="h-full flex flex-col justify-center items-center gap-4 border border-red-300 rounded-md">
-                {selectedImage.errors.map((err, i) => (
-                  <p key={i} className="text-red-400 w-60">
-                    {err}
-                  </p>
-                ))}
+              <>
+                {!selectedImage.errors ? (
+                  <Image
+                    src={selectedImage.url}
+                    fill={true}
+                    alt={`${selectedImage.filename} selected image`}
+                    className="rounded-md p-1 object-contain"
+                  />
+                ) : (
+                  <div className="h-full flex flex-col justify-center items-center gap-4 border border-red-300 rounded-md">
+                    {selectedImage.errors.map((err, i) => (
+                      <p key={i} className="text-red-400 w-60">
+                        {err}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+            {selectedImage && (
+              <div className="opacity-0 hover:opacity-100 transition absolute inset-0 w-full h-full bg-green-100 bg-opacity-25 flex flex-col items-center justify-center">
+                <HiPlusCircle className="text-7xl text-green-300 text-opacity-50" />
               </div>
             )}
           </>
-        )}
-        {selectedImage && (
-          <div className="opacity-0 hover:opacity-100 transition absolute inset-0 w-full h-full bg-green-100 bg-opacity-25 flex flex-col items-center justify-center">
-            <HiPlusCircle className="text-7xl text-green-300 text-opacity-50" />
-          </div>
         )}
       </button>
       <span className="text-sm italic opacity-50">Max 5</span>

@@ -10,6 +10,7 @@ import { HiXMark } from 'react-icons/hi2';
 import { capitalize } from '@/utils/capitalize';
 
 interface Props {
+  defaultCategoryTags?: CategoryTagDto[];
   categoryTags: CategoryTagDto[];
   setCategoryIds: Dispatch<SetStateAction<number[]>>;
   notEnoughCategoriesError: boolean;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function CategoryTagsInput({
+  defaultCategoryTags,
   categoryTags,
   setCategoryIds,
   notEnoughCategoriesError,
@@ -30,7 +32,7 @@ export default function CategoryTagsInput({
 
   const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
     CategoryTagDto[]
-  >([]);
+  >(defaultCategoryTags || []);
 
   useEffect(() => {
     setCategoryIds(selectedCategoryTags.map((tag) => tag.id));

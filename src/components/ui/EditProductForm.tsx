@@ -4,7 +4,7 @@ import {
   CreateUpdatePartialProductDto,
   ProductDto,
 } from '@/shared/dtos/product.dto';
-import { FocusEvent, FormEvent, useState } from 'react';
+import { FocusEvent, FormEvent, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -12,14 +12,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schema';
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
+import { getMoneyString } from '@/lib/dinero';
 import { ImSpinner8 } from 'react-icons/im';
 
 interface Props {
+  product: ProductDto;
   categoryTags: CategoryTagDto[];
 }
 
-// TODO: Validation refactor
-export default function AddProductForm({ categoryTags }: Props) {
+export default function EditProductForm({ product, categoryTags }: Props) {
   const router = useRouter();
 
   const [images, setImages] = useState<File[]>([]);
@@ -38,6 +39,11 @@ export default function AddProductForm({ categoryTags }: Props) {
     setValue,
   } = useForm<CreateUpdatePartialProductDto>({
     resolver: zodResolver(createUpdatePartialProductSchema),
+    defaultValues: {
+      title: product.title,
+      description: product.description,
+      stock: product.stock,
+    },
   });
 
   const onSubmit: SubmitHandler<CreateUpdatePartialProductDto> = async (
@@ -58,8 +64,8 @@ export default function AddProductForm({ categoryTags }: Props) {
     images.forEach((image) => formData.append('images', image));
     formData.append('categories', JSON.stringify(categoryIds));
 
-    const res = await fetch('/api/products', {
-      method: 'POST',
+    const res = await fetch(`/api/products/${product.id}`, {
+      method: 'PUT',
       body: formData,
     });
 
@@ -82,9 +88,6 @@ export default function AddProductForm({ categoryTags }: Props) {
   const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
     const price = Number(e.target.value);
     if (price > 1) {
-      // TODO: Fix price type
-      // Price has to be validated as a string and then transformed to a number
-      // but types are messed up and I have a skill issue going on right now
       setValue('price', price.toFixed(2) as unknown as number);
     } else {
       setValue('price', '1.00' as unknown as number, { shouldValidate: true });
@@ -98,10 +101,16 @@ export default function AddProductForm({ categoryTags }: Props) {
     }
   };
 
-  const addImage = (file: File) => {
-    setImages((prev) => [...prev, file]);
+  const addImage = useCallback((file: File) => {
+    setImages((prev) => {
+      if (!prev.some((image) => image.name === file.name)) {
+        return [...prev, file];
+      } else {
+        return prev;
+      }
+    });
     setNotEnoughImagesError(false);
-  };
+  }, []);
 
   const removeImage = (name: string) => {
     if (images.length === 1) {
@@ -116,10 +125,11 @@ export default function AddProductForm({ categoryTags }: Props) {
       className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-8 shadow-md rounded-lg border-2 border-gray-50"
     >
       <header className="w-full">
-        <h1 className="text-2xl font-bold text-green-800">Add Product</h1>
+        <h1 className="text-2xl font-bold text-green-800">Edit Product</h1>
       </header>
       <div className="flex flex-col gap-6 w-full">
         <ImageUploader
+          defaultImages={product.images}
           addImage={addImage}
           removeImage={removeImage}
           setImageUploadError={setImageUploadError}
@@ -164,7 +174,7 @@ export default function AddProductForm({ categoryTags }: Props) {
             <input
               {...register('price', { onBlur: handlePriceBlur })}
               id="price"
-              defaultValue="1.00"
+              defaultValue={getMoneyString(product.price)}
               min={1}
               step=".01"
               type="number"
@@ -197,6 +207,7 @@ export default function AddProductForm({ categoryTags }: Props) {
           </div>
         </div>
         <CategoryTagsInput
+          defaultCategoryTags={product.categories}
           categoryTags={categoryTags}
           setCategoryIds={setCategoryIds}
           notEnoughCategoriesError={notEnoughCategoriesError}
@@ -213,10 +224,10 @@ export default function AddProductForm({ categoryTags }: Props) {
         {isSubmitting ? (
           <>
             <ImSpinner8 className="animate-spin" />
-            Creating
+            Updating
           </>
         ) : (
-          <>Add product</>
+          <>Update</>
         )}
       </button>
     </form>

@@ -19,3 +19,7 @@ export function getTotalMoney(items: ItemWithPriceAndAmount[]): number {
     )
     .getAmount();
 }
+
+export function getMoneyString(x: number): string {
+  return Dinero({ amount: x }).toUnit().toFixed(2);
+}
