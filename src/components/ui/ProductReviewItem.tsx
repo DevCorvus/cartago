@@ -2,6 +2,7 @@ import { ReviewDto } from '@/shared/dtos/review.dto';
 import { useState } from 'react';
 import { HiPencilSquare, HiUserCircle } from 'react-icons/hi2';
 import EditReviewForm from './EditReviewForm';
+import Rating from './Rating';
 
 interface Props {
   review: ReviewDto;
@@ -39,15 +40,18 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
               </span>
             )}
           </div>
-          {review.isOwner && (
-            <button
-              onClick={() => setEditMode(true)}
-              title="Edit review"
-              className="text-lg hover:text-green-800 focus:text-green-800 transition"
-            >
-              <HiPencilSquare />
-            </button>
-          )}
+          <div className="flex gap-3">
+            <Rating score={review.rating} />
+            {review.isOwner && (
+              <button
+                onClick={() => setEditMode(true)}
+                title="Edit review"
+                className="text-lg hover:text-green-800 focus:text-green-800 transition"
+              >
+                <HiPencilSquare />
+              </button>
+            )}
+          </div>
         </div>
         <p className="whitespace-pre-line">{review.content}</p>
       </div>
