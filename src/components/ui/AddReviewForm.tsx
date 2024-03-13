@@ -1,9 +1,10 @@
 import { CreateUpdateReviewDto, ReviewDto } from '@/shared/dtos/review.dto';
 import { createUpdateReviewSchema } from '@/shared/schemas/review.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { HiMiniPlus } from 'react-icons/hi2';
+import RatingInput from './RatingInput';
 
 interface Props {
   productId: string;
@@ -15,6 +16,7 @@ export default function AddReviewForm({ productId, addReview }: Props) {
 
   const {
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
   } = useForm<CreateUpdateReviewDto>({
@@ -35,6 +37,13 @@ export default function AddReviewForm({ productId, addReview }: Props) {
       addReview(data);
     }
   };
+
+  const handleRating = useCallback(
+    (score: number) => {
+      setValue('rating', score);
+    },
+    [setValue],
+  );
 
   if (!showForm) {
     return (
@@ -59,19 +68,7 @@ export default function AddReviewForm({ productId, addReview }: Props) {
           <label htmlFor="rating" className="text-green-800 opacity-75">
             Rating
           </label>
-          <input
-            {...register('rating', { valueAsNumber: true })}
-            type="number"
-            id="rating"
-            className="input p-2"
-            placeholder="Enter rating"
-            min={1}
-            max={5}
-            defaultValue={1}
-          />
-          {errors.rating && (
-            <p className="text-red-400">{errors.rating.message}</p>
-          )}
+          <RatingInput handler={handleRating} error={Boolean(errors.rating)} />
         </div>
       </header>
       <div className="flex flex-col gap-1">
