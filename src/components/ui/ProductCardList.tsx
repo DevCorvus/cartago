@@ -49,18 +49,18 @@ export default function ProductCardList() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header>
-        <h1 className="text-green-800 font-bold text-2xl">Your products</h1>
+        <h1 className="text-2xl font-bold text-green-800">Your products</h1>
       </header>
       <SearchInput term="products" handleSearch={searchProducts} />
       <ul className="flex flex-col gap-3">
         {selectedProducts.map((product) => (
           <li key={product.id}>
-            <div className="flex rounded-md shadow-md bg-white">
+            <div className="flex rounded-md bg-white shadow-md">
               <Link
                 href={`/items/${product.id}`}
-                className="relative w-32 h-32 bg-neutral-100 rounded-md"
+                className="relative h-32 w-32 rounded-md bg-neutral-100"
               >
                 {product.images.length != 0 ? (
                   <Image
@@ -70,13 +70,13 @@ export default function ProductCardList() {
                     className="rounded-md object-contain"
                   />
                 ) : (
-                  <span className="h-full flex flex-col justify-center items-center">
-                    <HiOutlinePhoto className="text-red-400 text-4xl" />
+                  <span className="flex h-full flex-col items-center justify-center">
+                    <HiOutlinePhoto className="text-4xl text-red-400" />
                   </span>
                 )}
               </Link>
-              <section className="p-4 relative flex flex-col gap-2">
-                <header className="flex flex-wrap justify-between uppercase font-bold text-green-800 text-sm md:text-lg gap-2">
+              <section className="relative flex flex-col gap-2 p-4">
+                <header className="flex flex-wrap justify-between gap-2 text-sm font-bold uppercase text-green-800 md:text-lg">
                   <h2>{product.title}</h2>
                   <span>{formatMoney(product.price)}</span>
                 </header>
@@ -84,13 +84,13 @@ export default function ProductCardList() {
                 <div className="flex items-center gap-2 text-sm">
                   <Link
                     href="/todo"
-                    className="px-1.5 py-1 btn-alternative flex items-center gap-1"
+                    className="btn-alternative flex items-center gap-1 px-1.5 py-1"
                   >
                     Edit <HiPencilSquare />
                   </Link>
                   <button
                     onClick={() => deleteProduct(product.id)}
-                    className="text-red-400 hover:text-red-500 focus:text-red-500 transition"
+                    className="text-red-400 transition hover:text-red-500 focus:text-red-500"
                   >
                     Delete
                   </button>

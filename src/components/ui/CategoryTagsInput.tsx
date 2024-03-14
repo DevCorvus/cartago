@@ -107,17 +107,17 @@ export default function CategoryTagsInput({
   };
 
   return (
-    <div className="flex flex-col gap-3 relative">
+    <div className="relative flex flex-col gap-3">
       <label htmlFor="categories" className="text-green-800 opacity-75">
         Categories
       </label>
-      <div className="p-1 input">
-        <ul className="flex flex-wrap p-2 gap-1">
+      <div className="input p-1">
+        <ul className="flex flex-wrap gap-1 p-2">
           {selectedCategoryTags.map((selectedTag) => (
             <li key={selectedTag.id}>
               <button
                 title="Remove category"
-                className="p-1 flex items-center gap-0.5 rounded-md bg-green-200 text-green-800 hover:bg-red-200 focus:bg-red-200 hover:text-red-800 focus:text-red-800 transition shadow-sm"
+                className="flex items-center gap-0.5 rounded-md bg-green-200 p-1 text-green-800 shadow-sm transition hover:bg-red-200 hover:text-red-800 focus:bg-red-200 focus:text-red-800"
                 type="button"
                 onClick={() => handleDelete(selectedTag.id)}
               >
@@ -130,7 +130,7 @@ export default function CategoryTagsInput({
             <input
               id="categories"
               type="text"
-              className="p-1 bg-transparent w-28"
+              className="w-28 bg-transparent p-1"
               placeholder="Add category..."
               autoComplete="off"
               onKeyDown={handleKey}
@@ -146,7 +146,7 @@ export default function CategoryTagsInput({
               {autocompleteCategoryTags.map((tag) => (
                 <li key={tag.id}>
                   <button
-                    className="text-slate-500 hover:text-green-700 focus:text-green-700 transition"
+                    className="text-slate-500 transition hover:text-green-700 focus:text-green-700"
                     onClick={() => addSelectedCategoryTag(tag)}
                   >
                     {capitalize(tag.title)}

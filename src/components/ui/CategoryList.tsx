@@ -12,14 +12,14 @@ export default function CategoryList({ categories, skip }: Props) {
   return (
     <>
       {!isEmpty && (
-        <ul className="mb-6 w-full flex flex-wrap gap-1.5 ">
+        <ul className="mb-6 flex w-full flex-wrap gap-1.5 ">
           {categories.map(
             (category) =>
               category.id !== skip && (
                 <li key={category.id}>
                   <Link
                     href={`/items?categoryId=${category.id}`}
-                    className="bg-green-100 text-green-700 rounded-full px-2 py-1 shadow-sm"
+                    className="rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
                   >
                     {capitalize(category.title)}
                   </Link>

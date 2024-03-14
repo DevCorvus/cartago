@@ -10,14 +10,14 @@ interface Props {
 
 export default function ProductList({ products }: Props) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
       {products.map((product) => (
         <Link
           href={'/items/' + product.id}
           key={product.id}
-          className="flex flex-col rounded-md shadow-md bg-white"
+          className="flex flex-col rounded-md bg-white shadow-md"
         >
-          <div className="relative h-40 w-full bg-neutral-100 rounded-md">
+          <div className="relative h-40 w-full rounded-md bg-neutral-100">
             {product.images.length != 0 ? (
               <Image
                 src={'/uploads/' + product.images[0].path}
@@ -26,13 +26,13 @@ export default function ProductList({ products }: Props) {
                 className="rounded-md object-contain"
               />
             ) : (
-              <span className="h-full flex flex-col justify-center items-center">
-                <HiOutlinePhoto className="text-red-400 text-4xl" />
+              <span className="flex h-full flex-col items-center justify-center">
+                <HiOutlinePhoto className="text-4xl text-red-400" />
               </span>
             )}
           </div>
-          <section className="p-4 relative flex flex-col gap-2">
-            <header className="flex flex-wrap justify-between uppercase font-bold text-green-800 text-sm md:text-lg gap-2">
+          <section className="relative flex flex-col gap-2 p-4">
+            <header className="flex flex-wrap justify-between gap-2 text-sm font-bold uppercase text-green-800 md:text-lg">
               <h2>{product.title}</h2>
               <span>{formatMoney(product.price)}</span>
             </header>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 function Seller() {
   return (
-    <div className="max-w-md w-full flex flex-col gap-6">
+    <div className="flex w-full max-w-md flex-col gap-6">
       <header className="w-full">
         <h1 className="text-2xl font-bold text-green-800">Seller</h1>
       </header>
@@ -12,7 +12,7 @@ function Seller() {
         <li>
           <Link
             href="/seller/products"
-            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+            className="text-blue-400 transition hover:text-blue-500 focus:text-blue-500"
           >
             Products
           </Link>

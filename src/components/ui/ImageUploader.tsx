@@ -136,12 +136,12 @@ export default function ImageUploader({
   }, [imagePreviews]);
 
   return (
-    <div className="w-full h-96 relative flex flex-col gap-1">
+    <div className="relative flex h-96 w-full flex-col gap-1">
       <button
         title="Upload images"
         {...getRootProps()}
         type="button"
-        className="relative h-4/5 input"
+        className="input relative h-4/5"
       >
         <input {...getInputProps()} />
         {isLoading ? (
@@ -149,7 +149,7 @@ export default function ImageUploader({
         ) : (
           <>
             {!selectedImage ? (
-              <span className="h-full flex justify-center items-center w-60 mx-auto opacity-50">
+              <span className="mx-auto flex h-full w-60 items-center justify-center opacity-50">
                 {isDragActive
                   ? 'Drop your files here'
                   : 'Drag and drop some files here or click to select files'}
@@ -161,12 +161,12 @@ export default function ImageUploader({
                     src={selectedImage.url}
                     fill={true}
                     alt={`${selectedImage.filename} selected image`}
-                    className="rounded-md p-1 object-contain"
+                    className="rounded-md object-contain p-1"
                   />
                 ) : (
-                  <div className="h-full flex flex-col justify-center items-center gap-4 border border-red-300 rounded-md">
+                  <div className="flex h-full flex-col items-center justify-center gap-4 rounded-md border border-red-300">
                     {selectedImage.errors.map((err, i) => (
-                      <p key={i} className="text-red-400 w-60">
+                      <p key={i} className="w-60 text-red-400">
                         {err}
                       </p>
                     ))}
@@ -175,7 +175,7 @@ export default function ImageUploader({
               </>
             )}
             {selectedImage && (
-              <div className="opacity-0 hover:opacity-100 transition absolute inset-0 w-full h-full bg-green-100 bg-opacity-25 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center bg-green-100 bg-opacity-25 opacity-0 transition hover:opacity-100">
                 <HiPlusCircle className="text-7xl text-green-300 text-opacity-50" />
               </div>
             )}
@@ -184,14 +184,14 @@ export default function ImageUploader({
       </button>
       <span className="text-sm italic opacity-50">Max 5</span>
       {notEnoughImagesError && (
-        <p className="text-red-400 mt-1">At least one image is required</p>
+        <p className="mt-1 text-red-400">At least one image is required</p>
       )}
-      <div className="flex-1 grid grid-cols-5 gap-1">
+      <div className="grid flex-1 grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i} className="relative">
             <button
               type="button"
-              className={`relative w-full h-full border rounded bg-neutral-100 ${
+              className={`relative h-full w-full rounded border bg-neutral-100 ${
                 image.errors
                   ? 'border-red-300 hover:border-red-400 focus:border-red-400'
                   : ''
@@ -208,13 +208,13 @@ export default function ImageUploader({
                   className="object-contain"
                 />
               ) : (
-                <HiOutlineExclamationTriangle className="text-red-400 text-3xl mx-auto" />
+                <HiOutlineExclamationTriangle className="mx-auto text-3xl text-red-400" />
               )}
             </button>
             <button
               type="button"
               onClick={() => handleDeleteImage(image.filename)}
-              className="absolute top-0 right-0 text-xl text-red-300 hover:text-red-400 focus:text-red-400 transition"
+              className="absolute right-0 top-0 text-xl text-red-300 transition hover:text-red-400 focus:text-red-400"
             >
               <HiMiniXCircle />
             </button>

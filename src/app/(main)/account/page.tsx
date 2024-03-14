@@ -16,7 +16,7 @@ async function Account({ user }: Props) {
   }
 
   return (
-    <div className="max-w-md w-full flex flex-col gap-6">
+    <div className="flex w-full max-w-md flex-col gap-6">
       <header className="w-full">
         <h1 className="text-2xl font-bold text-green-800">Account</h1>
       </header>
@@ -32,7 +32,7 @@ async function Account({ user }: Props) {
           </tr>
           <tr>
             <th>Role</th>
-            <td className="text-green-700 font-bold">{profile.role}</td>
+            <td className="font-bold text-green-700">{profile.role}</td>
           </tr>
           <tr>
             <th>Created at</th>
@@ -49,7 +49,7 @@ async function Account({ user }: Props) {
         <li>
           <Link
             href="/account/addresses"
-            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+            className="text-blue-400 transition hover:text-blue-500 focus:text-blue-500"
           >
             Addresses
           </Link>
@@ -57,7 +57,7 @@ async function Account({ user }: Props) {
         <li>
           <Link
             href="/account/orders"
-            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+            className="text-blue-400 transition hover:text-blue-500 focus:text-blue-500"
           >
             Orders
           </Link>
@@ -65,7 +65,7 @@ async function Account({ user }: Props) {
         <li>
           <Link
             href="/account/change-password"
-            className="text-blue-400 hover:text-blue-500 focus:text-blue-500 transition"
+            className="text-blue-400 transition hover:text-blue-500 focus:text-blue-500"
           >
             Change password
           </Link>

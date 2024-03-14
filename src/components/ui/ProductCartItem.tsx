@@ -20,11 +20,11 @@ export default function ProductCartItem({
   removeItem,
 }: Props) {
   return (
-    <div className="w-full flex rounded-md shadow-md h-24 bg-white">
+    <div className="flex h-24 w-full rounded-md bg-white shadow-md">
       <Link
         href={'/items/' + product.id}
         key={product.id}
-        className="relative w-24 bg-neutral-100 rounded-md"
+        className="relative w-24 rounded-md bg-neutral-100"
       >
         <Image
           src={'/uploads/' + product.images[0].path}
@@ -33,14 +33,14 @@ export default function ProductCartItem({
           className="object-contain"
         />
       </Link>
-      <div className="flex-1 px-2 flex flex-col justify-around">
+      <div className="flex flex-1 flex-col justify-around px-2">
         <div className="flex justify-between text-green-800">
           <Link href={'/items/' + product.id} key={product.id}>
             <strong className="uppercase">{product.title}</strong>
           </Link>
           <span>{formatMoney(product.price)}</span>
         </div>
-        <div className="w-full flex justify-between">
+        <div className="flex w-full justify-between">
           <div className="flex items-center justify-center gap-2">
             <button
               className={product.amount > 1 ? '' : 'invisible'}

@@ -46,14 +46,14 @@ export default function SearchForm() {
       <form>
         <input
           type="text"
-          className="p-2 input"
+          className="input p-2"
           placeholder="Search"
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
         />
       </form>
       {categories.length !== 0 && (
-        <ul className="w-80 px-2 py-4 rounded-b-lg bg-white absolute flex flex-col gap-1">
+        <ul className="absolute flex w-80 flex-col gap-1 rounded-b-lg bg-white px-2 py-4">
           {categories.map((category) => (
             <li key={category.id}>
               <Link href={`/items?categoryId=${category.id}`}>

@@ -144,13 +144,13 @@ export default function Cart() {
 
   return (
     <>
-      <div className="max-w-md flex flex-col gap-6 mx-auto">
+      <div className="mx-auto flex max-w-md flex-col gap-6">
         <header>
-          <h1 className="text-green-800 font-bold text-2xl">
+          <h1 className="text-2xl font-bold text-green-800">
             Shopping cart ({cartItems.length})
           </h1>
         </header>
-        <div className="w-full flex flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           {cartItems.map((product) => (
             <ProductCartItem
               key={product.id}
@@ -168,7 +168,7 @@ export default function Cart() {
           <button
             type="submit"
             disabled={isLoadingOrder}
-            className="p-3 btn w-full flex items-center justify-center gap-2"
+            className="btn flex w-full items-center justify-center gap-2 p-3"
           >
             {!isLoadingOrder ? (
               <>

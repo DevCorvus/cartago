@@ -20,7 +20,7 @@ export default function RatingInput({
 
   return (
     <div
-      className={`px-1 text-yellow-500 rounded-full ${
+      className={`rounded-full px-1 text-yellow-500 ${
         error ? 'border border-red-400' : ''
       }`}
     >

@@ -71,19 +71,19 @@ export default function AddOrderForm({ order, close }: Props) {
       <form
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:container overflow-y-auto bg-white shadow-md lg:rounded-lg p-10 lg:p-12 border-2 border-gray-50 flex flex-col lg:flex-row gap-10"
+        className="flex w-full flex-col gap-10 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:flex-row lg:rounded-lg lg:p-12"
       >
-        <div className="flex-1 flex flex-col gap-10">
-          <header className="text-green-800 font-bold text-2xl">
+        <div className="flex flex-1 flex-col gap-10">
+          <header className="text-2xl font-bold text-green-800">
             <h2 className="flex items-center gap-2">
               Placing order
               <OrderStatusTag status={order.status} className="text-lg" />
             </h2>
           </header>
-          <section className="text-sm flex flex-col gap-1">
+          <section className="flex flex-col gap-1 text-sm">
             <p>
               <strong>ID</strong>{' '}
-              <span className="bg-slate-100 px-1 py-0.5 rounded-md">
+              <span className="rounded-md bg-slate-100 px-1 py-0.5">
                 {order.id}
               </span>
             </p>
@@ -150,11 +150,11 @@ export default function AddOrderForm({ order, close }: Props) {
             {order.items.map((item, i) => (
               <div
                 key={i}
-                className="flex gap-2 bg-slate-100 rounded-md shadow-md"
+                className="flex gap-2 rounded-md bg-slate-100 shadow-md"
               >
                 <Link
                   href={`/items/${item.id}`}
-                  className="relative w-20 h-20 bg-slate-200 rounded-l-md"
+                  className="relative h-20 w-20 rounded-l-md bg-slate-200"
                 >
                   <Image
                     src={'/uploads/' + item.image.path}
@@ -163,23 +163,23 @@ export default function AddOrderForm({ order, close }: Props) {
                     className="rounded-md object-contain"
                   />
                 </Link>
-                <section className="flex-1 p-1 flex flex-col justify-around">
+                <section className="flex flex-1 flex-col justify-around p-1">
                   <div>
                     <p>{item.title}</p>
                     <p className="line-clamp-1 font-sans text-sm opacity-70">
                       {item.description}
                     </p>
                   </div>
-                  <div className="text-sm flex items-center justify-between">
+                  <div className="flex items-center justify-between text-sm">
                     <p>
                       <span className="text-slate-500">Price</span>{' '}
-                      <span className="text-green-800 px-1 py-0.5 bg-green-100 rounded-md">
+                      <span className="rounded-md bg-green-100 px-1 py-0.5 text-green-800">
                         {formatMoney(item.price)}
                       </span>
                     </p>
                     <p>
                       <span className="text-slate-500">Quantity</span>{' '}
-                      <span className="text-green-800 px-1 py-0.5 bg-green-100 rounded-md">
+                      <span className="rounded-md bg-green-100 px-1 py-0.5 text-green-800">
                         {item.amount}
                       </span>
                     </p>
@@ -189,12 +189,12 @@ export default function AddOrderForm({ order, close }: Props) {
             ))}
           </section>
         </div>
-        <div className="flex flex-col gap-10 max-w-xs w-full">
+        <div className="flex w-full max-w-xs flex-col gap-10">
           <section className="flex flex-col gap-2">
             <header className="text-lg font-bold text-green-800">
               <h3>Summary</h3>
             </header>
-            <div className="flex flex-col gap-3 input p-6">
+            <div className="input flex flex-col gap-3 p-6">
               <div className="flex flex-col gap-1">
                 <p className="flex justify-between">
                   Total items cost <span>{formatMoney(order.total)}</span>
@@ -215,7 +215,7 @@ export default function AddOrderForm({ order, close }: Props) {
           <div className="flex items-center gap-2">
             <button
               type="submit"
-              className="px-3 py-2 flex items-center gap-2 btn"
+              className="btn flex items-center gap-2 px-3 py-2"
               disabled={isSubmitting}
             >
               {isSubmitting && <ImSpinner8 className="animate-spin" />}
@@ -224,7 +224,7 @@ export default function AddOrderForm({ order, close }: Props) {
             <button
               type="button"
               onClick={close}
-              className="px-3 py-2 btn-alternative"
+              className="btn-alternative px-3 py-2"
             >
               Cancel
             </button>

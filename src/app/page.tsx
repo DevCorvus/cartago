@@ -2,7 +2,6 @@ import CategoryList from '@/components/ui/CategoryList';
 import HeroImage from '@/components/ui/HeroImage';
 import ProductList from '@/components/ui/ProductList';
 import { categoryService, productService } from '@/server/services';
-import Wished from './items/wished/page';
 
 export default async function Home() {
   const products = await productService.findAll();

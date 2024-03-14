@@ -62,14 +62,14 @@ export function AddressList() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="w-full max-w-md flex flex-col gap-6">
+    <div className="flex w-full max-w-md flex-col gap-6">
       <header>
-        <h1 className="text-green-800 font-bold text-2xl">Addresses</h1>
+        <h1 className="text-2xl font-bold text-green-800">Addresses</h1>
       </header>
       <div>
         <button
           onClick={() => setShowAddForm(true)}
-          className="w-full border border-transparent border-t-gray-100 hover:border-green-700 focus:border-green-700 transition p-3 rounded-full shadow-md bg-white text-green-800 font-semibold flex items-center justify-center gap-2"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-transparent border-t-gray-100 bg-white p-3 font-semibold text-green-800 shadow-md transition hover:border-green-700 focus:border-green-700"
         >
           <HiMiniPlus className="text-3xl" />
           Add address

@@ -35,13 +35,13 @@ export default function ChangePasswordForm() {
     <div className="flex flex-col gap-12">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center justify-center flex-col gap-10 max-w-sm bg-white p-10 rounded-lg shadow-md border-2 border-gray-50"
+        className="flex max-w-sm flex-col items-center justify-center gap-10 rounded-lg border-2 border-gray-50 bg-white p-10 shadow-md"
       >
         <header className="w-full">
           <h1 className="text-2xl font-bold text-green-800">Change password</h1>
         </header>
-        <div className="flex flex-col gap-6 w-full">
-          <div className="flex justify-center flex-col gap-2">
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex flex-col justify-center gap-2">
             <label htmlFor="oldPassword" className="text-green-800 opacity-75">
               Current password
             </label>
@@ -50,13 +50,13 @@ export default function ChangePasswordForm() {
               id="oldPassword"
               type="password"
               placeholder="Enter your current password"
-              className="p-4 input"
+              className="input p-4"
             />
             {errors.oldPassword && (
               <p className="text-red-400">{errors.oldPassword.message}</p>
             )}
           </div>
-          <div className="flex justify-center flex-col gap-2">
+          <div className="flex flex-col justify-center gap-2">
             <label htmlFor="newPassword" className="text-green-800 opacity-75">
               New password
             </label>
@@ -65,13 +65,13 @@ export default function ChangePasswordForm() {
               id="newPassword"
               type="password"
               placeholder="Enter your new password"
-              className="p-4 input"
+              className="input p-4"
             />
             {errors.newPassword && (
               <p className="text-red-400">{errors.newPassword.message}</p>
             )}
           </div>
-          <div className="flex justify-center flex-col gap-2">
+          <div className="flex flex-col justify-center gap-2">
             <label
               htmlFor="confirmNewPassword"
               className="text-green-800 opacity-75"
@@ -83,7 +83,7 @@ export default function ChangePasswordForm() {
               id="confirmNewPassword"
               type="password"
               placeholder="Repeat new password"
-              className="p-4 input"
+              className="input p-4"
             />
             {errors.confirmNewPassword && (
               <p className="text-red-400">
@@ -92,7 +92,7 @@ export default function ChangePasswordForm() {
             )}
           </div>
         </div>
-        <button type="submit" className="w-full p-3 btn">
+        <button type="submit" className="btn w-full p-3">
           Submit
         </button>
       </form>

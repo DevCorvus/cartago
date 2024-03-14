@@ -53,26 +53,26 @@ export default function ProductItemDetails({ product }: Props) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
-      <div className="w-full h-96 relative flex flex-col gap-2">
-        <div className="relative h-4/5 bg-neutral-100 shadow-md rounded-md">
+    <div className="mx-auto flex max-w-md flex-col items-center gap-6">
+      <div className="relative flex h-96 w-full flex-col gap-2">
+        <div className="relative h-4/5 rounded-md bg-neutral-100 shadow-md">
           {selectedImage ? (
             <Image
               src={'/uploads/' + selectedImage.path}
               fill={true}
               alt={`${product.title} selected image`}
-              className="rounded-md p-1 object-contain"
+              className="rounded-md object-contain p-1"
             />
           ) : (
-            <span className="h-full flex justify-center items-center bg-neutral-200">
+            <span className="flex h-full items-center justify-center bg-neutral-200">
               Image not found
             </span>
           )}
         </div>
-        <div className="flex-1 grid grid-cols-5 gap-1">
+        <div className="grid flex-1 grid-cols-5 gap-1">
           {product.images.map((image, i) => (
             <button
-              className={`relative w-20 h-full rounded bg-neutral-100 ${
+              className={`relative h-full w-20 rounded bg-neutral-100 ${
                 selectedImage === image ? 'border-2 border-neutral-300' : ''
               }`}
               key={i}
@@ -90,21 +90,21 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </div>
       </div>
-      <header className="text-green-800 text-2xl w-full flex justify-between font-bold">
+      <header className="flex w-full justify-between text-2xl font-bold text-green-800">
         <h1 className="uppercase">{product.title}</h1>
         <p className="justify-start align-top">{formatMoney(product.price)}</p>
       </header>
-      <section className="w-full flex flex-col justify-between gap-6">
+      <section className="flex w-full flex-col justify-between gap-6">
         {product.description ? (
-          <p className="font-sans text-md opacity-75 whitespace-pre-line">
+          <p className="text-md whitespace-pre-line font-sans opacity-75">
             {product.description}
           </p>
         ) : (
           <p className="italic text-amber-800 opacity-50">No description</p>
         )}
-        <div className="w-full flex justify-between items-center text-green-950 opacity-60">
+        <div className="flex w-full items-center justify-between text-green-950 opacity-60">
           {noStock ? (
-            <p className="text-red-600 bg-red-100 border border-red-600 rounded-md px-2 py-1">
+            <p className="rounded-md border border-red-600 bg-red-100 px-2 py-1 text-red-600">
               Out of stock
             </p>
           ) : (
@@ -112,12 +112,12 @@ export default function ProductItemDetails({ product }: Props) {
           )}
           <p>Created at {product.createdAt.toDateString()}</p>
         </div>
-        <ul className="w-full flex flex-wrap gap-2">
+        <ul className="flex w-full flex-wrap gap-2">
           {product.categories.map((category) => (
             <li key={category.id}>
               <Link
                 href={`/items?categoryId=${category.id}`}
-                className="bg-green-100 text-green-700 rounded-full text-xs px-2 py-1"
+                className="rounded-full bg-green-100 px-2 py-1 text-xs text-green-700"
               >
                 {capitalize(category.title)}
               </Link>
@@ -125,14 +125,14 @@ export default function ProductItemDetails({ product }: Props) {
           ))}
         </ul>
       </section>
-      <div className="w-full flex gap-3 justify-center items-center flex-row-reverse">
+      <div className="flex w-full flex-row-reverse items-center justify-center gap-3">
         <div className=" text-4xl">
           <WishProduct product={product} />
         </div>
         {productIds.includes(product.id) ? (
           <Link
             href="/cart"
-            className="w-full p-4 flex items-center justify-center gap-2 btn flex-1"
+            className="btn flex w-full flex-1 items-center justify-center gap-2 p-4"
           >
             <HiShoppingCart />
             View in shopping cart
@@ -142,7 +142,7 @@ export default function ProductItemDetails({ product }: Props) {
             <button
               type="submit"
               disabled={noStock}
-              className={`w-full p-4 flex items-center justify-center gap-2 ${
+              className={`flex w-full items-center justify-center gap-2 p-4 ${
                 noStock ? 'btn-disabled' : 'btn'
               }`}
             >

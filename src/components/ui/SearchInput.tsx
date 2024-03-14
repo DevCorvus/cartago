@@ -23,7 +23,7 @@ export default function SearchInput({ term, handleSearch }: Props) {
     <input
       type="text"
       placeholder={`Search for ${term}`}
-      className="p-3 input"
+      className="input p-3"
       onChange={(e) => setInput(e.target.value)}
     />
   );

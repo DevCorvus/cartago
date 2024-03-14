@@ -110,7 +110,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
     <Modal>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:container overflow-y-auto bg-white shadow-md lg:rounded-lg p-10 lg:p-12 border-2 border-gray-50 grid grid-cols-2 gap-4 lg:gap-6"
+        className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:gap-6 lg:rounded-lg lg:p-12"
       >
         <header>
           <h2 className="text-xl font-bold text-green-800">New address</h2>
@@ -124,13 +124,13 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="nickname"
             placeholder="Address nickname"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.nickname && (
             <p className="text-red-400">{errors.nickname.message}</p>
           )}
         </div>
-        <div className="col-span-2 lg:col-span-1 space-y-2">
+        <div className="col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="contact-name" className="text-green-800 opacity-75">
             Contact name
           </label>
@@ -139,18 +139,18 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="contact-name"
             placeholder="Enter contact name"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.contactName && (
             <p className="text-red-400">{errors.contactName.message}</p>
           )}
         </div>
-        <div className="col-span-2 lg:col-span-1 space-y-2">
+        <div className="col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="phone-number" className="text-green-800 opacity-75">
             Phone number
           </label>
           <div className="relative">
-            <div className="flex items-center gap-2 input p-3 focus-within:border-green-800">
+            <div className="input flex items-center gap-2 p-3 focus-within:border-green-800">
               <div>
                 <button
                   ref={phoneCodesRef}
@@ -165,7 +165,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
                         alt={selectedPhoneCountry.name + ' Flag'}
                         width={0}
                         height={0}
-                        className="w-6 h-auto"
+                        className="h-auto w-6"
                       />
                     )}
                     {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
@@ -183,12 +183,12 @@ export function AddAddressForm({ addAddress, close }: Props) {
               </div>
             </div>
             {showPhoneCodes && (
-              <ul className="z-10 absolute top-14 left-0 bg-slate-50 p-2 rounded-md shadow-md w-32 h-80 overflow-y-auto">
+              <ul className="absolute left-0 top-14 z-10 h-80 w-32 overflow-y-auto rounded-md bg-slate-50 p-2 shadow-md">
                 {countryPhones.map((country) => (
                   <li key={country.id}>
                     <button
                       type="button"
-                      className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
+                      className="flex w-full items-center gap-1 py-1 text-sm text-slate-800 transition hover:text-green-700 focus:text-green-700"
                       onClick={() => handleSelectCountryPhone(country)}
                     >
                       <Image
@@ -196,7 +196,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
                         alt={country.name + ' Flag'}
                         width={0}
                         height={0}
-                        className="w-6 h-auto"
+                        className="h-auto w-6"
                       />
                       <span className="line-clamp-1">+{country.phoneCode}</span>
                     </button>
@@ -209,14 +209,14 @@ export function AddAddressForm({ addAddress, close }: Props) {
             <p className="text-red-400">{errors.phoneNumber.message}</p>
           )}
         </div>
-        <div className="relative col-span-2 lg:col-span-1 space-y-2">
+        <div className="relative col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="country" className="text-green-800 opacity-75">
             Country
           </label>
           <button
             ref={countriesRef}
             type="button"
-            className="p-3 input flex items-center justify-between"
+            className="input flex items-center justify-between p-3"
             onClick={() => setShowCountries((prev) => !prev)}
           >
             <>
@@ -227,7 +227,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
                     alt={selectedCountry.name + ' Flag'}
                     width={0}
                     height={0}
-                    className="w-6 h-auto"
+                    className="h-auto w-6"
                   />
                   <span className="line-clamp-1">{selectedCountry.name}</span>
                 </div>
@@ -238,12 +238,12 @@ export function AddAddressForm({ addAddress, close }: Props) {
             </>
           </button>
           {showCountries && (
-            <ul className="z-10 absolute top-[5.5rem] bg-slate-50 p-2 rounded-md shadow-md w-full h-80 overflow-y-auto">
+            <ul className="absolute top-[5.5rem] z-10 h-80 w-full overflow-y-auto rounded-md bg-slate-50 p-2 shadow-md">
               {countries.map((country) => (
                 <li key={country.id}>
                   <button
                     type="button"
-                    className="w-full flex items-center gap-1 py-1 text-sm text-slate-800 hover:text-green-700 focus:text-green-700 transition"
+                    className="flex w-full items-center gap-1 py-1 text-sm text-slate-800 transition hover:text-green-700 focus:text-green-700"
                     onClick={() => handleSelectCountry(country)}
                   >
                     <Image
@@ -251,7 +251,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
                       alt={country.name + ' Flag'}
                       width={0}
                       height={0}
-                      className="w-6 h-auto"
+                      className="h-auto w-6"
                     />
                     <span className="line-clamp-1 text-left">
                       {country.name}
@@ -265,14 +265,14 @@ export function AddAddressForm({ addAddress, close }: Props) {
             <p className="text-red-400">{errors.countryId.message}</p>
           )}
         </div>
-        <div className="col-span-2 lg:col-span-1 space-y-2">
+        <div className="col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="state" className="text-green-800 opacity-75">
             State
           </label>
           <select
             {...register('stateId', { valueAsNumber: true })}
             id="state"
-            className="p-3 input"
+            className="input p-3"
             disabled={!selectedCountry}
             defaultValue=""
           >
@@ -293,7 +293,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             <p className="text-red-400">{errors.stateId.message}</p>
           )}
         </div>
-        <div className="col-span-2 lg:col-span-1 space-y-2">
+        <div className="col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="city" className="text-green-800 opacity-75">
             City
           </label>
@@ -302,11 +302,11 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="city"
             placeholder="Enter city"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.city && <p className="text-red-400">{errors.city.message}</p>}
         </div>
-        <div className="col-span-2 lg:col-span-1 space-y-2">
+        <div className="col-span-2 space-y-2 lg:col-span-1">
           <label htmlFor="postal-code" className="text-green-800 opacity-75">
             Zip/Postal code
           </label>
@@ -315,7 +315,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="postal-code"
             placeholder="Enter zip/postal code if available"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.postalCode && (
             <p className="text-red-400">{errors.postalCode.message}</p>
@@ -330,7 +330,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="street"
             placeholder="Street address"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.street && (
             <p className="text-red-400">{errors.street.message}</p>
@@ -349,7 +349,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             type="text"
             id="street-details"
             placeholder="Apartment, suite, etc. (Optional)"
-            className="p-3 input"
+            className="input p-3"
           />
           {errors.streetDetails && (
             <p className="text-red-400">{errors.streetDetails.message}</p>
@@ -360,7 +360,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             {...register('default')}
             type="checkbox"
             id="default"
-            className="w-4 h-4 bg-slate-50 accent-green-800"
+            className="h-4 w-4 bg-slate-50 accent-green-800"
           />
           <label htmlFor="default" className="text-green-800 opacity-75">
             Set as default
@@ -369,7 +369,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
         <div className="col-span-2 flex items-center gap-2">
           <button
             type="submit"
-            className={`px-5 py-2 flex items-center gap-2 ${
+            className={`flex items-center gap-2 px-5 py-2 ${
               isSubmitting ? 'btn-disabled' : 'btn'
             }`}
             disabled={isSubmitting}
@@ -380,7 +380,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
           <button
             type="button"
             onClick={close}
-            className="px-5 py-2 btn-alternative"
+            className="btn-alternative px-5 py-2"
           >
             Cancel
           </button>

@@ -48,9 +48,9 @@ export default function ProductReviewList({ productId }: Props) {
   if (isLoading) return <Loading />;
 
   return (
-    <section className="mt-10 w-full flex flex-col gap-6">
+    <section className="mt-10 flex w-full flex-col gap-6">
       <header>
-        <h2 className="text-green-800 text-xl font-bold">
+        <h2 className="text-xl font-bold text-green-800">
           Reviews ({reviews.length})
         </h2>
       </header>

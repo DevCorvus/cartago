@@ -62,16 +62,16 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="flex flex-col gap-12 max-w-sm">
+    <div className="flex max-w-sm flex-col gap-12">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center justify-center flex-col gap-10"
+        className="flex flex-col items-center justify-center gap-10"
       >
         <header className="w-full">
           <h1 className="text-2xl font-bold text-green-800">Register</h1>
         </header>
-        <div className="flex flex-col gap-6 w-full">
-          <div className="flex justify-center flex-col gap-2">
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex flex-col justify-center gap-2">
             <label htmlFor="fullname" className="text-green-800 opacity-75">
               Name
             </label>
@@ -80,13 +80,13 @@ export default function SignUpForm() {
               id="fullname"
               type="text"
               placeholder="Enter your name"
-              className="p-4 input-alternative"
+              className="input-alternative p-4"
             />
             {errors.fullname && (
               <p className="text-red-400">{errors.fullname.message}</p>
             )}
           </div>
-          <div className="flex justify-center flex-col gap-2">
+          <div className="flex flex-col justify-center gap-2">
             <label htmlFor="email" className="text-green-800 opacity-75">
               Email
             </label>
@@ -95,13 +95,13 @@ export default function SignUpForm() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="p-4 input-alternative"
+              className="input-alternative p-4"
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
             )}
           </div>
-          <div className="flex justify-center flex-col gap-2">
+          <div className="flex flex-col justify-center gap-2">
             <label htmlFor="password" className="text-green-800 opacity-75">
               Password
             </label>
@@ -110,7 +110,7 @@ export default function SignUpForm() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="p-4 input-alternative"
+              className="input-alternative p-4"
               onChange={handlePasswordChange}
             />
             {errors.password && (
@@ -120,7 +120,7 @@ export default function SignUpForm() {
           <div
             className={`${
               displayConfirmPassword ? 'flex' : 'hidden'
-            } justify-center flex-col gap-2`}
+            } flex-col justify-center gap-2`}
           >
             <label
               htmlFor="confirmPassword"
@@ -133,7 +133,7 @@ export default function SignUpForm() {
               id="confirmPassword"
               type="password"
               placeholder="Repeat your password"
-              className="p-4 input-alternative"
+              className="input-alternative p-4"
             />
             {errors.confirmPassword && (
               <p className="text-red-400">{errors.confirmPassword.message}</p>
@@ -148,16 +148,16 @@ export default function SignUpForm() {
             )}
           </div>
         </div>
-        <button type="submit" className="p-3 w-full btn">
+        <button type="submit" className="btn w-full p-3">
           Sign Up
         </button>
       </form>
-      <div className="flex items-center justify-center flex-col opacity-75 text-green-800">
+      <div className="flex flex-col items-center justify-center text-green-800 opacity-75">
         <p>
           Do you already have an account?{' '}
           <Link
             href="sign-in"
-            className="hover:text-lime-700 transition font-semibold"
+            className="font-semibold transition hover:text-lime-700"
           >
             Sign In
           </Link>

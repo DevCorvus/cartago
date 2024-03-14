@@ -36,11 +36,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={merriweather.className}>
-      <body className="bg-neutral-50 relative">
+      <body className="relative bg-neutral-50">
         <AuthProvider session={session}>
           <UserProvider data={userData}>
             <NavBar />
-            <main className="w-full min-h-screen bg-amber-50">{children}</main>
+            <main className="min-h-screen w-full bg-amber-50">{children}</main>
             <div id="modal-container"></div>
           </UserProvider>
         </AuthProvider>

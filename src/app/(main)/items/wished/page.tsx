@@ -14,7 +14,7 @@ export default async function Wished() {
   return (
     <div>
       <header>
-        <h1 className="text-green-800 font-bold text-2xl">Wish List </h1>
+        <h1 className="text-2xl font-bold text-green-800">Wish List </h1>
       </header>
       <div>
         <WishList products={products} />

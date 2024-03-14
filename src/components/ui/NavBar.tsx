@@ -13,7 +13,7 @@ export default function NavBar() {
   };
 
   return (
-    <div className="bg-white text-green-800 font-semibold py-2 px-4 shadow-md fixed z-50 w-full">
+    <div className="fixed z-50 w-full bg-white px-4 py-2 font-semibold text-green-800 shadow-md">
       <nav className="container mx-auto flex items-center justify-between">
         <header>
           <Link href="/">eCommerce</Link>

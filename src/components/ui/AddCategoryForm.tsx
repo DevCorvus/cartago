@@ -48,7 +48,7 @@ export default function AddCategoryForm({ addCategory }: Props) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="w-full border border-transparent border-t-gray-100 hover:border-green-700 focus:border-green-700 transition p-3 rounded-full shadow-md bg-white text-green-800 font-semibold flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-transparent border-t-gray-100 bg-white p-3 font-semibold text-green-800 shadow-md transition hover:border-green-700 focus:border-green-700"
       >
         <HiMiniPlus className="text-3xl" />
         Add category
@@ -59,7 +59,7 @@ export default function AddCategoryForm({ addCategory }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white rounded-md shadow-md p-6 flex flex-col gap-4 border-2 border-gray-50"
+      className="flex flex-col gap-4 rounded-md border-2 border-gray-50 bg-white p-6 shadow-md"
     >
       <header>
         <h1 className="text-xl font-bold text-green-800">New category</h1>
@@ -73,7 +73,7 @@ export default function AddCategoryForm({ addCategory }: Props) {
           type="text"
           id="title"
           placeholder="Enter category title"
-          className="p-3 input"
+          className="input p-3"
         />
         {errors.title && <p className="text-red-400">{errors.title.message}</p>}
         {alreadyExistsError && <p className="text-red-400">Already taken</p>}
@@ -85,7 +85,7 @@ export default function AddCategoryForm({ addCategory }: Props) {
         <textarea
           {...register('description')}
           id="description"
-          className="p-3 textarea"
+          className="textarea p-3"
           placeholder="Enter category description"
         ></textarea>
         {errors.description && (
@@ -93,13 +93,13 @@ export default function AddCategoryForm({ addCategory }: Props) {
         )}
       </div>
       <div className="flex items-center gap-2">
-        <button type="submit" className="px-5 py-2 btn">
+        <button type="submit" className="btn px-5 py-2">
           Create
         </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}
-          className="px-5 py-2 btn-alternative"
+          className="btn-alternative px-5 py-2"
         >
           Cancel
         </button>

@@ -68,9 +68,9 @@ export default function Categories() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header>
-        <h1 className="text-green-800 font-bold text-2xl">Categories</h1>
+        <h1 className="text-2xl font-bold text-green-800">Categories</h1>
       </header>
       <AddCategoryForm addCategory={addCategory} />
       <SearchInput term="categories" handleSearch={searchCategories} />

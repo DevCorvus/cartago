@@ -11,7 +11,7 @@ export default function CategoryItemWithProducts({
 }: Props) {
   return (
     <div className="flex flex-col gap-4">
-      <header className="font-semibold text-green-800 text-2xl">
+      <header className="text-2xl font-semibold text-green-800">
         <h1>
           {capitalize(categoryWithProducts.title)} (
           {categoryWithProducts.products.length})

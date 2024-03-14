@@ -47,10 +47,10 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 bg-white p-4 rounded-lg shadow-md border-2 border-gray-50"
+      className="flex flex-col gap-4 rounded-lg border-2 border-gray-50 bg-white p-4 shadow-md"
     >
       <header className="flex items-center justify-between">
-        <h3 className="text-green-800 text-lg font-semibold">Edit review</h3>
+        <h3 className="text-lg font-semibold text-green-800">Edit review</h3>
         <div className="flex items-center gap-2">
           <label htmlFor="edit-rating" className="text-green-800 opacity-75">
             Rating

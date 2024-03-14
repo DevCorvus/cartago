@@ -24,7 +24,7 @@ export default function OrderStatusTag({ status, className = '' }: Props) {
     <span
       className={`${getStatusColor(
         status,
-      )} px-1.5 py-0.5 rounded-md border border-gray-100 ${className}`}
+      )} rounded-md border border-gray-100 px-1.5 py-0.5 ${className}`}
     >
       {status}
     </span>

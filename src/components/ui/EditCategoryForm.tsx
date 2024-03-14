@@ -57,7 +57,7 @@ export default function EditCategoryForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 rounded-md bg-white shadow-md flex flex-col gap-4 border-2 border-gray-50"
+      className="flex flex-col gap-4 rounded-md border-2 border-gray-50 bg-white p-6 shadow-md"
     >
       <header>
         <span className="text-xl font-bold text-green-800">
@@ -76,7 +76,7 @@ export default function EditCategoryForm({
           type="text"
           id={`title-${category.id}`}
           placeholder="Enter category title"
-          className="p-3 input"
+          className="input p-3"
         />
         {errors.title && <p className="text-red-400">{errors.title.message}</p>}
         {alreadyExistsError && <p className="text-red-400">Already taken</p>}
@@ -91,7 +91,7 @@ export default function EditCategoryForm({
         <textarea
           {...register('description')}
           id={`description-${category.id}`}
-          className="p-3 textarea"
+          className="textarea p-3"
           placeholder="Enter category description"
         ></textarea>
         {errors.description && (
@@ -99,13 +99,13 @@ export default function EditCategoryForm({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <button type="submit" className="px-5 py-2 btn">
+        <button type="submit" className="btn px-5 py-2">
           Apply
         </button>
         <button
           type="button"
           onClick={close}
-          className="px-5 py-2 btn-alternative"
+          className="btn-alternative px-5 py-2"
         >
           Cancel
         </button>

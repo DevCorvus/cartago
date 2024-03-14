@@ -49,7 +49,7 @@ export default function AddReviewForm({ productId, addReview }: Props) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="w-full border border-transparent border-t-gray-100 hover:border-green-700 focus:border-green-700 transition p-3 rounded-full shadow-md bg-white text-green-800 font-semibold flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-transparent border-t-gray-100 bg-white p-3 font-semibold text-green-800 shadow-md transition hover:border-green-700 focus:border-green-700"
       >
         <HiMiniPlus className="text-3xl" />
         Write review
@@ -60,10 +60,10 @@ export default function AddReviewForm({ productId, addReview }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 bg-white p-4 rounded-lg shadow-md border-2 border-gray-50"
+      className="flex flex-col gap-4 rounded-lg border-2 border-gray-50 bg-white p-4 shadow-md"
     >
       <header className="flex items-center justify-between">
-        <h3 className="text-green-800 text-lg font-semibold">New review</h3>
+        <h3 className="text-lg font-semibold text-green-800">New review</h3>
         <div className="flex items-center gap-2">
           <label htmlFor="rating" className="text-green-800 opacity-75">
             Rating

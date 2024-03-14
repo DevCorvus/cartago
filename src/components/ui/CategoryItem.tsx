@@ -41,7 +41,7 @@ export default function CategoryItem({
   }
 
   return (
-    <div className="p-4 rounded-md bg-white shadow-md">
+    <div className="rounded-md bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <span>{capitalize(category.title)}</span>
@@ -52,14 +52,14 @@ export default function CategoryItem({
         <div className="flex items-center gap-3">
           <button
             title="Edit category"
-            className="hover:text-green-700 focus:text-green-700 transition"
+            className="transition hover:text-green-700 focus:text-green-700"
             onClick={() => setEditMode(true)}
           >
             <HiPencil />
           </button>
           <button
             title="Delete category"
-            className="hover:text-red-600 focus:text-red-600 transition"
+            className="transition hover:text-red-600 focus:text-red-600"
             onClick={() => handleDelete(category.id)}
           >
             <HiTrash />
@@ -67,13 +67,13 @@ export default function CategoryItem({
         </div>
       </div>
       {showDetails && (
-        <div className="text-sm flex flex-col gap-4 mt-4">
+        <div className="mt-4 flex flex-col gap-4 text-sm">
           {category.description ? (
-            <p className="font-sans text-md opacity-75 whitespace-pre-line">
+            <p className="text-md whitespace-pre-line font-sans opacity-75">
               {category.description}
             </p>
           ) : (
-            <span className="italic font-sans text-md opacity-50">
+            <span className="text-md font-sans italic opacity-50">
               No description
             </span>
           )}

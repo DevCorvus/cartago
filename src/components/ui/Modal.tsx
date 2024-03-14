@@ -7,7 +7,7 @@ interface Props {
 export default function Modal({ children }: Props) {
   return (
     <Portal id="modal-container">
-      <div className="z-50 fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-50">
         {children}
       </div>
     </Portal>
