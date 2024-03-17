@@ -4055,9 +4055,50 @@ async function seedMissingCountryStates() {
   });
 }
 
+async function seedProductCategories() {
+  await prisma.category.createMany({
+    data: [
+      { title: 'accessories', description: '' },
+      { title: 'appliances', description: '' },
+      { title: 'art', description: '' },
+      { title: 'baby', description: '' },
+      { title: 'baby care', description: '' },
+      { title: 'beauty', description: '' },
+      { title: 'books', description: '' },
+      { title: 'cleaning', description: '' },
+      { title: 'clothing', description: '' },
+      { title: 'collectibles', description: '' },
+      { title: 'electronics', description: '' },
+      { title: 'furniture', description: '' },
+      { title: 'games', description: '' },
+      { title: 'garden', description: '' },
+      { title: 'handmade', description: '' },
+      { title: 'health', description: '' },
+      { title: 'home', description: '' },
+      { title: 'home improvement', description: '' },
+      { title: 'household', description: '' },
+      { title: 'jewelry', description: '' },
+      { title: 'kitchen', description: '' },
+      { title: 'laptops', description: '' },
+      { title: 'outdoors', description: '' },
+      { title: 'pc components', description: '' },
+      { title: 'personal car', description: '' },
+      { title: 'pet supplies', description: '' },
+      { title: 'programming', description: '' },
+      { title: 'shoes', description: '' },
+      { title: 'smartphones', description: '' },
+      { title: 'sports', description: '' },
+      { title: 'tools', description: '' },
+      { title: 'toys', description: '' },
+      { title: 'videogames', description: '' },
+    ],
+  });
+}
+
 (async () => {
   await seedCountries();
   await seedCountryStates();
   await seedMissingCountryStates();
+  await seedProductCategories();
   await prisma.$disconnect();
 })();
