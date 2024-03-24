@@ -20,7 +20,7 @@ export default function ProductCardList() {
     (async () => {
       const res = await fetch('/api/products');
       if (res.ok) {
-        const data = await res.json();
+        const data: ProductCardDto[] = await res.json();
         setProducts(data);
       }
       setLoading(false);
