@@ -87,7 +87,7 @@ export function SignInForm() {
         <p>
           You do not have an account?
           <Link
-            href="sign-up"
+            href="/register"
             className="font-semibold transition hover:text-lime-700"
           >
             {' '}

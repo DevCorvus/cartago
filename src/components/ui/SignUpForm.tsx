@@ -156,7 +156,7 @@ export default function SignUpForm() {
         <p>
           Do you already have an account?{' '}
           <Link
-            href="sign-in"
+            href="/login"
             className="font-semibold transition hover:text-lime-700"
           >
             Sign In
