@@ -83,7 +83,7 @@ export default function ProductCardList() {
                 <p className="line-clamp-2 font-sans">{product.description}</p>
                 <div className="flex items-center gap-2 text-sm">
                   <Link
-                    href="/todo"
+                    href={`/items/${product.id}/edit`}
                     className="btn-alternative flex items-center gap-1 px-1.5 py-1"
                   >
                     Edit <HiPencilSquare />
