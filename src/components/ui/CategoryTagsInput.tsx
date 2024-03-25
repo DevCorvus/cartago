@@ -28,11 +28,11 @@ export default function CategoryTagsInput({
 
   const [selectedCategoryTags, setSelectedCategoryTags] = useState<
     CategoryTagDto[]
-  >([]);
+  >(defaultCategoryTags || []);
 
   const [autocompleteCategoryTags, setAutocompleteCategoryTags] = useState<
     CategoryTagDto[]
-  >(defaultCategoryTags || []);
+  >([]);
 
   useEffect(() => {
     setCategoryIds(selectedCategoryTags.map((tag) => tag.id));
