@@ -3,6 +3,7 @@ import {
   ProductDto,
   CreateUpdateProductDto,
   ProductCardDto,
+  ProductDetailsDto,
 } from '@/shared/dtos/product.dto';
 
 interface CreateUpdateProductInterface
@@ -89,6 +90,90 @@ export class ProductService {
         },
       },
     });
+  }
+
+  async findByIdWithRelatedOnes(
+    id: string,
+    userId?: string,
+    amount: number = 6,
+  ): Promise<ProductDetailsDto | null> {
+    const product = await prisma.product.findUnique({
+      where: { id, userId, deletedAt: null },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        stock: true,
+        createdAt: true,
+        updatedAt: true,
+        images: {
+          select: {
+            path: true,
+          },
+        },
+        categories: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    if (!product) return null;
+
+    let relatedCategories = product.categories
+      .toSorted(() => 0.5 - Math.random())
+      .slice(0, amount);
+
+    const relatedProducts: ProductCardDto[] = [];
+
+    while (relatedProducts.length < amount && relatedCategories.length !== 0) {
+      for (const { id: categoryId } of relatedCategories) {
+        const relatedProductCard = await prisma.product.findFirst({
+          where: {
+            id: {
+              notIn: [
+                product.id,
+                ...relatedProducts.map((product) => product.id),
+              ],
+            },
+            categories: { some: { id: categoryId } },
+            deletedAt: null,
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            price: true,
+            images: {
+              take: 1,
+              select: {
+                path: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
+        if (relatedProductCard) {
+          relatedProducts.push(relatedProductCard);
+          if (relatedProducts.length === amount) break;
+        } else {
+          relatedCategories = relatedCategories.filter(
+            (c) => c.id !== categoryId,
+          );
+        }
+      }
+    }
+
+    return {
+      product,
+      relatedProducts,
+    };
   }
 
   async findWithOwnerAndImages(

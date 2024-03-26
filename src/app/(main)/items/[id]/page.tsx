@@ -15,11 +15,13 @@ export default async function ProductItem({ params }: Props) {
     notFound();
   }
 
-  const product = await productService.findById(result.data.id);
+  const productWithRelatedOnes = await productService.findByIdWithRelatedOnes(
+    result.data.id,
+  );
 
-  if (!product) {
+  if (!productWithRelatedOnes) {
     notFound();
   }
 
-  return <ProductItemDetails product={product} />;
+  return <ProductItemDetails {...productWithRelatedOnes} />;
 }

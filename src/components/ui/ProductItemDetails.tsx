@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 import { HiShoppingCart } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
-import { ProductDto } from '@/shared/dtos/product.dto';
+import { ProductDetailsDto } from '@/shared/dtos/product.dto';
 import Link from 'next/link';
 import { capitalize } from '@/utils/capitalize';
 import { useCartStore } from '@/stores/useCartStore';
@@ -12,12 +12,12 @@ import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { formatMoney } from '@/lib/dinero';
 import ProductReviewList from './ProductReviewList';
+import ProductList from './ProductList';
 
-interface Props {
-  product: ProductDto;
-}
-
-export default function ProductItemDetails({ product }: Props) {
+export default function ProductItemDetails({
+  product,
+  relatedProducts,
+}: ProductDetailsDto) {
   const isAuthenticated = useIsAuthenticated();
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
@@ -152,6 +152,7 @@ export default function ProductItemDetails({ product }: Props) {
           </form>
         )}
       </div>
+      <ProductList products={relatedProducts} />
       <ProductReviewList productId={product.id} />
     </div>
   );

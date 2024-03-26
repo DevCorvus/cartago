@@ -35,6 +35,11 @@ export interface ProductCardDto {
   images: ProductImageDto[];
 }
 
+export interface ProductDetailsDto {
+  product: ProductDto;
+  relatedProducts: ProductCardDto[];
+}
+
 export interface ProductCartItemDto {
   id: string;
   title: string;
