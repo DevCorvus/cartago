@@ -13,7 +13,7 @@ export async function GET() {
   }
 
   try {
-    const products = await productService.findAllFromUser(user.id);
+    const products = await productService.findAll(user.id);
     return NextResponse.json(products);
   } catch {
     return NextResponse.json(null, { status: 500 });

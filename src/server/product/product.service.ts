@@ -19,30 +19,7 @@ interface ProductWithOwnerAndImages {
 export class ProductService {
   constructor() {}
 
-  async findAll(): Promise<ProductCardDto[]> {
-    return prisma.product.findMany({
-      where: {
-        deletedAt: null,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        images: {
-          take: 1,
-          select: {
-            path: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  async findAllFromUser(userId: string): Promise<ProductCardDto[]> {
+  async findAll(userId?: string): Promise<ProductCardDto[]> {
     return prisma.product.findMany({
       where: {
         userId,
