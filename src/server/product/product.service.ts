@@ -20,7 +20,7 @@ export class ProductService {
   constructor() {}
 
   async findAll(userId?: string): Promise<ProductCardDto[]> {
-    return prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: {
         userId,
         deletedAt: null,
@@ -41,6 +41,32 @@ export class ProductService {
         createdAt: 'desc',
       },
     });
+
+    const productSales = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        productId: {
+          in: products.map((product) => product.id),
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const productsWithSales = products.map((product) => {
+      const productSalesFound = productSales.find(
+        (p) => p.productId === product.id,
+      );
+
+      const sales = productSalesFound?._sum.amount
+        ? productSalesFound._sum.amount
+        : 0;
+
+      return { ...product, sales };
+    });
+
+    return productsWithSales;
   }
 
   async findById(id: string, userId?: string): Promise<ProductDto | null> {

@@ -32,6 +32,7 @@ export interface ProductCardDto {
   title: string;
   description: string;
   price: number;
+  sales: number;
   images: ProductImageDto[];
 }
 
