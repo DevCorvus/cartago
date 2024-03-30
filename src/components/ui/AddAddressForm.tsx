@@ -49,6 +49,10 @@ export function AddAddressForm({ addAddress, close }: Props) {
     setShowCountries(false),
   );
 
+  const ref = useClickOutside<HTMLFormElement>(close, {
+    disable: showCountries || showPhoneCodes,
+  });
+
   const {
     register,
     formState: { errors, isSubmitting },
@@ -107,8 +111,9 @@ export function AddAddressForm({ addAddress, close }: Props) {
   if (isLoading) return <LoadingModal />;
 
   return (
-    <Modal>
+    <Modal id="modal-container-alt">
       <form
+        ref={ref}
         onSubmit={handleSubmit(onSubmit)}
         className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:gap-6 lg:rounded-lg lg:p-12"
       >
@@ -168,7 +173,9 @@ export function AddAddressForm({ addAddress, close }: Props) {
                         className="h-auto w-6"
                       />
                     )}
-                    {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
+                    <span className="pointer-events-none">
+                      {!showPhoneCodes ? <HiChevronDown /> : <HiChevronUp />}
+                    </span>
                   </>
                 </button>
               </div>
@@ -234,7 +241,9 @@ export function AddAddressForm({ addAddress, close }: Props) {
               ) : (
                 <span>Select country</span>
               )}
-              {!showCountries ? <HiChevronDown /> : <HiChevronUp />}
+              <span className="pointer-events-none">
+                {!showCountries ? <HiChevronDown /> : <HiChevronUp />}
+              </span>
             </>
           </button>
           {showCountries && (

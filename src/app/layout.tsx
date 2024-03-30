@@ -42,6 +42,7 @@ export default async function RootLayout({
             <NavBar />
             <main className="min-h-screen w-full bg-amber-50">{children}</main>
             <div id="modal-container"></div>
+            <div id="modal-container-alt"></div>
           </UserProvider>
         </AuthProvider>
       </body>

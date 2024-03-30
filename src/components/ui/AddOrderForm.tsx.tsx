@@ -2,7 +2,7 @@
 
 import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { HiOutlineQuestionMarkCircle } from 'react-icons/hi2';
+import { HiOutlineQuestionMarkCircle, HiPlus } from 'react-icons/hi2';
 import Image from 'next/image';
 import { formatMoney } from '@/lib/dinero';
 import { CreatePaymentDto } from '@/shared/dtos/payment.dto';
@@ -15,9 +15,10 @@ import { formatDate } from '@/utils/formatDate';
 import OrderStatusTag from './OrderStatusTag';
 import Link from 'next/link';
 import Modal from './Modal';
-import { useEffect, useState } from 'react';
-import { AddressMinimalDto } from '@/shared/dtos/address.dto';
+import { FormEvent, useEffect, useState } from 'react';
+import { AddressDto, AddressMinimalDto } from '@/shared/dtos/address.dto';
 import LoadingModal from './LoadingModal';
+import { AddAddressForm } from './AddAddressForm';
 
 interface Props {
   order: NewOrderDto;
@@ -28,8 +29,11 @@ export default function AddOrderForm({ order, close }: Props) {
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState<AddressMinimalDto[]>([]);
+  const [showAddressForm, setShowAddressForm] = useState(false);
 
-  const ref = useClickOutside<HTMLFormElement>(close);
+  const ref = useClickOutside<HTMLFormElement>(close, {
+    disable: showAddressForm,
+  });
 
   useEffect(() => {
     (async () => {
@@ -43,6 +47,25 @@ export default function AddOrderForm({ order, close }: Props) {
       setLoading(false);
     })();
   }, []);
+
+  const addAddress = (newAddress: AddressDto) => {
+    setAddresses((prev) => {
+      if (newAddress.default) {
+        prev = prev.map((address) => {
+          address.default = false;
+          return address;
+        });
+      }
+      return [
+        ...prev,
+        {
+          id: newAddress.id,
+          nickname: newAddress.nickname,
+          default: newAddress.default,
+        },
+      ];
+    });
+  };
 
   const {
     register,
@@ -64,13 +87,22 @@ export default function AddOrderForm({ order, close }: Props) {
     }
   };
 
+  const submitWrapper = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (showAddressForm) return;
+
+    const cb = handleSubmit(onSubmit);
+    await cb(e);
+  };
+
   if (isLoading) return <LoadingModal />;
 
   return (
     <Modal>
       <form
         ref={ref}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={submitWrapper}
         className="flex w-full flex-col gap-10 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:flex-row lg:rounded-lg lg:p-12"
       >
         <div className="flex flex-1 flex-col gap-10">
@@ -100,22 +132,31 @@ export default function AddOrderForm({ order, close }: Props) {
               <h3>Shipping address</h3>
             </header>
             <div>
-              <select
-                className="input p-3"
-                {...register('address')}
-                defaultValue={
-                  addresses.find((address) => address.default)?.id || ''
-                }
-              >
-                <option value="" disabled>
-                  Select address
-                </option>
-                {addresses.map((address) => (
-                  <option key={address.id} value={address.id}>
-                    {address.nickname + (address.default ? ' (Default)' : '')}
+              <div className="flex gap-2">
+                <select
+                  className="input p-3"
+                  {...register('address')}
+                  defaultValue={
+                    addresses.find((address) => address.default)?.id || ''
+                  }
+                >
+                  <option value="" disabled>
+                    Select address
                   </option>
-                ))}
-              </select>
+                  {addresses.map((address) => (
+                    <option key={address.id} value={address.id}>
+                      {address.nickname + (address.default ? ' (Default)' : '')}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setShowAddressForm(true)}
+                  type="button"
+                  className="rounded-md border border-gray-50 p-4 text-slate-500 shadow-md transition hover:border-green-700 hover:text-green-700 focus:border-green-700 focus:text-green-700"
+                >
+                  <HiPlus className="scale-150" />
+                </button>
+              </div>
               {errors.address && (
                 <p className="text-red-400">{errors.address.message}</p>
               )}
@@ -230,6 +271,12 @@ export default function AddOrderForm({ order, close }: Props) {
             </button>
           </div>
         </div>
+        {showAddressForm && (
+          <AddAddressForm
+            addAddress={addAddress}
+            close={() => setShowAddressForm(false)}
+          />
+        )}
       </form>
     </Modal>
   );
