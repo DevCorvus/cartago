@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createCartItemSchema } from './cartItem.schema';
 
 const passwordSchema = z.string().min(6).max(256);
 
@@ -13,6 +14,8 @@ export const createUserSchema = z
     email: z.string().email().trim(),
     password: passwordSchema,
     confirmPassword: z.string(),
+    wishedItems: z.array(z.string().uuid()).optional(),
+    cartItems: z.array(createCartItemSchema).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords must match',

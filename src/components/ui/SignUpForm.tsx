@@ -8,6 +8,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUserSchema } from '@/shared/schemas/user.schema';
 import { CreateUserDto } from '@/shared/dtos/user.dto';
+import { localStorageCart } from '@/utils/localStorageCart';
+import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
+import { localStorageWished } from '@/utils/localStorageWished';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -15,6 +18,8 @@ export default function SignUpForm() {
 
   const [registerError, setRegisterError] = useState(false);
   const [somethingWentWrongError, setSomethingWentWrongError] = useState(false);
+
+  const [isExportingData, setExportingData] = useState(true);
 
   const {
     register,
@@ -27,6 +32,22 @@ export default function SignUpForm() {
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
     setRegisterError(false);
     setSomethingWentWrongError(false);
+
+    if (isExportingData) {
+      const wishedItems = localStorageWished.get().map((product) => product.id);
+
+      if (wishedItems.length) {
+        data.wishedItems = wishedItems;
+      }
+
+      const cartItems: CreateCartItemDto[] = localStorageCart
+        .get()
+        .map((product) => ({ productId: product.id, amount: product.amount }));
+
+      if (cartItems.length) {
+        data.cartItems = cartItems;
+      }
+    }
 
     const signUpRes = await fetch('/api/auth/signup', {
       method: 'POST',
@@ -138,6 +159,18 @@ export default function SignUpForm() {
             {errors.confirmPassword && (
               <p className="text-red-400">{errors.confirmPassword.message}</p>
             )}
+          </div>
+          <div className="col-span-2 flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="export"
+              className="h-4 w-4 bg-slate-50 accent-green-800"
+              checked={isExportingData}
+              onChange={(e) => setExportingData(e.target.checked)}
+            />
+            <label htmlFor="export" className="text-green-800 opacity-75">
+              Export cart and wished items
+            </label>
           </div>
           <div className="space-y-2">
             {registerError && (
