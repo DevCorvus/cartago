@@ -17,10 +17,49 @@ interface ProductWithOwnerAndImages {
   images: string[];
 }
 
+interface FindAllOptions {
+  lastId?: string;
+  take?: number;
+}
+
 export class ProductService {
   constructor() {}
 
-  async findAll(userId?: string): Promise<ProductCardWithSalesDto[]> {
+  async findAll(options?: FindAllOptions): Promise<ProductCardWithSalesDto[]> {
+    const products = await prisma.product.findMany({
+      where: {
+        deletedAt: null,
+      },
+      cursor: options?.lastId
+        ? {
+            id: options.lastId,
+          }
+        : undefined,
+      take: options?.take || 20,
+      skip: options?.lastId ? 1 : 0,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        images: {
+          take: 1,
+          select: {
+            path: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const productsWithSales = await this.getSalesFromProductCards(products);
+
+    return productsWithSales;
+  }
+
+  async findAllFromUser(userId: string): Promise<ProductCardWithSalesDto[]> {
     const products = await prisma.product.findMany({
       where: {
         userId,
@@ -292,7 +331,7 @@ export class ProductService {
     });
   }
 
-  private async getSalesFromProductCards(
+  async getSalesFromProductCards(
     products: ProductCardDto[],
   ): Promise<ProductCardWithSalesDto[]> {
     const productSales = await prisma.orderItem.groupBy({

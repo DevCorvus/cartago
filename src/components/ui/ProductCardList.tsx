@@ -3,24 +3,24 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Loading from './Loading';
-import { ProductCardDto } from '@/shared/dtos/product.dto';
+import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import { HiOutlinePhoto, HiPencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
 import SearchInput from './SearchInput';
 import { formatMoney } from '@/lib/dinero';
 
 export default function ProductCardList() {
-  const [products, setProducts] = useState<ProductCardDto[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<ProductCardDto[]>(
-    [],
-  );
+  const [products, setProducts] = useState<ProductCardWithSalesDto[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<
+    ProductCardWithSalesDto[]
+  >([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const res = await fetch('/api/products');
       if (res.ok) {
-        const data: ProductCardDto[] = await res.json();
+        const data: ProductCardWithSalesDto[] = await res.json();
         setProducts(data);
       }
       setLoading(false);

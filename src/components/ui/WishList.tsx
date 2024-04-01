@@ -1,11 +1,11 @@
 'use client';
 
-import { ProductCardDto } from '@/shared/dtos/product.dto';
+import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import ProductList from './ProductList';
 import { localStorageWished } from '@/utils/localStorageWished';
 
 interface Props {
-  products: ProductCardDto[] | null;
+  products: ProductCardWithSalesDto[] | null;
 }
 
 export default function WishList({ products }: Props) {

@@ -5,8 +5,11 @@ import {
   CategoryWithProductsDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
+import { ProductService } from '../product/product.service';
 
 export class CategoryService {
+  constructor(private productService: ProductService) {}
+
   findAll(title: string = ''): Promise<CategoryDto[]> {
     return prisma.category.findMany({
       where: { title: { startsWith: title } },
@@ -26,7 +29,7 @@ export class CategoryService {
   async findByIdWithProducts(
     id: number,
   ): Promise<CategoryWithProductsDto | null> {
-    return prisma.category.findUnique({
+    const categoryWithProducts = await prisma.category.findUnique({
       where: { id },
       include: {
         products: {
@@ -48,6 +51,15 @@ export class CategoryService {
         },
       },
     });
+
+    if (!categoryWithProducts) return null;
+
+    const productsWithSales =
+      await this.productService.getSalesFromProductCards(
+        categoryWithProducts.products,
+      );
+
+    return { ...categoryWithProducts, products: productsWithSales };
   }
 
   create(data: CreateUpdateCategoryDto): Promise<CategoryDto> {

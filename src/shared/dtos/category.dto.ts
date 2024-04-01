@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createUpdateCategorySchema } from '../schemas/category.schema';
-import { ProductCardDto } from './product.dto';
+import { ProductCardWithSalesDto } from './product.dto';
 
 export type CreateUpdateCategoryDto = z.infer<
   typeof createUpdateCategorySchema
@@ -25,5 +25,5 @@ export interface CategoryWithProductsDto {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  products: ProductCardDto[];
+  products: ProductCardWithSalesDto[];
 }

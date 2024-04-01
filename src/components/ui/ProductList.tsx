@@ -1,8 +1,8 @@
-import { ProductCardDto } from '@/shared/dtos/product.dto';
+import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import ProductItem from './ProductItem';
 
 interface Props {
-  products: ProductCardDto[];
+  products: ProductCardWithSalesDto[];
 }
 
 export default function ProductList({ products }: Props) {
