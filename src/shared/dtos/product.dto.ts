@@ -32,8 +32,11 @@ export interface ProductCardDto {
   title: string;
   description: string;
   price: number;
-  sales: number;
   images: ProductImageDto[];
+}
+
+export interface ProductCardWithSalesDto extends ProductCardDto {
+  sales: number;
 }
 
 export interface ProductDetailsDto {

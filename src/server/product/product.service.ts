@@ -4,6 +4,7 @@ import {
   CreateUpdateProductDto,
   ProductCardDto,
   ProductDetailsDto,
+  ProductCardWithSalesDto,
 } from '@/shared/dtos/product.dto';
 
 interface CreateUpdateProductInterface
@@ -19,7 +20,7 @@ interface ProductWithOwnerAndImages {
 export class ProductService {
   constructor() {}
 
-  async findAll(userId?: string): Promise<ProductCardDto[]> {
+  async findAll(userId?: string): Promise<ProductCardWithSalesDto[]> {
     const products = await prisma.product.findMany({
       where: {
         userId,
@@ -42,29 +43,7 @@ export class ProductService {
       },
     });
 
-    const productSales = await prisma.orderItem.groupBy({
-      by: ['productId'],
-      where: {
-        productId: {
-          in: products.map((product) => product.id),
-        },
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    const productsWithSales = products.map((product) => {
-      const productSalesFound = productSales.find(
-        (p) => p.productId === product.id,
-      );
-
-      const sales = productSalesFound?._sum.amount
-        ? productSalesFound._sum.amount
-        : 0;
-
-      return { ...product, sales };
-    });
+    const productsWithSales = await this.getSalesFromProductCards(products);
 
     return productsWithSales;
   }
@@ -173,9 +152,12 @@ export class ProductService {
       }
     }
 
+    const relatedProductsWithSales =
+      await this.getSalesFromProductCards(relatedProducts);
+
     return {
       product,
-      relatedProducts,
+      relatedProducts: relatedProductsWithSales,
     };
   }
 
@@ -308,5 +290,35 @@ export class ProductService {
         },
       },
     });
+  }
+
+  private async getSalesFromProductCards(
+    products: ProductCardDto[],
+  ): Promise<ProductCardWithSalesDto[]> {
+    const productSales = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        productId: {
+          in: products.map((product) => product.id),
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const productsWithSales = products.map((product) => {
+      const productSalesFound = productSales.find(
+        (p) => p.productId === product.id,
+      );
+
+      const sales = productSalesFound?._sum.amount
+        ? productSalesFound._sum.amount
+        : 0;
+
+      return { ...product, sales };
+    });
+
+    return productsWithSales;
   }
 }
