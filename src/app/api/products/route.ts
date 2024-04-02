@@ -4,16 +4,23 @@ import { createUpdateProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/server/auth/rbac';
+import { z } from 'zod';
 
-export async function GET() {
-  const user = await getUserSession();
+const lastIdSchema = z.string().uuid().nullable();
 
-  if (!user) {
-    return NextResponse.json(null, { status: 401 });
-  }
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+
+  const result = await lastIdSchema.safeParseAsync(searchParams.get('lastId'));
+
+  if (!result.success) return NextResponse.json(null, { status: 400 });
+
+  const lastId = result.data;
 
   try {
-    const products = await productService.findAllFromUser(user.id);
+    const products = await productService.findAll({
+      lastId: lastId || undefined,
+    });
     return NextResponse.json(products);
   } catch {
     return NextResponse.json(null, { status: 500 });

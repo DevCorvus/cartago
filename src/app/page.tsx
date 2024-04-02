@@ -1,10 +1,9 @@
 import CategoryList from '@/components/ui/CategoryList';
 import HeroImage from '@/components/ui/HeroImage';
-import ProductList from '@/components/ui/ProductList';
-import { categoryService, productService } from '@/server/services';
+import ProductScroller from '@/components/ui/ProductScroller';
+import { categoryService } from '@/server/services';
 
 export default async function Home() {
-  const products = await productService.findAll();
   const categories = await categoryService.findAllTags();
 
   return (
@@ -14,7 +13,7 @@ export default async function Home() {
       </div>
       <div className="container mx-auto p-6">
         <CategoryList categories={categories} />
-        <ProductList products={products} />
+        <ProductScroller />
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ export default function ProductCardList() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api/products');
+      const res = await fetch('/api/seller/products');
       if (res.ok) {
         const data: ProductCardWithSalesDto[] = await res.json();
         setProducts(data);

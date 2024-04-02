@@ -7,6 +7,7 @@ import UserProvider, { UserData } from '@/components/providers/UserProvider';
 import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '@/server/auth/next-auth.config';
 import { cartService, wishedItemService } from '@/server/services';
+import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
 
 const merriweather = Merriweather({
   weight: '400',
@@ -38,12 +39,16 @@ export default async function RootLayout({
     <html lang="en" className={merriweather.className}>
       <body className="relative bg-neutral-50">
         <AuthProvider session={session}>
-          <UserProvider data={userData}>
-            <NavBar />
-            <main className="min-h-screen w-full bg-amber-50">{children}</main>
-            <div id="modal-container"></div>
-            <div id="modal-container-alt"></div>
-          </UserProvider>
+          <ReactQueryProvider>
+            <UserProvider data={userData}>
+              <NavBar />
+              <main className="min-h-screen w-full bg-amber-50">
+                {children}
+              </main>
+              <div id="modal-container"></div>
+              <div id="modal-container-alt"></div>
+            </UserProvider>
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>
