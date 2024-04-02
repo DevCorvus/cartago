@@ -1,9 +1,7 @@
 import { prisma } from '@/lib/prisma';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
-import { ProductService } from '../product/product.service';
 
 export class WishedItemService {
-  constructor(private productService: ProductService) {}
+  constructor() {}
 
   async findAllIds(userId: string): Promise<string[] | null> {
     const wishedItems = await prisma.wishedItem.findMany({
@@ -12,35 +10,6 @@ export class WishedItemService {
     });
 
     return wishedItems ? wishedItems.map((item) => item.productId) : null;
-  }
-
-  async findAllItems(userId: string): Promise<ProductCardWithSalesDto[]> {
-    const wishedItems = await prisma.wishedItem.findMany({
-      where: { userId, product: { deletedAt: null } },
-      select: {
-        product: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            price: true,
-            images: {
-              take: 1,
-              select: {
-                path: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const products = wishedItems.map((item) => item.product);
-
-    const productsWithSales =
-      await this.productService.getSalesFromProductCards(products);
-
-    return productsWithSales;
   }
 
   async create(userId: string, productId: string): Promise<boolean> {

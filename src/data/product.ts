@@ -25,3 +25,10 @@ export const getProducts = async (
   const res = await fetch(url);
   return res.json();
 };
+
+export const getWishedProducts = async (): Promise<
+  ProductCardWithSalesDto[]
+> => {
+  const res = await fetch('/api/products/wished');
+  return res.json();
+};

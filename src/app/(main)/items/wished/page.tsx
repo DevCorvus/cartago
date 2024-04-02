@@ -1,23 +1,37 @@
-import WishList from '@/components/ui/WishList';
-import { getUserSession } from '@/server/auth/auth.utils';
-import { wishedItemService } from '@/server/services';
+'use client';
 
-export default async function Wished() {
-  const user = await getUserSession();
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import ProductList from '@/components/ui/ProductList';
+import { useQuery } from '@tanstack/react-query';
+import { getWishedProducts } from '@/data/product';
+import Loading from '@/components/ui/Loading';
+import { localStorageWished } from '@/utils/localStorageWished';
+import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 
-  let products = null;
+export default function Wished() {
+  const isAuthenticated = useIsAuthenticated();
 
-  if (user) {
-    products = await wishedItemService.findAllItems(user.id);
-  }
+  const { isLoading, isError, data } = useQuery({
+    queryFn: getWishedProducts,
+    queryKey: ['wishedProducts'],
+    enabled: isAuthenticated,
+  });
 
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <header>
         <h1 className="text-2xl font-bold text-green-800">Wish List </h1>
       </header>
       <div>
-        <WishList products={products} />
+        {isAuthenticated ? (
+          <>
+            {isLoading && <Loading />}
+            {isError && <SomethingWentWrong />}
+            {!isLoading && !isError && <ProductList products={data || []} />}
+          </>
+        ) : (
+          <ProductList products={localStorageWished.get()} />
+        )}
       </div>
     </div>
   );

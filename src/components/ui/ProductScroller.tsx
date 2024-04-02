@@ -8,6 +8,7 @@ import ProductList from './ProductList';
 import { useEffect, useMemo, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
+import SomethingWentWrong from './SomethingWentWrong';
 
 interface Props {
   categoryId?: number;
@@ -71,9 +72,7 @@ export default function ProductScroller({ categoryId }: Props) {
         {!isLoading && !hasNextPage && (
           <p className="text-lg text-green-800">No more items for you .(</p>
         )}
-        {isError && (
-          <p className="text-lg text-green-800">Something went wrong .(</p>
-        )}
+        {isError && <SomethingWentWrong />}
       </div>
     </div>
   );

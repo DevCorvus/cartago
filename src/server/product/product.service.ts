@@ -95,6 +95,36 @@ export class ProductService {
     return productsWithSales;
   }
 
+  async findAllWishedFromUser(
+    userId: string,
+  ): Promise<ProductCardWithSalesDto[]> {
+    const wishedItems = await prisma.wishedItem.findMany({
+      where: { userId, product: { deletedAt: null } },
+      select: {
+        product: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            price: true,
+            images: {
+              take: 1,
+              select: {
+                path: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const products = wishedItems.map((item) => item.product);
+
+    const productsWithSales = await this.getSalesFromProductCards(products);
+
+    return productsWithSales;
+  }
+
   async findById(id: string, userId?: string): Promise<ProductDto | null> {
     return prisma.product.findUnique({
       where: { id, userId, deletedAt: null },
@@ -339,7 +369,7 @@ export class ProductService {
     });
   }
 
-  async getSalesFromProductCards(
+  private async getSalesFromProductCards(
     products: ProductCardDto[],
   ): Promise<ProductCardWithSalesDto[]> {
     const productSales = await prisma.orderItem.groupBy({
