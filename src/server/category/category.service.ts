@@ -2,13 +2,11 @@ import { prisma } from '@/lib/prisma';
 import {
   CategoryDto,
   CategoryTagDto,
-  CategoryWithProductsDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
-import { ProductService } from '../product/product.service';
 
 export class CategoryService {
-  constructor(private productService: ProductService) {}
+  constructor() {}
 
   findAll(title: string = ''): Promise<CategoryDto[]> {
     return prisma.category.findMany({
@@ -26,40 +24,17 @@ export class CategoryService {
     });
   }
 
-  async findByIdWithProducts(
-    id: number,
-  ): Promise<CategoryWithProductsDto | null> {
-    const categoryWithProducts = await prisma.category.findUnique({
+  async findById(id: number): Promise<CategoryDto | null> {
+    return prisma.category.findUnique({
       where: { id },
-      include: {
-        products: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            price: true,
-            images: {
-              take: 1,
-              select: {
-                path: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
-
-    if (!categoryWithProducts) return null;
-
-    const productsWithSales =
-      await this.productService.getSalesFromProductCards(
-        categoryWithProducts.products,
-      );
-
-    return { ...categoryWithProducts, products: productsWithSales };
   }
 
   create(data: CreateUpdateCategoryDto): Promise<CategoryDto> {

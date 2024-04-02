@@ -7,19 +7,29 @@ import { Permissions } from '@/server/auth/rbac';
 import { z } from 'zod';
 
 const lastIdSchema = z.string().uuid().nullable();
+const categoryIdSchema = z.coerce.number().int().positive().nullable();
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
 
-  const result = await lastIdSchema.safeParseAsync(searchParams.get('lastId'));
+  const lastIdResult = await lastIdSchema.safeParseAsync(
+    searchParams.get('lastId'),
+  );
+  if (!lastIdResult.success) return NextResponse.json(null, { status: 400 });
 
-  if (!result.success) return NextResponse.json(null, { status: 400 });
+  const categoryIdResult = await categoryIdSchema.safeParseAsync(
+    searchParams.get('categoryId'),
+  );
+  if (!categoryIdResult.success)
+    return NextResponse.json(null, { status: 400 });
 
-  const lastId = result.data;
+  const lastId = lastIdResult.data || undefined;
+  const categoryId = categoryIdResult.data || undefined;
 
   try {
     const products = await productService.findAll({
-      lastId: lastId || undefined,
+      lastId,
+      categoryId,
     });
     return NextResponse.json(products);
   } catch {

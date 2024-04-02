@@ -7,28 +7,42 @@ import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import ProductList from './ProductList';
 import { useEffect, useMemo, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
+import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 
-export default function ProductScroller() {
+interface Props {
+  categoryId?: number;
+}
+
+export default function ProductScroller({ categoryId }: Props) {
   const [pageCounter, setPageCounter] = useState(0);
 
   const showLoadMoreBtn = useMemo(() => {
     return pageCounter > 0 && pageCounter % 5 === 0;
   }, [pageCounter]);
 
-  const { isLoading, isError, fetchNextPage, hasNextPage, data } =
+  const { isLoading, isError, fetchNextPage, hasNextPage, refetch, data } =
     useInfiniteQuery<ProductCardWithSalesDto[]>({
       initialPageParam: undefined,
       queryFn: async ({ pageParam }) => {
         setPageCounter((prev) => prev + 1);
-        return getProducts(pageParam as string | undefined);
+        return getProducts({
+          lastId: pageParam as string | undefined,
+          categoryId,
+        });
       },
       queryKey: ['products'],
       getNextPageParam: (products) => {
-        if (products.length) {
-          return products[products.length - 1].id;
-        }
+        if (products.length !== PRODUCT_PAGE_SIZE) return;
+        else return products[products.length - 1].id;
       },
     });
+
+  useEffect(() => {
+    setPageCounter(0);
+    setTimeout(() => {
+      refetch();
+    });
+  }, [categoryId, refetch]);
 
   const { observerTarget, isVisible } = useObserver({ threshold: 1 });
 

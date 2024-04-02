@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import {
   ProductDto,
   CreateUpdateProductDto,
@@ -19,7 +20,7 @@ interface ProductWithOwnerAndImages {
 
 interface FindAllOptions {
   lastId?: string;
-  take?: number;
+  categoryId?: number;
 }
 
 export class ProductService {
@@ -29,13 +30,20 @@ export class ProductService {
     const products = await prisma.product.findMany({
       where: {
         deletedAt: null,
+        categories: options?.categoryId
+          ? {
+              some: {
+                id: options.categoryId,
+              },
+            }
+          : undefined,
       },
       cursor: options?.lastId
         ? {
             id: options.lastId,
           }
         : undefined,
-      take: options?.take || 20,
+      take: PRODUCT_PAGE_SIZE,
       skip: options?.lastId ? 1 : 0,
       select: {
         id: true,

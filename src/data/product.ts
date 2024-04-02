@@ -1,13 +1,24 @@
 import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 
+interface GetProductsOptions {
+  lastId?: string;
+  categoryId?: number;
+}
+
 export const getProducts = async (
-  lastId?: string,
+  options: GetProductsOptions,
 ): Promise<ProductCardWithSalesDto[]> => {
   let url = '/api/products';
 
-  if (lastId) {
-    const searchParams = new URLSearchParams();
-    searchParams.append('lastId', lastId);
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(options)) {
+    if (value) {
+      searchParams.append(key, value);
+    }
+  }
+
+  if (searchParams.size > 0) {
     url += '?' + searchParams.toString();
   }
 

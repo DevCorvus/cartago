@@ -1,4 +1,4 @@
-import CategoryItemWithProducts from '@/components/ui/CategoryItemWithProducts';
+import CategoryWithProducts from '@/components/ui/CategoryWithProducts';
 import CategoryList from '@/components/ui/CategoryList';
 import ProductList from '@/components/ui/ProductList';
 import { categoryService, productService } from '@/server/services';
@@ -27,11 +27,9 @@ export default async function ProductItems({ searchParams }: Props) {
       notFound();
     }
 
-    const categoryWithProducts = await categoryService.findByIdWithProducts(
-      result.data.categoryId,
-    );
+    const category = await categoryService.findById(result.data.categoryId);
 
-    if (!categoryWithProducts) {
+    if (!category) {
       notFound();
     }
 
@@ -39,8 +37,8 @@ export default async function ProductItems({ searchParams }: Props) {
 
     return (
       <div>
-        <CategoryList categories={categories} skip={categoryWithProducts.id} />
-        <CategoryItemWithProducts categoryWithProducts={categoryWithProducts} />
+        <CategoryList categories={categories} skip={category.id} />
+        <CategoryWithProducts category={category} />
       </div>
     );
   }
