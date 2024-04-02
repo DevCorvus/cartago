@@ -23,13 +23,13 @@
     "dinero.js": "^1.9.1",
     "libphonenumber-js": "^1.10.57",
     "next": "latest",
-    "next-auth": "^4.23.1",
+    "next-auth": "^4.24.7",
     "react": "latest",
     "react-dom": "latest",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.48.2",
     "react-icons": "^4.11.0",
-    "zod": "^3.22.2",
+    "zod": "^3.22.4",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
