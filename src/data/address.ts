@@ -1,5 +1,15 @@
 import { AddressDto, CreateUpdateAddressForm } from '@/shared/dtos/address.dto';
 
+export const getAddresses = async () => {
+  const res = await fetch('/api/addresses');
+
+  if (!res.ok) {
+    throw new Error('Could not get addresses');
+  }
+
+  return res.json();
+};
+
 export const createNewAddress = async (
   data: CreateUpdateAddressForm,
 ): Promise<AddressDto> => {

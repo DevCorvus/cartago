@@ -6,24 +6,24 @@ import { AddAddressForm } from './AddAddressForm';
 import { AddressDto } from '@/shared/dtos/address.dto';
 import Loading from './Loading';
 import AddressItem from './AddressItem';
+import { useQuery } from '@tanstack/react-query';
+import SomethingWentWrong from './SomethingWentWrong';
+import { getAddresses } from '@/data/address';
 
 export function AddressList() {
-  const [isLoading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [addresses, setAddresses] = useState<AddressDto[]>([]);
 
+  const { isLoading, isError, data } = useQuery({
+    queryFn: getAddresses,
+    queryKey: ['addresses'],
+  });
+
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/addresses');
-
-      if (res.ok) {
-        const data: AddressDto[] = await res.json();
-        setAddresses(data);
-      }
-
-      setLoading(false);
-    })();
-  }, []);
+    if (data) {
+      setAddresses(data);
+    }
+  }, [data]);
 
   const addAddress = (newAddress: AddressDto) => {
     setAddresses((prev) => {
@@ -60,6 +60,7 @@ export function AddressList() {
   };
 
   if (isLoading) return <Loading />;
+  if (isError) return <SomethingWentWrong />;
 
   return (
     <div className="flex w-full max-w-md flex-col gap-6">
