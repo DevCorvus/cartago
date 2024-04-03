@@ -11,12 +11,13 @@ import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
+import { useMutation } from '@tanstack/react-query';
+import { createUser } from '@/data/user';
 
 export default function SignUpForm() {
   const router = useRouter();
-  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
 
-  const [registerError, setRegisterError] = useState(false);
+  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
   const [somethingWentWrongError, setSomethingWentWrongError] = useState(false);
 
   const [isExportingData, setExportingData] = useState(true);
@@ -29,8 +30,12 @@ export default function SignUpForm() {
     resolver: zodResolver(createUserSchema),
   });
 
+  const registerMutation = useMutation({
+    mutationFn: createUser,
+    mutationKey: ['createUser'],
+  });
+
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
-    setRegisterError(false);
     setSomethingWentWrongError(false);
 
     if (isExportingData) {
@@ -49,29 +54,22 @@ export default function SignUpForm() {
       }
     }
 
-    const signUpRes = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      await registerMutation.mutateAsync(data);
 
-    if (!signUpRes.ok) {
-      setRegisterError(true);
-      return;
-    }
+      const signInRes = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-    const signInRes = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
-
-    if (signInRes?.ok && !signInRes.error) {
-      return router.refresh();
-    } else {
-      setSomethingWentWrongError(true);
+      if (signInRes?.ok && !signInRes.error) {
+        return router.refresh();
+      } else {
+        setSomethingWentWrongError(true);
+      }
+    } catch {
+      // TODO: Handle error case
     }
   };
 
@@ -173,7 +171,7 @@ export default function SignUpForm() {
             </label>
           </div>
           <div className="space-y-2">
-            {registerError && (
+            {registerMutation.isError && (
               <p className="text-red-400">User already exists</p>
             )}
             {somethingWentWrongError && (
