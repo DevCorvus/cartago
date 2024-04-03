@@ -47,3 +47,13 @@ export const editAddress = async ({
 
   return res.json();
 };
+
+export const deleteAddress = async (addressId: string) => {
+  const res = await fetch(`/api/addresses/${addressId}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    throw new Error('Could not delete address');
+  }
+};

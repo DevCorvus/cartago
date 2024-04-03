@@ -11,6 +11,8 @@ import {
 } from 'react-icons/hi2';
 import { EditAddressForm } from './EditAddressForm';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { useMutation } from '@tanstack/react-query';
+import { deleteAddress } from '@/data/address';
 
 interface Props {
   address: AddressDto;
@@ -28,13 +30,17 @@ export default function AddressItem({
 
   const menuRef = useClickOutside<HTMLDivElement>(() => setShowActions(false));
 
-  const handleDelete = async (addressId: string) => {
-    const res = await fetch(`/api/addresses/${addressId}`, {
-      method: 'DELETE',
-    });
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteAddress,
+    mutationKey: ['deleteAddress'],
+  });
 
-    if (res.ok) {
+  const handleDelete = async (addressId: string) => {
+    try {
+      await deleteAddressMutation.mutateAsync(addressId);
       removeAddress(addressId);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
