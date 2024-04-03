@@ -12,135 +12,142 @@ import { ImSpinner8 } from 'react-icons/im';
 import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
 import AddOrderForm from '@/components/ui/AddOrderForm.tsx';
-
-// I had to fetch the data in the old-fashioned client-side way
-// Server-component methods to always fetch data dynamically didn't work for me
-// at least in this current state of Next.js App Router (Probably a skill issue)
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  checkout,
+  decrementCartItemAmount,
+  getCartItems,
+  incrementCartItemAmount,
+  removeCartItem,
+} from '@/data/cart';
+import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 
 export default function Cart() {
   const isAuthenticated = useIsAuthenticated();
 
-  const [isLoading, setLoading] = useState(true);
+  const [cartItems, setCartItems] = useState<ProductCartItemDto[]>(
+    isAuthenticated ? [] : localStorageCart.get(),
+  );
 
-  const [cartItems, setCartProducts] = useState<ProductCartItemDto[]>([]);
-  const removeProductId = useCartStore((state) => state.removeProductId);
-
-  const [isLoadingOrder, setLoadingOrder] = useState(false);
-  const [order, setOrder] = useState<NewOrderDto | null>(null);
+  const { isLoading, isError, data } = useQuery({
+    queryFn: getCartItems,
+    queryKey: ['cartItems'],
+    enabled: isAuthenticated,
+  });
 
   useEffect(() => {
-    if (isAuthenticated) {
-      (async () => {
-        const res = await fetch('/api/cart');
+    if (data) setCartItems(data);
+  }, [data]);
 
-        if (res.ok) {
-          const data = await res.json();
-          setCartProducts(data);
+  const [order, setOrder] = useState<NewOrderDto | null>(null);
+
+  const incrementMutation = useMutation({
+    mutationFn: incrementCartItemAmount,
+    mutationKey: ['incrementCartItemAmount'],
+  });
+
+  const incrementCartItemAmountFromUI = (productId: string) => {
+    setCartItems((prev) => {
+      return prev.map((product) => {
+        if (product.id === productId && product.amount < product.stock) {
+          return { ...product, amount: product.amount + 1 };
         }
-
-        setLoading(false);
-      })();
-    } else {
-      setCartProducts(localStorageCart.get());
-      setLoading(false);
-    }
-  }, [isAuthenticated]);
-
-  const total = useMemo(() => getTotalMoney(cartItems), [cartItems]);
+        return product;
+      });
+    });
+  };
 
   const incrementAmount = async (productId: string) => {
-    let userIncrementSuccess = false;
-
     if (isAuthenticated) {
-      const res = await fetch(
-        `/api/cart/${productId}/amount?action=increment`,
-        {
-          method: 'PUT',
-        },
-      );
-
-      userIncrementSuccess = res.ok;
+      try {
+        await incrementMutation.mutateAsync(productId);
+        incrementCartItemAmountFromUI(productId);
+      } catch {
+        // TODO: Handle error case
+      }
     } else {
       localStorageCart.incrementItemAmount(productId);
+      incrementCartItemAmountFromUI(productId);
     }
+  };
 
-    if (!isAuthenticated || userIncrementSuccess) {
-      setCartProducts((prev) => {
-        return prev.map((product) => {
-          if (product.id === productId && product.amount < product.stock) {
-            return { ...product, amount: product.amount + 1 };
-          }
-          return product;
-        });
+  const decrementCartItemAmountMutation = useMutation({
+    mutationFn: decrementCartItemAmount,
+    mutationKey: ['decrementCartItemAmount'],
+  });
+
+  const decrementCartItemAmountFromUI = (productId: string) => {
+    setCartItems((prev) => {
+      return prev.map((product) => {
+        if (product.id === productId && product.amount > 1) {
+          return { ...product, amount: product.amount - 1 };
+        }
+        return product;
       });
-    }
+    });
   };
 
   const decrementAmount = async (productId: string) => {
-    let userDecrementSuccess = false;
-
     if (isAuthenticated) {
-      const res = await fetch(
-        `/api/cart/${productId}/amount?action=decrement`,
-        {
-          method: 'PUT',
-        },
-      );
-
-      userDecrementSuccess = res.ok;
+      try {
+        await decrementCartItemAmountMutation.mutateAsync(productId);
+        decrementCartItemAmountFromUI(productId);
+      } catch {
+        // TODO: Handle error case
+      }
     } else {
       localStorageCart.decrementItemAmount(productId);
+      decrementCartItemAmountFromUI(productId);
     }
+  };
 
-    if (!isAuthenticated || userDecrementSuccess) {
-      setCartProducts((prev) => {
-        return prev.map((product) => {
-          if (product.id === productId && product.amount > 1) {
-            return { ...product, amount: product.amount - 1 };
-          }
-          return product;
-        });
-      });
-    }
+  const removeCartItemMutation = useMutation({
+    mutationFn: removeCartItem,
+    mutationKey: ['removeCartItem'],
+  });
+
+  const removeProductId = useCartStore((state) => state.removeProductId);
+
+  const removeCartItemFromUI = (productId: string) => {
+    removeProductId(productId);
+    setCartItems((prev) => {
+      return prev.filter((product) => product.id !== productId);
+    });
   };
 
   const removeItem = async (productId: string) => {
-    let userRemoveSuccess = false;
-
     if (isAuthenticated) {
-      const res = await fetch(`/api/cart/${productId}`, {
-        method: 'DELETE',
-      });
-
-      userRemoveSuccess = res.ok;
+      try {
+        await removeCartItemMutation.mutateAsync(productId);
+        removeCartItemFromUI(productId);
+      } catch {
+        // TODO: Handle error case
+      }
     } else {
       localStorageCart.remove(productId);
-    }
-
-    if (!isAuthenticated || userRemoveSuccess) {
-      removeProductId(productId);
-      setCartProducts((prev) => {
-        return prev.filter((product) => product.id !== productId);
-      });
+      removeCartItemFromUI(productId);
     }
   };
+
+  const checkoutMutation = useMutation({
+    mutationFn: checkout,
+    mutationKey: ['checkout'],
+  });
 
   const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setLoadingOrder(true);
-
-    const res = await fetch('/api/orders', { method: 'POST' });
-
-    if (res.ok) {
-      const data: NewOrderDto = await res.json();
-      setOrder(data);
+    try {
+      const newOrder = await checkoutMutation.mutateAsync();
+      setOrder(newOrder);
+    } catch {
+      setOrder(null);
     }
-
-    setLoadingOrder(false);
   };
 
+  const total = useMemo(() => getTotalMoney(cartItems), [cartItems]);
+
   if (isLoading) return <Loading />;
+  if (isError) return <SomethingWentWrong />;
 
   return (
     <>
@@ -167,10 +174,10 @@ export default function Cart() {
         <form onSubmit={handleCheckout}>
           <button
             type="submit"
-            disabled={isLoadingOrder}
+            disabled={checkoutMutation.isPending}
             className="btn flex w-full items-center justify-center gap-2 p-3"
           >
-            {!isLoadingOrder ? (
+            {!checkoutMutation.isPending ? (
               <>
                 <HiOutlineShoppingCart />
                 Checkout
