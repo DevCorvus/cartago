@@ -23,6 +23,11 @@ export const getProducts = async (
   }
 
   const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error('Could not get products');
+  }
+
   return res.json();
 };
 
@@ -30,5 +35,10 @@ export const getWishedProducts = async (): Promise<
   ProductCardWithSalesDto[]
 > => {
   const res = await fetch('/api/products/wished');
+
+  if (!res.ok) {
+    throw new Error('Could not get wished products');
+  }
+
   return res.json();
 };
