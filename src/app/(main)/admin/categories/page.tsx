@@ -4,7 +4,10 @@ import AddCategoryForm from '@/components/ui/AddCategoryForm';
 import CategoryItem from '@/components/ui/CategoryItem';
 import Loading from '@/components/ui/Loading';
 import SearchInput from '@/components/ui/SearchInput';
+import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
+import { getCategories } from '@/data/category';
 import { CategoryDto } from '@/shared/dtos/category.dto';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export default function Categories() {
@@ -12,20 +15,15 @@ export default function Categories() {
   const [selectedCategories, setSelectedCategories] = useState<CategoryDto[]>(
     [],
   );
-  const [isLoading, setLoading] = useState(true);
+
+  const { isLoading, isError, data } = useQuery({
+    queryFn: getCategories,
+    queryKey: ['categories'],
+  });
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/categories');
-
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data);
-      }
-
-      setLoading(false);
-    })();
-  }, []);
+    if (data) setCategories(data);
+  }, [data]);
 
   useEffect(() => {
     setSelectedCategories(categories);
@@ -66,6 +64,7 @@ export default function Categories() {
   };
 
   if (isLoading) return <Loading />;
+  if (isError) return <SomethingWentWrong />;
 
   return (
     <div className="flex w-full flex-col gap-6">
