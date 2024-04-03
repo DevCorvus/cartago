@@ -11,20 +11,29 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getCountries } from '@/data/country';
+import { createNewAddress } from '@/data/address';
 
 interface Props {
   addAddress(newAddress: AddressDto): void;
   close(): void;
 }
 
-// TODO: Refactor (It's bloated)
 export function AddAddressForm({ addAddress, close }: Props) {
-  const [countries, setCountries] = useState<CountryDto[]>([]);
-  const [isLoading, setLoading] = useState(true);
-
   const [showPhoneCodes, setShowPhoneCodes] = useState(false);
   const [selectedPhoneCountry, setSelectedPhoneCountry] =
     useState<CountryDto | null>(null);
+
+  const {
+    isLoading,
+    isError,
+    data: countries,
+  } = useQuery({
+    initialData: [],
+    queryFn: getCountries,
+    queryKey: ['countries'],
+  });
 
   const countryPhones = useMemo(() => {
     return countries
@@ -63,36 +72,28 @@ export function AddAddressForm({ addAddress, close }: Props) {
   });
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/countries');
+    if (countries) {
+      const america = countries.find((country) => country.id === 'US') || null;
 
-      if (res.ok) {
-        const data: CountryDto[] = await res.json();
-        setCountries(data);
-
-        const america = data.find((country) => country.id === 'US') || null;
-
-        if (america) {
-          setSelectedPhoneCountry(america);
-          setValue('phoneCountryCode', america.id);
-        }
+      if (america) {
+        setSelectedPhoneCountry(america);
+        setValue('phoneCountryCode', america.id);
       }
+    }
+  }, [countries, setValue]);
 
-      setLoading(false);
-    })();
-  }, [setValue]);
+  const newAddressMutation = useMutation({
+    mutationFn: createNewAddress,
+    mutationKey: ['createAddress'],
+  });
 
   const onSubmit: SubmitHandler<CreateUpdateAddressForm> = async (data) => {
-    const res = await fetch('/api/addresses', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      const data: AddressDto = await res.json();
-      addAddress(data);
+    try {
+      const newAddress = await newAddressMutation.mutateAsync(data);
+      addAddress(newAddress);
       close();
+    } catch {
+      // TODO: Handle error case
     }
   };
 

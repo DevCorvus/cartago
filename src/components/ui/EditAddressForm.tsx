@@ -12,6 +12,9 @@ import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
 import { getCountryCodeFromPhoneNumber } from '@/lib/phone';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getCountries } from '@/data/country';
+import { editAddress } from '@/data/address';
 
 interface Props {
   address: AddressDto;
@@ -19,14 +22,20 @@ interface Props {
   close(): void;
 }
 
-// TODO: Refactor (It's bloated)
 export function EditAddressForm({ address, updateAddress, close }: Props) {
-  const [countries, setCountries] = useState<CountryDto[]>([]);
-  const [isLoading, setLoading] = useState(true);
-
   const [showPhoneCodes, setShowPhoneCodes] = useState(false);
   const [selectedPhoneCountry, setSelectedPhoneCountry] =
     useState<CountryDto | null>(null);
+
+  const {
+    isLoading,
+    isError,
+    data: countries,
+  } = useQuery({
+    initialData: [],
+    queryFn: getCountries,
+    queryKey: ['countries'],
+  });
 
   const countryPhones = useMemo(() => {
     return countries
@@ -74,49 +83,44 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
   });
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/countries');
+    if (countries) {
+      const phoneCountryCode = getCountryCodeFromPhoneNumber(
+        address.phoneNumber,
+      )!;
 
-      if (res.ok) {
-        const data: CountryDto[] = await res.json();
-        setCountries(data);
+      const phoneCountry =
+        countries.find((country) => country.id === phoneCountryCode) || null;
 
-        const phoneCountryCode = getCountryCodeFromPhoneNumber(
-          address.phoneNumber,
-        )!;
-
-        const phoneCountry =
-          data.find((country) => country.id === phoneCountryCode) || null;
-
-        if (phoneCountry) {
-          setSelectedPhoneCountry(phoneCountry);
-          setValue('phoneCountryCode', phoneCountry.id);
-        }
-
-        const country =
-          data.find((country) => country.id === address.country.id) || null;
-
-        if (country) {
-          setSelectedCountry(country);
-          setValue('countryId', country.id);
-        }
+      if (phoneCountry) {
+        setSelectedPhoneCountry(phoneCountry);
+        setValue('phoneCountryCode', phoneCountry.id);
       }
 
-      setLoading(false);
-    })();
-  }, [setValue, address.phoneNumber, address.country.id]);
+      const country =
+        countries.find((country) => country.id === address.country.id) || null;
+
+      if (country) {
+        setSelectedCountry(country);
+        setValue('countryId', country.id);
+      }
+    }
+  }, [countries, setValue, address.country.id, address.phoneNumber]);
+
+  const editAddressMutation = useMutation({
+    mutationFn: editAddress,
+    mutationKey: ['editAddress'],
+  });
 
   const onSubmit: SubmitHandler<CreateUpdateAddressForm> = async (data) => {
-    const res = await fetch(`/api/addresses/${address.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      const data: AddressDto = await res.json();
-      updateAddress(data);
+    try {
+      const updatedAddress = await editAddressMutation.mutateAsync({
+        addressId: address.id,
+        data,
+      });
+      updateAddress(updatedAddress);
       close();
+    } catch {
+      // TODO: Handle error case
     }
   };
 
