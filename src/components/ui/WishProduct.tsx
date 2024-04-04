@@ -1,3 +1,4 @@
+import { useUnwishProduct, useWishProduct } from '@/data/wished';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
@@ -25,23 +26,26 @@ export default function WishProduct({ product }: Props) {
     [productIds, product.id],
   );
 
+  const wishMutation = useWishProduct();
+  const unwishMutation = useUnwishProduct();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isAuthenticated) {
       if (!isWished) {
-        const res = await fetch(`/api/wished/${product.id}`, {
-          method: 'POST',
-        });
-        if (res.ok) {
+        try {
+          await wishMutation.mutateAsync(product.id);
           addWishedItem(product.id);
+        } catch {
+          // TODO: Handl error case
         }
       } else {
-        const res = await fetch(`/api/wished/${product.id}`, {
-          method: 'DELETE',
-        });
-        if (res.ok) {
+        try {
+          await unwishMutation.mutateAsync(product.id);
           removeWishedItem(product.id);
+        } catch {
+          // TODO: Handl error case
         }
       }
     } else {
