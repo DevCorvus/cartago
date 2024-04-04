@@ -62,7 +62,7 @@ export class ProductService {
       },
     });
 
-    const productsWithSales = await this.getSalesFromProductCards(products);
+    const productsWithSales = await this.getSalesFromProducts(products);
 
     return productsWithSales;
   }
@@ -90,7 +90,7 @@ export class ProductService {
       },
     });
 
-    const productsWithSales = await this.getSalesFromProductCards(products);
+    const productsWithSales = await this.getSalesFromProducts(products);
 
     return productsWithSales;
   }
@@ -120,13 +120,13 @@ export class ProductService {
 
     const products = wishedItems.map((item) => item.product);
 
-    const productsWithSales = await this.getSalesFromProductCards(products);
+    const productsWithSales = await this.getSalesFromProducts(products);
 
     return productsWithSales;
   }
 
   async findById(id: string, userId?: string): Promise<ProductDto | null> {
-    return prisma.product.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id, userId, deletedAt: null },
       select: {
         id: true,
@@ -149,6 +149,13 @@ export class ProductService {
         },
       },
     });
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      sales: await this.getSalesFromProduct(product.id),
+    };
   }
 
   async findByIdWithRelatedOnes(
@@ -230,10 +237,13 @@ export class ProductService {
     }
 
     const relatedProductsWithSales =
-      await this.getSalesFromProductCards(relatedProducts);
+      await this.getSalesFromProducts(relatedProducts);
 
     return {
-      product,
+      product: {
+        ...product,
+        sales: await this.getSalesFromProduct(product.id),
+      },
       relatedProducts: relatedProductsWithSales,
     };
   }
@@ -305,7 +315,10 @@ export class ProductService {
       },
     });
 
-    return newProduct;
+    return {
+      ...newProduct,
+      sales: await this.getSalesFromProduct(newProduct.id),
+    };
   }
 
   async update(
@@ -340,7 +353,10 @@ export class ProductService {
       },
     });
 
-    return updatedProduct;
+    return {
+      ...updatedProduct,
+      sales: await this.getSalesFromProduct(updatedProduct.id),
+    };
   }
 
   async delete(id: string): Promise<void> {
@@ -369,9 +385,9 @@ export class ProductService {
     });
   }
 
-  private async getSalesFromProductCards(
-    products: ProductCardDto[],
-  ): Promise<ProductCardWithSalesDto[]> {
+  private async getSalesFromProducts<T extends { id: string }>(
+    products: T[],
+  ): Promise<(T & { sales: number })[]> {
     const productSales = await prisma.orderItem.groupBy({
       by: ['productId'],
       where: {
@@ -389,13 +405,26 @@ export class ProductService {
         (p) => p.productId === product.id,
       );
 
-      const sales = productSalesFound?._sum.amount
-        ? productSalesFound._sum.amount
-        : 0;
-
+      const sales = productSalesFound?._sum.amount || 0;
       return { ...product, sales };
     });
 
     return productsWithSales;
+  }
+
+  private async getSalesFromProduct(id: string): Promise<number> {
+    const productSales = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        productId: id,
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const sales = productSales[0]?._sum.amount || 0;
+
+    return sales;
   }
 }

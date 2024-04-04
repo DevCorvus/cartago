@@ -21,6 +21,7 @@ export interface ProductDto {
   description: string;
   price: number;
   stock: number;
+  sales: number;
   createdAt: Date;
   updatedAt: Date;
   images: ProductImageDto[];
@@ -41,7 +42,7 @@ export interface ProductCardWithSalesDto extends ProductCardDto {
 
 export interface ProductDetailsDto {
   product: ProductDto;
-  relatedProducts: ProductCardDto[];
+  relatedProducts: ProductCardWithSalesDto[];
 }
 
 export interface ProductCartItemDto {
