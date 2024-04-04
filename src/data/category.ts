@@ -1,12 +1,14 @@
+import { useDebounce } from '@/hooks/useDebounce';
 import {
   CategoryDto,
+  CategoryTagDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useCategories = () => {
   return useQuery<CategoryDto[]>({
-    queryFn: async (): Promise<CategoryDto[]> => {
+    queryFn: async () => {
       const res = await fetch('/api/categories');
 
       if (!res.ok) {
@@ -17,6 +19,18 @@ export const useCategories = () => {
     },
     queryKey: ['categories'],
   });
+};
+
+export const getCategoryTags = async (
+  input: string,
+): Promise<CategoryTagDto[]> => {
+  const res = await fetch(`/api/categories/tags?title=${input}`);
+
+  if (!res.ok) {
+    throw new Error('Coult not get category tags');
+  }
+
+  return res.json();
 };
 
 export const useCreateCategory = () => {

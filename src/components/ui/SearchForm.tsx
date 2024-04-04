@@ -1,44 +1,47 @@
 'use client';
 
-import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalize } from '@/utils/capitalize';
+import Loading from './Loading';
+import { CategoryTagDto } from '@/shared/dtos/category.dto';
+import { getCategoryTags } from '@/data/category';
 
 export default function SearchForm() {
-  const [input, setInput] = useState<string>('');
-  const [categories, setCategories] = useState<CategoryTagDto[]>([]);
-  const timeoutRef = useRef<NodeJS.Timeout>();
   const pathname = usePathname();
+
+  const [input, setInput] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [categoryTags, setCategoryTags] = useState<CategoryTagDto[]>([]);
+
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     clearTimeout(timeoutRef.current);
 
     if (input) {
+      setLoading(true);
       timeoutRef.current = setTimeout(() => {
         (async () => {
-          const searchParams = new URLSearchParams();
-          searchParams.append('title', input);
-
-          const res = await fetch(
-            `/api/categories/tags?${searchParams.toString()}`,
-          );
-
-          if (res.ok) {
-            const data = await res.json();
-            setCategories(data);
+          try {
+            const data = await getCategoryTags(input);
+            setCategoryTags(data);
+          } catch {
+            // TODO: Handle error case
+          } finally {
+            setLoading(false);
           }
         })();
       }, 500);
     } else {
-      setCategories([]);
+      setCategoryTags([]);
     }
   }, [input]);
 
   useEffect(() => {
     setInput('');
-    setCategories([]);
+    setCategoryTags([]);
   }, [pathname]);
 
   return (
@@ -46,22 +49,34 @@ export default function SearchForm() {
       <form>
         <input
           type="text"
-          className="input p-2"
+          className="resize-none rounded-lg bg-slate-50 p-2 text-black shadow-inner shadow-slate-300 outline-none"
           placeholder="Search"
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
         />
       </form>
-      {categories.length !== 0 && (
-        <ul className="absolute flex w-80 flex-col gap-1 rounded-b-lg bg-white px-2 py-4">
-          {categories.map((category) => (
-            <li key={category.id}>
-              <Link href={`/items?categoryId=${category.id}`}>
-                {capitalize(category.title)}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {input && (
+        <div className="absolute w-80 rounded-b-lg bg-white px-2 py-4">
+          {categoryTags.length === 0 ? (
+            <>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <p className="text-center">Nothing here .(</p>
+              )}
+            </>
+          ) : (
+            <ul className="space-y-1">
+              {categoryTags.map((category) => (
+                <li key={category.id}>
+                  <Link href={`/items?categoryId=${category.id}`}>
+                    {capitalize(category.title)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </div>
   );
