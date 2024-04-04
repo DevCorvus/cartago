@@ -14,6 +14,7 @@ import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getMoneyString } from '@/lib/dinero';
 import { ImSpinner8 } from 'react-icons/im';
+import { useUpdateProduct } from '@/data/product';
 
 interface Props {
   product: ProductDto;
@@ -46,6 +47,8 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     },
   });
 
+  const updateProductMutation = useUpdateProduct();
+
   const onSubmit: SubmitHandler<CreateUpdatePartialProductDto> = async (
     data,
   ) => {
@@ -64,14 +67,14 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     images.forEach((image) => formData.append('images', image));
     formData.append('categories', JSON.stringify(categoryIds));
 
-    const res = await fetch(`/api/products/${product.id}`, {
-      method: 'PUT',
-      body: formData,
-    });
-
-    if (res.ok) {
-      const data: ProductDto = await res.json();
-      return router.push(`/items/${data.id}`);
+    try {
+      await updateProductMutation.mutateAsync({
+        productId: product.id,
+        formData,
+      });
+      return router.push(`/items/${product.id}`);
+    } catch {
+      // TODO:  Handle error case
     }
   };
 

@@ -18,6 +18,19 @@ export const useCartItems = (authenticated: boolean) => {
   });
 };
 
+export const useAddCartItem = () => {
+  return useMutation({
+    mutationFn: async (productId: string) => {
+      const res = await fetch(`/api/cart/${productId}`, { method: 'POST' });
+
+      if (!res.ok) {
+        throw new Error('Coult not get cart items');
+      }
+    },
+    mutationKey: ['addCartItem'],
+  });
+};
+
 export const useIncrementCartItemAmount = () => {
   return useMutation({
     mutationFn: async (productId: string) => {

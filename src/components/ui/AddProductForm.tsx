@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  CreateUpdatePartialProductDto,
-  ProductDto,
-} from '@/shared/dtos/product.dto';
+import { CreateUpdatePartialProductDto } from '@/shared/dtos/product.dto';
 import { FocusEvent, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ui/ImageUploader';
@@ -13,12 +10,12 @@ import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schem
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { ImSpinner8 } from 'react-icons/im';
+import { useCreateProduct } from '@/data/product';
 
 interface Props {
   categoryTags: CategoryTagDto[];
 }
 
-// TODO: Validation refactor
 export default function AddProductForm({ categoryTags }: Props) {
   const router = useRouter();
 
@@ -40,6 +37,8 @@ export default function AddProductForm({ categoryTags }: Props) {
     resolver: zodResolver(createUpdatePartialProductSchema),
   });
 
+  const createProductMutation = useCreateProduct();
+
   const onSubmit: SubmitHandler<CreateUpdatePartialProductDto> = async (
     data,
   ) => {
@@ -58,14 +57,11 @@ export default function AddProductForm({ categoryTags }: Props) {
     images.forEach((image) => formData.append('images', image));
     formData.append('categories', JSON.stringify(categoryIds));
 
-    const res = await fetch('/api/products', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (res.ok) {
-      const data: ProductDto = await res.json();
-      return router.push(`/items/${data.id}`);
+    try {
+      const newProduct = await createProductMutation.mutateAsync(formData);
+      return router.push(`/items/${newProduct.id}`);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
@@ -82,7 +78,6 @@ export default function AddProductForm({ categoryTags }: Props) {
   const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
     const price = Number(e.target.value);
     if (price > 1) {
-      // TODO: Fix price type
       // Price has to be validated as a string and then transformed to a number
       // but types are messed up and I have a skill issue going on right now
       setValue('price', price.toFixed(2) as unknown as number);

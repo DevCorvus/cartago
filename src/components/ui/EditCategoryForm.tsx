@@ -1,12 +1,12 @@
 'use client';
 
+import { useUpdateCategory } from '@/data/category';
 import {
   CategoryDto,
   CreateUpdateCategoryDto,
 } from '@/shared/dtos/category.dto';
 import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface Props {
@@ -20,8 +20,6 @@ export default function EditCategoryForm({
   updateCategory,
   close,
 }: Props) {
-  const [alreadyExistsError, setAlreadyExistsError] = useState<boolean>(false);
-
   const {
     handleSubmit,
     register,
@@ -34,23 +32,18 @@ export default function EditCategoryForm({
     },
   });
 
+  const updateCategoryMutation = useUpdateCategory();
+
   const onSubmit: SubmitHandler<CreateUpdateCategoryDto> = async (data) => {
-    setAlreadyExistsError(false);
-
-    const res = await fetch(`/api/categories/${category.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      const data: CategoryDto = await res.json();
-      updateCategory(data);
+    try {
+      const updatedCategory = await updateCategoryMutation.mutateAsync({
+        categoryId: category.id,
+        data,
+      });
+      updateCategory(updatedCategory);
       close();
-    } else {
-      setAlreadyExistsError(true);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
@@ -79,7 +72,9 @@ export default function EditCategoryForm({
           className="input p-3"
         />
         {errors.title && <p className="text-red-400">{errors.title.message}</p>}
-        {alreadyExistsError && <p className="text-red-400">Already taken</p>}
+        {updateCategoryMutation.isError && (
+          <p className="text-red-400">Already taken</p>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <label

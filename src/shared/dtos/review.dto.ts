@@ -15,3 +15,8 @@ export interface ReviewDto {
     fullname: string;
   };
 }
+
+export interface ReviewListDto {
+  canReview: boolean;
+  reviews: ReviewDto[];
+}

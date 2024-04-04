@@ -7,13 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
 import { useState } from 'react';
 import { HiMiniPlus } from 'react-icons/hi2';
+import { useCreateCategory } from '@/data/category';
 
 interface Props {
   addCategory(data: CategoryDto): void;
 }
 
 export default function AddCategoryForm({ addCategory }: Props) {
-  const [alreadyExistsError, setAlreadyExistsError] = useState<boolean>(false);
   const [showForm, setShowForm] = useState(false);
 
   const {
@@ -24,23 +24,15 @@ export default function AddCategoryForm({ addCategory }: Props) {
     resolver: zodResolver(createUpdateCategorySchema),
   });
 
+  const createCategoryMutation = useCreateCategory();
+
   const onSubmit: SubmitHandler<CreateUpdateCategoryDto> = async (data) => {
-    setAlreadyExistsError(false);
-
-    const res = await fetch('/api/categories', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      const data: CategoryDto = await res.json();
-      addCategory(data);
+    try {
+      const newCategory = await createCategoryMutation.mutateAsync(data);
+      addCategory(newCategory);
       setShowForm(false);
-    } else {
-      setAlreadyExistsError(true);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
@@ -76,7 +68,9 @@ export default function AddCategoryForm({ addCategory }: Props) {
           className="input p-3"
         />
         {errors.title && <p className="text-red-400">{errors.title.message}</p>}
-        {alreadyExistsError && <p className="text-red-400">Already taken</p>}
+        {createCategoryMutation.isError && (
+          <p className="text-red-400">Already taken</p>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="description" className="text-green-800 opacity-75">

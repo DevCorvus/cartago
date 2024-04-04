@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import RatingInput from './RatingInput';
+import { useUpdateReview } from '@/data/review';
 
 interface Props {
   review: ReviewDto;
@@ -21,19 +22,18 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
     resolver: zodResolver(createUpdateReviewSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateUpdateReviewDto> = async (data) => {
-    const res = await fetch(`/api/reviews/${review.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const updateReviewMutation = useUpdateReview();
 
-    if (res.ok) {
-      const data: ReviewDto = await res.json();
-      updateReview(data);
+  const onSubmit: SubmitHandler<CreateUpdateReviewDto> = async (data) => {
+    try {
+      const updatedReview = await updateReviewMutation.mutateAsync({
+        reviewId: review.id,
+        data,
+      });
+      updateReview(updatedReview);
       close();
+    } catch {
+      // TODO: Handle error case
     }
   };
 

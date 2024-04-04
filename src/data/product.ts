@@ -1,6 +1,6 @@
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { ProductCardWithSalesDto, ProductDto } from '@/shared/dtos/product.dto';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 interface GetProductsOptions {
   lastId?: string;
@@ -63,5 +63,79 @@ export const useWishedProducts = (authenticated: boolean) => {
     },
     queryKey: ['wishedProducts'],
     enabled: authenticated,
+  });
+};
+
+export const useProductCards = () => {
+  return useQuery({
+    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+      const res = await fetch('/api/seller/products');
+
+      if (!res.ok) {
+        throw new Error('Could not get product cards');
+      }
+
+      return res.json();
+    },
+    queryKey: ['productCards'],
+  });
+};
+
+export const useCreateProduct = () => {
+  return useMutation({
+    mutationFn: async (formData: FormData): Promise<ProductDto> => {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Could not create product');
+      }
+
+      return res.json();
+    },
+    mutationKey: ['createProduct'],
+  });
+};
+
+interface UpdateProductInterface {
+  productId: string;
+  formData: FormData;
+}
+
+export const useUpdateProduct = () => {
+  return useMutation({
+    mutationFn: async ({
+      productId,
+      formData,
+    }: UpdateProductInterface): Promise<ProductDto> => {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error('Could not update product');
+      }
+
+      return res.json();
+    },
+    mutationKey: ['updateProduct'],
+  });
+};
+
+export const useDeleteProduct = () => {
+  return useMutation({
+    mutationFn: async (productId: string) => {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error('Could not delete product');
+      }
+    },
+    mutationKey: ['deleteProduct'],
   });
 };

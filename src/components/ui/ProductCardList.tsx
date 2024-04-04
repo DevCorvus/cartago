@@ -8,28 +8,23 @@ import { HiOutlinePhoto, HiPencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
 import SearchInput from './SearchInput';
 import { formatMoney } from '@/lib/dinero';
+import { useDeleteProduct, useProductCards } from '@/data/product';
+import SomethingWentWrong from './SomethingWentWrong';
 
 export default function ProductCardList() {
   const [products, setProducts] = useState<ProductCardWithSalesDto[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<
     ProductCardWithSalesDto[]
   >([]);
-  const [isLoading, setLoading] = useState(true);
+
+  const { isLoading, isError, data } = useProductCards();
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/seller/products');
-      if (res.ok) {
-        const data: ProductCardWithSalesDto[] = await res.json();
-        setProducts(data);
-      }
-      setLoading(false);
-    })();
-  }, []);
-
-  useEffect(() => {
-    setSelectedProducts(products);
-  }, [products]);
+    if (data) {
+      setProducts(data);
+      setSelectedProducts(data);
+    }
+  }, [data]);
 
   const searchProducts = (title: string) => {
     const input = title.trim().toLowerCase();
@@ -38,15 +33,23 @@ export default function ProductCardList() {
     );
   };
 
-  const deleteProduct = async (productId: string) => {
-    const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
+  const removeProduct = (productId: string) => {
+    setProducts((prev) => prev.filter((product) => product.id !== productId));
+  };
 
-    if (res.ok) {
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
+  const deleteProductMutation = useDeleteProduct();
+
+  const deleteProduct = async (productId: string) => {
+    try {
+      await deleteProductMutation.mutateAsync(productId);
+      removeProduct(productId);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
   if (isLoading) return <Loading />;
+  if (isError) return <SomethingWentWrong />;
 
   return (
     <div className="flex w-full flex-col gap-6">

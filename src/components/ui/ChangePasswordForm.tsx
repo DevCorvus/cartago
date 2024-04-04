@@ -1,5 +1,6 @@
 'use client';
 
+import { useChangePassword } from '@/data/password';
 import { UpdateUserPasswordDto } from '@/shared/dtos/user.dto';
 import { updateUserPasswordSchema } from '@/shared/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,18 +17,14 @@ export default function ChangePasswordForm() {
     resolver: zodResolver(updateUserPasswordSchema),
   });
 
-  // TODO: Handle error
-  const onSubmit: SubmitHandler<UpdateUserPasswordDto> = async (data) => {
-    const res = await fetch('/api/auth/password', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const changePasswordMutation = useChangePassword();
 
-    if (res.ok) {
+  const onSubmit: SubmitHandler<UpdateUserPasswordDto> = async (data) => {
+    try {
+      await changePasswordMutation.mutateAsync(data);
       router.push('/account');
+    } catch {
+      // TODO: Handle error case
     }
   };
 

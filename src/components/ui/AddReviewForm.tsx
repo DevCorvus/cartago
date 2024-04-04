@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { HiMiniPlus } from 'react-icons/hi2';
 import RatingInput from './RatingInput';
+import { useCreateReview } from '@/data/review';
 
 interface Props {
   productId: string;
@@ -23,18 +24,17 @@ export default function AddReviewForm({ productId, addReview }: Props) {
     resolver: zodResolver(createUpdateReviewSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateUpdateReviewDto> = async (data) => {
-    const res = await fetch(`/api/products/${productId}/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const createReviewMutation = useCreateReview();
 
-    if (res.ok) {
-      const data: ReviewDto = await res.json();
-      addReview(data);
+  const onSubmit: SubmitHandler<CreateUpdateReviewDto> = async (data) => {
+    try {
+      const newReview = await createReviewMutation.mutateAsync({
+        productId,
+        data,
+      });
+      addReview(newReview);
+    } catch {
+      // TODO: Handle error case
     }
   };
 

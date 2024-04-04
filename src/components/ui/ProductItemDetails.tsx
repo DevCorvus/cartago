@@ -13,6 +13,7 @@ import { localStorageCart } from '@/utils/localStorageCart';
 import { formatMoney } from '@/lib/dinero';
 import ProductReviewList from './ProductReviewList';
 import ProductList from './ProductList';
+import { useAddCartItem } from '@/data/cart';
 
 export default function ProductItemDetails({
   product,
@@ -27,14 +28,18 @@ export default function ProductItemDetails({
 
   const noStock = product.stock === 0;
 
+  const addCartItemMutation = useAddCartItem();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let success = false;
-
     if (isAuthenticated) {
-      const res = await fetch(`/api/cart/${product.id}`, { method: 'POST' });
-      success = res.ok;
+      try {
+        await addCartItemMutation.mutateAsync(product.id);
+        addProductId(product.id);
+      } catch {
+        // TODO: Handle error case
+      }
     } else {
       localStorageCart.addItem({
         id: product.id,
@@ -45,9 +50,6 @@ export default function ProductItemDetails({
         amount: 1,
         images: [product.images[0]],
       });
-    }
-
-    if (!isAuthenticated || success) {
       addProductId(product.id);
     }
   };

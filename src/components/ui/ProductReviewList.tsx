@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from 'react';
 import Loading from './Loading';
 import AddReviewForm from './AddReviewForm';
 import ProductReviewItem from './ProductReviewItem';
+import { useReviews } from '@/data/review';
+import SomethingWentWrong from './SomethingWentWrong';
 
 interface Props {
   productId: string;
@@ -13,23 +15,14 @@ interface Props {
 export default function ProductReviewList({ productId }: Props) {
   const [reviews, setReviews] = useState<ReviewDto[]>([]);
   const [canReview, setCanReview] = useState(false);
-  const [isLoading, setLoading] = useState(true);
+
+  const { isLoading, isError, data } = useReviews(productId);
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch(`/api/products/${productId}/reviews`);
-
-      if (res.ok) {
-        const data: { canReview: boolean; reviews: ReviewDto[] } =
-          await res.json();
-
-        setReviews(data.reviews);
-        setCanReview(data.canReview);
-      }
-
-      setLoading(false);
-    })();
-  }, [productId]);
+    if (data) {
+      setReviews(data.reviews);
+    }
+  }, [data]);
 
   const addReview = useCallback((newReview: ReviewDto) => {
     setReviews((prev) => [newReview, ...prev]);
@@ -46,6 +39,7 @@ export default function ProductReviewList({ productId }: Props) {
   }, []);
 
   if (isLoading) return <Loading />;
+  if (isError) return <SomethingWentWrong />;
 
   return (
     <section className="mt-10 flex w-full flex-col gap-6">

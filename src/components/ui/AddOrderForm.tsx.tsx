@@ -19,6 +19,8 @@ import { FormEvent, useEffect, useState } from 'react';
 import { AddressDto, AddressMinimalDto } from '@/shared/dtos/address.dto';
 import LoadingModal from './LoadingModal';
 import { AddAddressForm } from './AddAddressForm';
+import { useMinimalAddresses } from '@/data/address';
+import { usePayment } from '@/data/order';
 
 interface Props {
   order: NewOrderDto;
@@ -27,7 +29,6 @@ interface Props {
 
 export default function AddOrderForm({ order, close }: Props) {
   const router = useRouter();
-  const [isLoading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState<AddressMinimalDto[]>([]);
   const [showAddressForm, setShowAddressForm] = useState(false);
 
@@ -35,18 +36,13 @@ export default function AddOrderForm({ order, close }: Props) {
     disable: showAddressForm,
   });
 
+  const { isLoading, isError, data } = useMinimalAddresses();
+
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/addresses?minimal=true');
-
-      if (res.ok) {
-        const data: AddressMinimalDto[] = await res.json();
-        setAddresses(data);
-      }
-
-      setLoading(false);
-    })();
-  }, []);
+    if (data) {
+      setAddresses(data);
+    }
+  }, [data]);
 
   const addAddress = (newAddress: AddressDto) => {
     setAddresses((prev) => {
@@ -75,15 +71,14 @@ export default function AddOrderForm({ order, close }: Props) {
     resolver: zodResolver(createPaymentSchema),
   });
 
-  const onSubmit: SubmitHandler<CreatePaymentDto> = async (data) => {
-    const res = await fetch(`/api/orders/${order.id}/payment`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+  const paymentMutation = usePayment();
 
-    if (res.ok) {
+  const onSubmit: SubmitHandler<CreatePaymentDto> = async (data) => {
+    try {
+      await paymentMutation.mutateAsync({ orderId: order.id, data });
       router.push(`/account/orders/${order.id}`);
+    } catch {
+      // TODO: Handle error case
     }
   };
 

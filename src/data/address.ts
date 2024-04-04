@@ -1,8 +1,12 @@
-import { AddressDto, CreateUpdateAddressForm } from '@/shared/dtos/address.dto';
+import {
+  AddressDto,
+  AddressMinimalDto,
+  CreateUpdateAddressForm,
+} from '@/shared/dtos/address.dto';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useAddresses = () => {
-  return useQuery({
+  return useQuery<AddressDto[]>({
     queryFn: async () => {
       const res = await fetch('/api/addresses');
 
@@ -13,6 +17,21 @@ export const useAddresses = () => {
       return res.json();
     },
     queryKey: ['addresses'],
+  });
+};
+
+export const useMinimalAddresses = () => {
+  return useQuery<AddressMinimalDto[]>({
+    queryFn: async () => {
+      const res = await fetch('/api/addresses?minimal=true');
+
+      if (!res.ok) {
+        throw new Error('Could not get minimal addresses');
+      }
+
+      return res.json();
+    },
+    queryKey: ['minimalAddresses'],
   });
 };
 

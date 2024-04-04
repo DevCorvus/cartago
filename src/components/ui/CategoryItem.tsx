@@ -5,6 +5,7 @@ import { capitalize } from '@/utils/capitalize';
 import { useState } from 'react';
 import { HiTrash, HiChevronDown, HiChevronUp, HiPencil } from 'react-icons/hi2';
 import EditCategoryForm from './EditCategoryForm';
+import { useDeleteCategory } from '@/data/category';
 
 interface Props {
   category: CategoryDto;
@@ -20,13 +21,14 @@ export default function CategoryItem({
   const [showDetails, setShowDetails] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  const handleDelete = async (categoryId: number) => {
-    const res = await fetch(`/api/categories/${categoryId}`, {
-      method: 'DELETE',
-    });
+  const deleteCategoryMutation = useDeleteCategory();
 
-    if (res.ok) {
+  const handleDelete = async (categoryId: number) => {
+    try {
+      await deleteCategoryMutation.mutateAsync(category.id);
       deleteCategory(categoryId);
+    } catch {
+      // TODO: Handle error case
     }
   };
 
