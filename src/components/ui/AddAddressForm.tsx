@@ -11,9 +11,8 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getCountries } from '@/data/country';
-import { createNewAddress } from '@/data/address';
+import { useCountries } from '@/data/country';
+import { useCreateAddress } from '@/data/address';
 
 interface Props {
   addAddress(newAddress: AddressDto): void;
@@ -25,15 +24,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
   const [selectedPhoneCountry, setSelectedPhoneCountry] =
     useState<CountryDto | null>(null);
 
-  const {
-    isLoading,
-    isError,
-    data: countries,
-  } = useQuery({
-    initialData: [],
-    queryFn: getCountries,
-    queryKey: ['countries'],
-  });
+  const { isLoading, isError, data: countries } = useCountries();
 
   const countryPhones = useMemo(() => {
     return countries
@@ -82,10 +73,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
     }
   }, [countries, setValue]);
 
-  const newAddressMutation = useMutation({
-    mutationFn: createNewAddress,
-    mutationKey: ['createAddress'],
-  });
+  const newAddressMutation = useCreateAddress();
 
   const onSubmit: SubmitHandler<CreateUpdateAddressForm> = async (data) => {
     try {

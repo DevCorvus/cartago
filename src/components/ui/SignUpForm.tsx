@@ -11,8 +11,7 @@ import { CreateUserDto } from '@/shared/dtos/user.dto';
 import { localStorageCart } from '@/utils/localStorageCart';
 import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
-import { useMutation } from '@tanstack/react-query';
-import { createUser } from '@/data/user';
+import { useCreateUser } from '@/data/user';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -30,10 +29,7 @@ export default function SignUpForm() {
     resolver: zodResolver(createUserSchema),
   });
 
-  const registerMutation = useMutation({
-    mutationFn: createUser,
-    mutationKey: ['createUser'],
-  });
+  const registerMutation = useCreateUser();
 
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
     setSomethingWentWrongError(false);

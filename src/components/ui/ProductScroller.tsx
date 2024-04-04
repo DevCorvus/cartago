@@ -1,13 +1,10 @@
 'use client';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { getProducts } from '@/data/product';
+import { useProducts } from '@/data/product';
 import Loading from './Loading';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import ProductList from './ProductList';
 import { useEffect, useMemo, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
-import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import SomethingWentWrong from './SomethingWentWrong';
 
 interface Props {
@@ -15,28 +12,27 @@ interface Props {
 }
 
 export default function ProductScroller({ categoryId }: Props) {
-  const [pageCounter, setPageCounter] = useState(0);
+  const [pageCounter, setPageCounter] = useState(1);
 
   const showLoadMoreBtn = useMemo(() => {
     return pageCounter > 0 && pageCounter % 5 === 0;
   }, [pageCounter]);
 
-  const { isLoading, isError, fetchNextPage, hasNextPage, refetch, data } =
-    useInfiniteQuery<ProductCardWithSalesDto[]>({
-      initialPageParam: undefined,
-      queryFn: async ({ pageParam }) => {
-        setPageCounter((prev) => prev + 1);
-        return getProducts({
-          lastId: pageParam as string | undefined,
-          categoryId,
-        });
-      },
-      queryKey: ['products'],
-      getNextPageParam: (products) => {
-        if (products.length !== PRODUCT_PAGE_SIZE) return;
-        else return products[products.length - 1].id;
-      },
-    });
+  const {
+    isLoading,
+    isError,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    data,
+  } = useProducts(categoryId);
+
+  useEffect(() => {
+    if (isFetching) {
+      setPageCounter((prev) => prev + 1);
+    }
+  }, [isFetching]);
 
   useEffect(() => {
     setPageCounter(0);

@@ -2,8 +2,7 @@
 
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import ProductList from '@/components/ui/ProductList';
-import { useQuery } from '@tanstack/react-query';
-import { getWishedProducts } from '@/data/product';
+import { useWishedProducts } from '@/data/product';
 import Loading from '@/components/ui/Loading';
 import { localStorageWished } from '@/utils/localStorageWished';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
@@ -11,11 +10,7 @@ import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 export default function Wished() {
   const isAuthenticated = useIsAuthenticated();
 
-  const { isLoading, isError, data } = useQuery({
-    queryFn: getWishedProducts,
-    queryKey: ['wishedProducts'],
-    enabled: isAuthenticated,
-  });
+  const { isLoading, isError, data } = useWishedProducts(isAuthenticated);
 
   return (
     <div className="flex flex-col gap-6">

@@ -12,13 +12,12 @@ import { ImSpinner8 } from 'react-icons/im';
 import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
 import AddOrderForm from '@/components/ui/AddOrderForm.tsx';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import {
-  checkout,
-  decrementCartItemAmount,
-  getCartItems,
-  incrementCartItemAmount,
-  removeCartItem,
+  useCartItems,
+  useCheckout,
+  useDecrementCartItemAmount,
+  useIncrementCartItemAmount,
+  useRemoveCartItem,
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 
@@ -29,11 +28,7 @@ export default function Cart() {
     isAuthenticated ? [] : localStorageCart.get(),
   );
 
-  const { isLoading, isError, data } = useQuery({
-    queryFn: getCartItems,
-    queryKey: ['cartItems'],
-    enabled: isAuthenticated,
-  });
+  const { isLoading, isError, data } = useCartItems(isAuthenticated);
 
   useEffect(() => {
     if (data) setCartItems(data);
@@ -41,10 +36,7 @@ export default function Cart() {
 
   const [order, setOrder] = useState<NewOrderDto | null>(null);
 
-  const incrementMutation = useMutation({
-    mutationFn: incrementCartItemAmount,
-    mutationKey: ['incrementCartItemAmount'],
-  });
+  const incrementMutation = useIncrementCartItemAmount();
 
   const incrementCartItemAmountFromUI = (productId: string) => {
     setCartItems((prev) => {
@@ -71,10 +63,7 @@ export default function Cart() {
     }
   };
 
-  const decrementCartItemAmountMutation = useMutation({
-    mutationFn: decrementCartItemAmount,
-    mutationKey: ['decrementCartItemAmount'],
-  });
+  const decrementCartItemAmountMutation = useDecrementCartItemAmount();
 
   const decrementCartItemAmountFromUI = (productId: string) => {
     setCartItems((prev) => {
@@ -101,10 +90,7 @@ export default function Cart() {
     }
   };
 
-  const removeCartItemMutation = useMutation({
-    mutationFn: removeCartItem,
-    mutationKey: ['removeCartItem'],
-  });
+  const removeCartItemMutation = useRemoveCartItem();
 
   const removeProductId = useCartStore((state) => state.removeProductId);
 
@@ -129,10 +115,7 @@ export default function Cart() {
     }
   };
 
-  const checkoutMutation = useMutation({
-    mutationFn: checkout,
-    mutationKey: ['checkout'],
-  });
+  const checkoutMutation = useCheckout();
 
   const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

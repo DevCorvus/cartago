@@ -12,9 +12,8 @@ import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
 import { getCountryCodeFromPhoneNumber } from '@/lib/phone';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getCountries } from '@/data/country';
-import { editAddress } from '@/data/address';
+import { useCountries } from '@/data/country';
+import { useUpdateAddress } from '@/data/address';
 
 interface Props {
   address: AddressDto;
@@ -27,15 +26,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
   const [selectedPhoneCountry, setSelectedPhoneCountry] =
     useState<CountryDto | null>(null);
 
-  const {
-    isLoading,
-    isError,
-    data: countries,
-  } = useQuery({
-    initialData: [],
-    queryFn: getCountries,
-    queryKey: ['countries'],
-  });
+  const { isLoading, isError, data: countries } = useCountries();
 
   const countryPhones = useMemo(() => {
     return countries
@@ -106,14 +97,11 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
     }
   }, [countries, setValue, address.country.id, address.phoneNumber]);
 
-  const editAddressMutation = useMutation({
-    mutationFn: editAddress,
-    mutationKey: ['editAddress'],
-  });
+  const updateAddressMutation = useUpdateAddress();
 
   const onSubmit: SubmitHandler<CreateUpdateAddressForm> = async (data) => {
     try {
-      const updatedAddress = await editAddressMutation.mutateAsync({
+      const updatedAddress = await updateAddressMutation.mutateAsync({
         addressId: address.id,
         data,
       });

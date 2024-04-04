@@ -6,18 +6,14 @@ import { AddAddressForm } from './AddAddressForm';
 import { AddressDto } from '@/shared/dtos/address.dto';
 import Loading from './Loading';
 import AddressItem from './AddressItem';
-import { useQuery } from '@tanstack/react-query';
 import SomethingWentWrong from './SomethingWentWrong';
-import { getAddresses } from '@/data/address';
+import { useAddresses } from '@/data/address';
 
 export function AddressList() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [addresses, setAddresses] = useState<AddressDto[]>([]);
 
-  const { isLoading, isError, data } = useQuery({
-    queryFn: getAddresses,
-    queryKey: ['addresses'],
-  });
+  const { isLoading, isError, data } = useAddresses();
 
   useEffect(() => {
     if (data) {

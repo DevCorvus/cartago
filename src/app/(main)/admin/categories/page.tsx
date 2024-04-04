@@ -5,9 +5,8 @@ import CategoryItem from '@/components/ui/CategoryItem';
 import Loading from '@/components/ui/Loading';
 import SearchInput from '@/components/ui/SearchInput';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
-import { getCategories } from '@/data/category';
+import { useCategories } from '@/data/category';
 import { CategoryDto } from '@/shared/dtos/category.dto';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export default function Categories() {
@@ -16,10 +15,7 @@ export default function Categories() {
     [],
   );
 
-  const { isLoading, isError, data } = useQuery({
-    queryFn: getCategories,
-    queryKey: ['categories'],
-  });
+  const { isLoading, isError, data } = useCategories();
 
   useEffect(() => {
     if (data) setCategories(data);

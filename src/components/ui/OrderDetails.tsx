@@ -13,8 +13,7 @@ import { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import PaymentStatusTag from './PaymentStatusTag';
 import Link from 'next/link';
-import { useMutation } from '@tanstack/react-query';
-import { confirmDelivery } from '@/data/order';
+import { useConfirmDelivery } from '@/data/order';
 
 interface Props {
   order: OrderDto;
@@ -23,10 +22,7 @@ interface Props {
 export default function OrderDetails({ order }: Props) {
   const router = useRouter();
 
-  const confirmDeliveryMutation = useMutation({
-    mutationFn: confirmDelivery,
-    mutationKey: ['confirmDelivery'],
-  });
+  const confirmDeliveryMutation = useConfirmDelivery();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

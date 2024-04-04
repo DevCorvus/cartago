@@ -1,11 +1,13 @@
+import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 interface GetProductsOptions {
   lastId?: string;
   categoryId?: number;
 }
 
-export const getProducts = async (
+const getProducts = async (
   options: GetProductsOptions,
 ): Promise<ProductCardWithSalesDto[]> => {
   let url = '/api/products';
@@ -31,14 +33,35 @@ export const getProducts = async (
   return res.json();
 };
 
-export const getWishedProducts = async (): Promise<
-  ProductCardWithSalesDto[]
-> => {
-  const res = await fetch('/api/products/wished');
+export const useProducts = (categoryId?: number) => {
+  return useInfiniteQuery<ProductCardWithSalesDto[]>({
+    initialPageParam: undefined,
+    queryFn: async ({ pageParam }) => {
+      return getProducts({
+        lastId: pageParam as string | undefined,
+        categoryId,
+      });
+    },
+    queryKey: ['products'],
+    getNextPageParam: (products) => {
+      if (products.length !== PRODUCT_PAGE_SIZE) return;
+      else return products[products.length - 1].id;
+    },
+  });
+};
 
-  if (!res.ok) {
-    throw new Error('Could not get wished products');
-  }
+export const useWishedProducts = (authenticated: boolean) => {
+  return useQuery({
+    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+      const res = await fetch('/api/products/wished');
 
-  return res.json();
+      if (!res.ok) {
+        throw new Error('Could not get wished products');
+      }
+
+      return res.json();
+    },
+    queryKey: ['wishedProducts'],
+    enabled: authenticated,
+  });
 };
