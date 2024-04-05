@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '@/server/auth/next-auth.config';
 import { cartService, wishedItemService } from '@/server/services';
 import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
+import { Toaster } from 'react-hot-toast';
 
 const merriweather = Merriweather({
   weight: '400',
@@ -47,6 +48,7 @@ export default async function RootLayout({
               </main>
               <div id="modal-container"></div>
               <div id="modal-container-alt"></div>
+              <Toaster position="bottom-right" />
             </UserProvider>
           </ReactQueryProvider>
         </AuthProvider>
