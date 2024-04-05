@@ -1,5 +1,6 @@
 import { useUnwishProduct, useWishProduct } from '@/data/wished';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { toastError } from '@/lib/toast';
 import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
 import { localStorageWished } from '@/utils/localStorageWished';
@@ -35,17 +36,19 @@ export default function WishProduct({ product }: Props) {
     if (isAuthenticated) {
       if (!isWished) {
         try {
-          await wishMutation.mutateAsync(product.id);
           addWishedItem(product.id);
-        } catch {
-          // TODO: Handl error case
+          await wishMutation.mutateAsync(product.id);
+        } catch (err) {
+          toastError(err);
+          removeWishedItem(product.id);
         }
       } else {
         try {
-          await unwishMutation.mutateAsync(product.id);
           removeWishedItem(product.id);
-        } catch {
-          // TODO: Handl error case
+          await unwishMutation.mutateAsync(product.id);
+        } catch (err) {
+          toastError(err);
+          addWishedItem(product.id);
         }
       }
     } else {
