@@ -16,24 +16,73 @@ import {
   useCartItems,
   useCheckout,
   useDecrementCartItemAmount,
+  useGuestCartItems,
   useIncrementCartItemAmount,
   useRemoveCartItem,
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastError } from '@/lib/toast';
+import toast from 'react-hot-toast';
 
 export default function Cart() {
   const isAuthenticated = useIsAuthenticated();
 
-  const [cartItems, setCartItems] = useState<ProductCartItemDto[]>(
-    isAuthenticated ? [] : localStorageCart.get(),
-  );
+  const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
 
-  const { isLoading, isError, data } = useCartItems(isAuthenticated);
+  const { isLoading, isError, error, data } = useCartItems(isAuthenticated);
+  const {
+    isLoading: isGuestLoading,
+    isError: isGuestError,
+    error: guestError,
+    data: guestData,
+  } = useGuestCartItems(!isAuthenticated);
 
   useEffect(() => {
     if (data) setCartItems(data);
   }, [data]);
+
+  useEffect(() => {
+    if (guestData) {
+      const cart = localStorageCart.get();
+
+      const cartItems: ProductCartItemDto[] = guestData.map((product) => {
+        const cartItem = cart.find((item) => item.id === product.id);
+
+        if (!cartItem) {
+          toastError(new Error(`Could not sync "${product.title}" amount`));
+        }
+
+        let amount = cartItem?.amount || 1;
+
+        if (amount > product.stock) {
+          localStorageCart.setItemAmount(product.id, product.stock);
+          amount = product.stock;
+          toast(
+            () => (
+              <p>
+                <strong>{product.title}</strong> amount is higher than current
+                stock available. It will now be equal to the remaining stock to
+                keep you in sync.
+              </p>
+            ),
+            { duration: 5000 },
+          );
+        }
+
+        return { ...product, amount };
+      });
+
+      setCartItems(cartItems);
+    }
+  }, [guestData]);
+
+  useEffect(() => {
+    if (error) toastError(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (guestError) toastError(guestError);
+  }, [guestError]);
 
   const [order, setOrder] = useState<NewOrderDto | null>(null);
 
@@ -60,8 +109,12 @@ export default function Cart() {
         decrementCartItemAmountFromUI(productId);
       }
     } else {
-      localStorageCart.incrementItemAmount(productId);
-      incrementCartItemAmountFromUI(productId);
+      const product = cartItems.find((item) => item.id === productId);
+
+      if (product) {
+        localStorageCart.incrementItemAmount(productId, product.stock);
+        incrementCartItemAmountFromUI(productId);
+      }
     }
   };
 
@@ -133,8 +186,8 @@ export default function Cart() {
 
   const total = useMemo(() => getTotalMoney(cartItems), [cartItems]);
 
-  if (isLoading) return <Loading />;
-  if (isError) return <SomethingWentWrong />;
+  if (isLoading || isGuestLoading) return <Loading />;
+  if (isError || isGuestError) return <SomethingWentWrong />;
 
   return (
     <>

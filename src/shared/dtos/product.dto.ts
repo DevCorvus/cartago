@@ -54,3 +54,17 @@ export interface ProductCartItemDto {
   amount: number;
   images: ProductImageDto[];
 }
+
+export interface ProductCartItemWithoutAmountDto {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  images: ProductImageDto[];
+}
+
+export interface ProductCartItemMinimalDto {
+  id: string;
+  amount: number;
+}

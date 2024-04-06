@@ -1,5 +1,9 @@
 import { NewOrderDto } from '@/shared/dtos/order.dto';
-import { ProductCartItemDto } from '@/shared/dtos/product.dto';
+import {
+  ProductCartItemDto,
+  ProductCartItemWithoutAmountDto,
+} from '@/shared/dtos/product.dto';
+import { localStorageCart } from '@/utils/localStorageCart';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useCartItems = (authenticated: boolean) => {
@@ -15,6 +19,27 @@ export const useCartItems = (authenticated: boolean) => {
     },
     queryKey: ['cartItems'],
     enabled: authenticated,
+  });
+};
+
+export const useGuestCartItems = (unauthenticated: boolean) => {
+  return useQuery<ProductCartItemWithoutAmountDto[]>({
+    queryFn: async () => {
+      const cartItemIds = localStorageCart.get().map((item) => item.id);
+
+      const searchParams = new URLSearchParams();
+      searchParams.append('items', JSON.stringify(cartItemIds));
+
+      const res = await fetch('/api/cart/guest?' + searchParams.toString());
+
+      if (!res.ok) {
+        throw new Error('Coult not get guest cart items');
+      }
+
+      return res.json();
+    },
+    queryKey: ['guestCartItems'],
+    enabled: unauthenticated,
   });
 };
 

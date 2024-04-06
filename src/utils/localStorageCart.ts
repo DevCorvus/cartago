@@ -1,18 +1,18 @@
-import { ProductCartItemDto } from '@/shared/dtos/product.dto';
+import { ProductCartItemMinimalDto } from '@/shared/dtos/product.dto';
 
 class LocalStorageCart {
   constructor(private key: string = 'cart') {}
 
-  set(data: ProductCartItemDto[]) {
+  set(data: ProductCartItemMinimalDto[]) {
     localStorage.setItem(this.key, JSON.stringify(data));
   }
 
-  get(): ProductCartItemDto[] {
+  get(): ProductCartItemMinimalDto[] {
     const cart = localStorage.getItem(this.key);
     return cart ? JSON.parse(cart) : [];
   }
 
-  addItem(data: ProductCartItemDto) {
+  addItem(data: ProductCartItemMinimalDto) {
     const cart = this.get();
 
     const productAlreadyExists = cart.some((product) => product.id === data.id);
@@ -28,11 +28,11 @@ class LocalStorageCart {
     this.set(cart.filter((product) => product.id !== productId));
   }
 
-  incrementItemAmount(productId: string) {
+  incrementItemAmount(productId: string, stock: number) {
     const cart = this.get();
     this.set(
       cart.map((product) => {
-        if (product.id === productId && product.amount < product.stock) {
+        if (product.id === productId && product.amount < stock) {
           product.amount += 1;
         }
         return product;
@@ -46,6 +46,20 @@ class LocalStorageCart {
       cart.map((product) => {
         if (product.id === productId && product.amount > 1) {
           product.amount -= 1;
+        }
+        return product;
+      }),
+    );
+  }
+
+  setItemAmount(productId: string, amount: number) {
+    if (amount <= 0) return;
+
+    const cart = this.get();
+    this.set(
+      cart.map((product) => {
+        if (product.id === productId) {
+          product.amount = amount;
         }
         return product;
       }),

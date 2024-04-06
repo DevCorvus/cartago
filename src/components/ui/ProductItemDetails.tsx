@@ -23,8 +23,12 @@ export default function ProductItemDetails({
   const isAuthenticated = useIsAuthenticated();
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
-  const { productIds, addProductId } = useCartStore(
-    ({ productIds, addProductId }) => ({ productIds, addProductId }),
+  const { productIds, addProductId, removeProductId } = useCartStore(
+    ({ productIds, addProductId, removeProductId }) => ({
+      productIds,
+      addProductId,
+      removeProductId,
+    }),
   );
 
   const noStock = product.stock === 0;
@@ -36,21 +40,14 @@ export default function ProductItemDetails({
 
     if (isAuthenticated) {
       try {
-        await addCartItemMutation.mutateAsync(product.id);
         addProductId(product.id);
+        await addCartItemMutation.mutateAsync(product.id);
       } catch (err) {
         toastError(err);
+        removeProductId(product.id);
       }
     } else {
-      localStorageCart.addItem({
-        id: product.id,
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        stock: product.stock,
-        amount: 1,
-        images: [product.images[0]],
-      });
+      localStorageCart.addItem({ id: product.id, amount: 1 });
       addProductId(product.id);
     }
   };

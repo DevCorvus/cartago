@@ -6,6 +6,7 @@ import {
   ProductCardDto,
   ProductDetailsDto,
   ProductCardWithSalesDto,
+  ProductCartItemWithoutAmountDto,
 } from '@/shared/dtos/product.dto';
 
 interface CreateUpdateProductInterface
@@ -123,6 +124,33 @@ export class ProductService {
     const productsWithSales = await this.getSalesFromProducts(products);
 
     return productsWithSales;
+  }
+
+  async findAllAsCartItems(
+    cartItemIds: string[],
+  ): Promise<ProductCartItemWithoutAmountDto[]> {
+    return prisma.product.findMany({
+      where: {
+        id: { in: cartItemIds },
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        stock: true,
+        price: true,
+        images: {
+          take: 1,
+          select: {
+            path: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
   }
 
   async findById(id: string, userId?: string): Promise<ProductDto | null> {
