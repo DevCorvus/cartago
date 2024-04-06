@@ -12,7 +12,7 @@ export const useCartItems = (authenticated: boolean) => {
       const res = await fetch('/api/cart');
 
       if (!res.ok) {
-        throw new Error('Coult not get cart items');
+        throw new Error('Could not get cart items');
       }
 
       return res.json();
@@ -33,7 +33,7 @@ export const useGuestCartItems = (unauthenticated: boolean) => {
       const res = await fetch('/api/cart/guest?' + searchParams.toString());
 
       if (!res.ok) {
-        throw new Error('Coult not get guest cart items');
+        throw new Error('Could not get guest cart items');
       }
 
       return res.json();
@@ -49,7 +49,7 @@ export const useAddCartItem = () => {
       const res = await fetch(`/api/cart/${productId}`, { method: 'POST' });
 
       if (!res.ok) {
-        throw new Error('Coult not get cart items');
+        throw new Error('Could not get cart items');
       }
     },
     mutationKey: ['addCartItem'],
@@ -67,7 +67,7 @@ export const useIncrementCartItemAmount = () => {
       );
 
       if (!res.ok) {
-        throw new Error('Coult not increment cart item amount');
+        throw new Error('Could not increment cart item amount');
       }
     },
     mutationKey: ['incrementCartItemAmount'],
@@ -85,7 +85,7 @@ export const useDecrementCartItemAmount = () => {
       );
 
       if (!res.ok) {
-        throw new Error('Coult not decrement cart item amount');
+        throw new Error('Could not decrement cart item amount');
       }
     },
     mutationKey: ['decrementCartItemAmount'],
@@ -100,7 +100,7 @@ export const useRemoveCartItem = () => {
       });
 
       if (!res.ok) {
-        throw new Error('Coult not remove cart item');
+        throw new Error('Could not remove cart item');
       }
     },
     mutationKey: ['removeCartItem'],
@@ -113,7 +113,7 @@ export const useCheckout = () => {
       const res = await fetch('/api/orders', { method: 'POST' });
 
       if (!res.ok) {
-        throw new Error('Coult not checkout cart items');
+        throw new Error('Could not checkout cart items');
       }
 
       return res.json();

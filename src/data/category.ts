@@ -11,7 +11,7 @@ export const useCategories = () => {
       const res = await fetch('/api/categories');
 
       if (!res.ok) {
-        throw new Error('Coult not get categories');
+        throw new Error('Could not get categories');
       }
 
       return res.json();
@@ -26,7 +26,7 @@ export const getCategoryTags = async (
   const res = await fetch(`/api/categories/tags?title=${input}`);
 
   if (!res.ok) {
-    throw new Error('Coult not get category tags');
+    throw new Error('Could not get category tags');
   }
 
   return res.json();
@@ -44,7 +44,7 @@ export const useCreateCategory = () => {
       });
 
       if (!res.ok) {
-        throw new Error('Coult not create category');
+        throw new Error('Could not create category');
       }
 
       return res.json();
@@ -73,7 +73,7 @@ export const useUpdateCategory = () => {
       });
 
       if (!res.ok) {
-        throw new Error('Coult not update category');
+        throw new Error('Could not update category');
       }
 
       return res.json();
@@ -90,7 +90,7 @@ export const useDeleteCategory = () => {
       });
 
       if (!res.ok) {
-        throw new Error('Coult not delete category');
+        throw new Error('Could not delete category');
       }
 
       return res.json();
