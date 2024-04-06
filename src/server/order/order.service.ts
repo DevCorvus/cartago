@@ -149,9 +149,13 @@ export class OrderService {
       select: {
         productId: true,
         amount: true,
-        product: { select: { price: true } },
+        product: { select: { price: true, stock: true } },
       },
     });
+
+    if (items.some((item) => item.amount > item.product.stock)) {
+      throw new Error('Product stock does not fulfill order');
+    }
 
     const orderItems: CreateOrderItem[] = items.map((item) => {
       return {
