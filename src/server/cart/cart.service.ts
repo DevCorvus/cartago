@@ -32,7 +32,7 @@ export class CartService {
   }
 
   async findAllItems(cartId: string): Promise<ProductCartItemDto[] | null> {
-    const cartItems = await prisma.cartItem.findMany({
+    const items = await prisma.cartItem.findMany({
       where: { cartId, product: { deletedAt: null } },
       include: {
         product: {
@@ -55,13 +55,13 @@ export class CartService {
       },
     });
 
-    const cartProductsWithAmount = cartItems
-      ? cartItems.map((item) => {
-          return { id: item.productId, ...item.product, amount: item.amount };
-        })
-      : null;
+    if (!items) return null;
 
-    return cartProductsWithAmount;
+    const cartItems = items.map((item) => {
+      return { id: item.productId, ...item.product, amount: item.amount };
+    });
+
+    return cartItems;
   }
 
   async findAllItemIds(cartId: string): Promise<string[] | null> {
