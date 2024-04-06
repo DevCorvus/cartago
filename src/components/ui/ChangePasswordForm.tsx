@@ -1,6 +1,7 @@
 'use client';
 
 import { useChangePassword } from '@/data/password';
+import { toastError } from '@/lib/toast';
 import { UpdateUserPasswordDto } from '@/shared/dtos/user.dto';
 import { updateUserPasswordSchema } from '@/shared/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,8 +24,8 @@ export default function ChangePasswordForm() {
     try {
       await changePasswordMutation.mutateAsync(data);
       router.push('/account');
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

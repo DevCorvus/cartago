@@ -14,6 +14,7 @@ import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
 import { getCountryCodeFromPhoneNumber } from '@/lib/phone';
 import { useCountries } from '@/data/country';
 import { useUpdateAddress } from '@/data/address';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   address: AddressDto;
@@ -27,6 +28,10 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
     useState<CountryDto | null>(null);
 
   const { isLoading, isError, data: countries } = useCountries();
+
+  useEffect(() => {
+    if (isError) toastError();
+  }, [isError]);
 
   const countryPhones = useMemo(() => {
     return countries
@@ -107,8 +112,8 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
       });
       updateAddress(updatedAddress);
       close();
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { toastError } from '@/lib/toast';
 import { LoginUserDto } from '@/shared/dtos/user.dto';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,16 +23,20 @@ export function SignInForm() {
   const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
     setLoginError(false);
 
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    try {
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-    if (res?.ok && !res.error) {
-      router.refresh();
-    } else {
-      setLoginError(true);
+      if (res?.ok && !res.error) {
+        router.refresh();
+      } else {
+        setLoginError(true);
+      }
+    } catch (err) {
+      toastError(err);
     }
   };
 

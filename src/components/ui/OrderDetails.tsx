@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import PaymentStatusTag from './PaymentStatusTag';
 import Link from 'next/link';
 import { useConfirmDelivery } from '@/data/order';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   order: OrderDto;
@@ -30,8 +31,8 @@ export default function OrderDetails({ order }: Props) {
     try {
       await confirmDeliveryMutation.mutateAsync(order.id);
       router.refresh();
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

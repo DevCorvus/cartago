@@ -14,6 +14,7 @@ import { formatMoney } from '@/lib/dinero';
 import ProductReviewList from './ProductReviewList';
 import ProductList from './ProductList';
 import { useAddCartItem } from '@/data/cart';
+import { toastError } from '@/lib/toast';
 
 export default function ProductItemDetails({
   product,
@@ -37,8 +38,8 @@ export default function ProductItemDetails({
       try {
         await addCartItemMutation.mutateAsync(product.id);
         addProductId(product.id);
-      } catch {
-        // TODO: Handle error case
+      } catch (err) {
+        toastError(err);
       }
     } else {
       localStorageCart.addItem({

@@ -21,6 +21,7 @@ import LoadingModal from './LoadingModal';
 import { AddAddressForm } from './AddAddressForm';
 import { useMinimalAddresses } from '@/data/address';
 import { usePayment } from '@/data/order';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   order: NewOrderDto;
@@ -39,10 +40,12 @@ export default function AddOrderForm({ order, close }: Props) {
   const { isLoading, isError, data } = useMinimalAddresses();
 
   useEffect(() => {
-    if (data) {
-      setAddresses(data);
-    }
+    if (data) setAddresses(data);
   }, [data]);
+
+  useEffect(() => {
+    if (isError) toastError();
+  }, [isError]);
 
   const addAddress = (newAddress: AddressDto) => {
     setAddresses((prev) => {
@@ -77,8 +80,8 @@ export default function AddOrderForm({ order, close }: Props) {
     try {
       await paymentMutation.mutateAsync({ orderId: order.id, data });
       router.push(`/account/orders/${order.id}`);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 
@@ -92,6 +95,7 @@ export default function AddOrderForm({ order, close }: Props) {
   };
 
   if (isLoading) return <LoadingModal />;
+  if (isError) return null;
 
   return (
     <Modal>

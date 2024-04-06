@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { HiMiniPlus } from 'react-icons/hi2';
 import RatingInput from './RatingInput';
 import { useCreateReview } from '@/data/review';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   productId: string;
@@ -33,8 +34,8 @@ export default function AddReviewForm({ productId, addReview }: Props) {
         data,
       });
       addReview(newReview);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

@@ -10,6 +10,7 @@ import SearchInput from './SearchInput';
 import { formatMoney } from '@/lib/dinero';
 import { useDeleteProduct, useProductCards } from '@/data/product';
 import SomethingWentWrong from './SomethingWentWrong';
+import { toastError } from '@/lib/toast';
 
 export default function ProductCardList() {
   const [products, setProducts] = useState<ProductCardWithSalesDto[]>([]);
@@ -43,8 +44,8 @@ export default function ProductCardList() {
     try {
       await deleteProductMutation.mutateAsync(productId);
       removeProduct(productId);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

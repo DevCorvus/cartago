@@ -11,6 +11,7 @@ import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { ImSpinner8 } from 'react-icons/im';
 import { useCreateProduct } from '@/data/product';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   categoryTags: CategoryTagDto[];
@@ -60,8 +61,8 @@ export default function AddProductForm({ categoryTags }: Props) {
     try {
       const newProduct = await createProductMutation.mutateAsync(formData);
       return router.push(`/items/${newProduct.id}`);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

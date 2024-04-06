@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { HiTrash, HiChevronDown, HiChevronUp, HiPencil } from 'react-icons/hi2';
 import EditCategoryForm from './EditCategoryForm';
 import { useDeleteCategory } from '@/data/category';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   category: CategoryDto;
@@ -27,8 +28,8 @@ export default function CategoryItem({
     try {
       await deleteCategoryMutation.mutateAsync(category.id);
       deleteCategory(categoryId);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

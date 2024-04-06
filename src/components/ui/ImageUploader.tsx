@@ -16,6 +16,7 @@ import {
 import { extname } from 'path';
 import Loading from './Loading';
 import { ProductImageDto } from '@/shared/dtos/product.dto';
+import { toastError } from '@/lib/toast';
 
 interface ImagePreview {
   filename: string;
@@ -81,14 +82,22 @@ export default function ImageUploader({
         setLoading(true);
 
         for (const { path } of defaultImages) {
-          const res = await fetch(`/uploads/${path}`);
+          try {
+            const res = await fetch(`/uploads/${path}`);
 
-          if (res.ok) {
+            if (!res.ok) {
+              throw new Error(`Could not get image ${path}`);
+            }
+
             const imageBlob = await res.blob();
             const imageType = `image/${extname(path).replace(/\./, '')}`;
-            const imageFile = new File([imageBlob], path, { type: imageType });
+            const imageFile = new File([imageBlob], path, {
+              type: imageType,
+            });
 
             handleNewImage(imageFile);
+          } catch (err) {
+            toastError(err);
           }
         }
 
@@ -107,8 +116,12 @@ export default function ImageUploader({
       acceptedFiles.slice(0, slots).forEach((file) => {
         const reader = new FileReader();
 
-        reader.onabort = () => console.log('File reading was aborted');
-        reader.onerror = () => console.log('File reading has failed');
+        reader.onabort = () => {
+          toastError(new Error('File reading was aborted'));
+        };
+        reader.onerror = () => {
+          toastError(new Error('File reading has failed'));
+        };
         reader.onload = () => {
           if (!imagePreviews.some((image) => image.filename === file.name)) {
             handleNewImage(file);

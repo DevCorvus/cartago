@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import RatingInput from './RatingInput';
 import { useUpdateReview } from '@/data/review';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   review: ReviewDto;
@@ -32,8 +33,8 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
       });
       updateReview(updatedReview);
       close();
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

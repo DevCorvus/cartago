@@ -8,6 +8,7 @@ import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
 import { useState } from 'react';
 import { HiMiniPlus } from 'react-icons/hi2';
 import { useCreateCategory } from '@/data/category';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   addCategory(data: CategoryDto): void;
@@ -31,8 +32,8 @@ export default function AddCategoryForm({ addCategory }: Props) {
       const newCategory = await createCategoryMutation.mutateAsync(data);
       addCategory(newCategory);
       setShowForm(false);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

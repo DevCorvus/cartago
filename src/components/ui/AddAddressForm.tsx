@@ -13,6 +13,7 @@ import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
 import { useCountries } from '@/data/country';
 import { useCreateAddress } from '@/data/address';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   addAddress(newAddress: AddressDto): void;
@@ -80,8 +81,8 @@ export function AddAddressForm({ addAddress, close }: Props) {
       const newAddress = await newAddressMutation.mutateAsync(data);
       addAddress(newAddress);
       close();
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

@@ -12,6 +12,7 @@ import {
 import { EditAddressForm } from './EditAddressForm';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDeleteAddress } from '@/data/address';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   address: AddressDto;
@@ -35,8 +36,8 @@ export default function AddressItem({
     try {
       await deleteAddressMutation.mutateAsync(addressId);
       removeAddress(addressId);
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

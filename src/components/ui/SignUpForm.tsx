@@ -12,12 +12,12 @@ import { localStorageCart } from '@/utils/localStorageCart';
 import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { useCreateUser } from '@/data/user';
+import { toastError } from '@/lib/toast';
 
 export default function SignUpForm() {
   const router = useRouter();
 
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
-  const [somethingWentWrongError, setSomethingWentWrongError] = useState(false);
 
   const [isExportingData, setExportingData] = useState(true);
 
@@ -32,8 +32,6 @@ export default function SignUpForm() {
   const registerMutation = useCreateUser();
 
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
-    setSomethingWentWrongError(false);
-
     if (isExportingData) {
       const wishedItems = localStorageWished.get().map((product) => product.id);
 
@@ -52,7 +50,11 @@ export default function SignUpForm() {
 
     try {
       await registerMutation.mutateAsync(data);
+    } catch {
+      return;
+    }
 
+    try {
       const signInRes = await signIn('credentials', {
         email: data.email,
         password: data.password,
@@ -62,10 +64,10 @@ export default function SignUpForm() {
       if (signInRes?.ok && !signInRes.error) {
         return router.refresh();
       } else {
-        setSomethingWentWrongError(true);
+        toastError(signInRes?.error);
       }
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 
@@ -166,14 +168,9 @@ export default function SignUpForm() {
               Export cart and wished items
             </label>
           </div>
-          <div className="space-y-2">
-            {registerMutation.isError && (
-              <p className="text-red-400">User already exists</p>
-            )}
-            {somethingWentWrongError && (
-              <p className="text-red-400">Something went wrong</p>
-            )}
-          </div>
+          {registerMutation.isError && (
+            <p className="text-red-400">User already exists</p>
+          )}
         </div>
         <button type="submit" className="btn w-full p-3">
           Sign Up

@@ -7,6 +7,7 @@ import { capitalize } from '@/utils/capitalize';
 import Loading from './Loading';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getCategoryTags } from '@/data/category';
+import { toastError } from '@/lib/toast';
 
 export default function SearchForm() {
   const pathname = usePathname();
@@ -27,8 +28,8 @@ export default function SearchForm() {
           try {
             const data = await getCategoryTags(input);
             setCategoryTags(data);
-          } catch {
-            // TODO: Handle error case
+          } catch (err) {
+            toastError(err);
           } finally {
             setLoading(false);
           }

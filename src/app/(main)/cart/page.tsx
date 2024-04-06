@@ -20,6 +20,7 @@ import {
   useRemoveCartItem,
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
+import { toastError } from '@/lib/toast';
 
 export default function Cart() {
   const isAuthenticated = useIsAuthenticated();
@@ -52,10 +53,11 @@ export default function Cart() {
   const incrementAmount = async (productId: string) => {
     if (isAuthenticated) {
       try {
-        await incrementMutation.mutateAsync(productId);
         incrementCartItemAmountFromUI(productId);
-      } catch {
-        // TODO: Handle error case
+        await incrementMutation.mutateAsync(productId);
+      } catch (err) {
+        toastError(err);
+        decrementCartItemAmountFromUI(productId);
       }
     } else {
       localStorageCart.incrementItemAmount(productId);
@@ -79,10 +81,11 @@ export default function Cart() {
   const decrementAmount = async (productId: string) => {
     if (isAuthenticated) {
       try {
-        await decrementCartItemAmountMutation.mutateAsync(productId);
         decrementCartItemAmountFromUI(productId);
-      } catch {
-        // TODO: Handle error case
+        await decrementCartItemAmountMutation.mutateAsync(productId);
+      } catch (err) {
+        toastError(err);
+        incrementCartItemAmountFromUI(productId);
       }
     } else {
       localStorageCart.decrementItemAmount(productId);
@@ -106,8 +109,8 @@ export default function Cart() {
       try {
         await removeCartItemMutation.mutateAsync(productId);
         removeCartItemFromUI(productId);
-      } catch {
-        // TODO: Handle error case
+      } catch (err) {
+        toastError(err);
       }
     } else {
       localStorageCart.remove(productId);
@@ -122,7 +125,8 @@ export default function Cart() {
     try {
       const newOrder = await checkoutMutation.mutateAsync();
       setOrder(newOrder);
-    } catch {
+    } catch (err) {
+      toastError(err);
       setOrder(null);
     }
   };

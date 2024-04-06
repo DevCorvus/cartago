@@ -15,6 +15,7 @@ import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getMoneyString } from '@/lib/dinero';
 import { ImSpinner8 } from 'react-icons/im';
 import { useUpdateProduct } from '@/data/product';
+import { toastError } from '@/lib/toast';
 
 interface Props {
   product: ProductDto;
@@ -73,8 +74,8 @@ export default function EditProductForm({ product, categoryTags }: Props) {
         formData,
       });
       return router.push(`/items/${product.id}`);
-    } catch {
-      // TODO:  Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 

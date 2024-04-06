@@ -1,6 +1,7 @@
 'use client';
 
 import { useUpdateCategory } from '@/data/category';
+import { toastError } from '@/lib/toast';
 import {
   CategoryDto,
   CreateUpdateCategoryDto,
@@ -42,8 +43,8 @@ export default function EditCategoryForm({
       });
       updateCategory(updatedCategory);
       close();
-    } catch {
-      // TODO: Handle error case
+    } catch (err) {
+      toastError(err);
     }
   };
 
