@@ -23,6 +23,7 @@ import {
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastError } from '@/lib/toast';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export default function Cart() {
   const isAuthenticated = useIsAuthenticated();
@@ -211,25 +212,35 @@ export default function Cart() {
         <p className="text-right">
           Total: <span className="text-xl">{formatMoney(total)}</span>
         </p>
-        <form onSubmit={handleCheckout}>
-          <button
-            type="submit"
-            disabled={checkoutMutation.isPending}
+        {isAuthenticated ? (
+          <form onSubmit={handleCheckout}>
+            <button
+              type="submit"
+              disabled={checkoutMutation.isPending}
+              className="btn flex w-full items-center justify-center gap-2 p-3"
+            >
+              {!checkoutMutation.isPending ? (
+                <>
+                  <HiOutlineShoppingCart />
+                  Checkout
+                </>
+              ) : (
+                <>
+                  <ImSpinner8 className="animate-spin" />
+                  Generating order...
+                </>
+              )}
+            </button>
+          </form>
+        ) : (
+          <Link
+            href="/register"
             className="btn flex w-full items-center justify-center gap-2 p-3"
           >
-            {!checkoutMutation.isPending ? (
-              <>
-                <HiOutlineShoppingCart />
-                Checkout
-              </>
-            ) : (
-              <>
-                <ImSpinner8 className="animate-spin" />
-                Generating order...
-              </>
-            )}
-          </button>
-        </form>
+            <HiOutlineShoppingCart />
+            Checkout
+          </Link>
+        )}
       </div>
       {order && <AddOrderForm order={order} close={() => setOrder(null)} />}
     </>
