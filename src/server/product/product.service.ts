@@ -388,9 +388,13 @@ export class ProductService {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.product.update({
-      where: { id },
-      data: { deletedAt: new Date() },
+    await prisma.$transaction(async (tx) => {
+      await tx.cartItem.deleteMany({ where: { productId: id } });
+
+      await tx.product.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+      });
     });
   }
 
