@@ -46,22 +46,29 @@ export default function Cart() {
     if (guestData) {
       const cart = localStorageCart.get();
 
-      const cartItems: ProductCartItemDto[] = guestData.map((product) => {
-        const cartItem = cart.find((item) => item.id === product.id);
+      const removedItems = cart.filter((item) =>
+        guestData.some((p) => p.id === item.id),
+      );
 
-        if (!cartItem) {
-          toastError(new Error(`Could not sync "${product.title}" amount`));
-        }
+      if (removedItems.length !== 0) {
+        toastError(new Error('Some items no longer exist'));
+        removedItems.forEach((item) => {
+          localStorageCart.remove(item.id);
+        });
+      }
 
-        let amount = cartItem?.amount || 1;
+      const cartItems: ProductCartItemDto[] = guestData.map((cartItem) => {
+        const localItem = cart.find((item) => item.id === cartItem.id)!;
 
-        if (amount > product.stock) {
-          localStorageCart.setItemAmount(product.id, product.stock);
-          amount = product.stock;
+        let amount = localItem.amount;
+
+        if (amount > cartItem.stock) {
+          amount = cartItem.stock;
+          localStorageCart.setItemAmount(cartItem.id, cartItem.stock);
           toast(
             () => (
               <p>
-                <strong>{product.title}</strong> amount is higher than current
+                <strong>{cartItem.title}</strong> amount is higher than current
                 stock available. It will now be equal to the remaining stock to
                 keep you in sync.
               </p>
@@ -70,7 +77,7 @@ export default function Cart() {
           );
         }
 
-        return { ...product, amount };
+        return { ...cartItem, amount };
       });
 
       setCartItems(cartItems);
