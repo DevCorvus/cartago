@@ -33,7 +33,7 @@ export default function SignUpForm() {
 
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
     if (isExportingData) {
-      const wishedItems = localStorageWished.get().map((product) => product.id);
+      const wishedItems = localStorageWished.get();
 
       if (wishedItems.length) {
         data.wishedItems = wishedItems;

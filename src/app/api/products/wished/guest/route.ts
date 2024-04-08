@@ -12,11 +12,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(null, { status: 400 });
   }
 
-  const cartItemIds = result.data;
+  const wishedItemIds = result.data;
 
   try {
-    const cartItems = await productService.findAllAsCartItems(cartItemIds);
-    return NextResponse.json(cartItems, { status: 200 });
+    const wishedItems =
+      await productService.findAllWishedFromIds(wishedItemIds);
+
+    return NextResponse.json(wishedItems, { status: 200 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

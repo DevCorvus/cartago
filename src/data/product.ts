@@ -1,5 +1,6 @@
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import { ProductCardWithSalesDto, ProductDto } from '@/shared/dtos/product.dto';
+import { localStorageWished } from '@/utils/localStorageWished';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 interface GetProductsOptions {
@@ -63,6 +64,30 @@ export const useWishedProducts = (authenticated: boolean) => {
     },
     queryKey: ['wishedProducts'],
     enabled: authenticated,
+  });
+};
+
+export const useGuestWishedProducts = (unauthenticated: boolean) => {
+  return useQuery({
+    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+      const wishedItemIds = localStorageWished.get();
+
+      const searchParams = new URLSearchParams();
+      searchParams.append('items', JSON.stringify(wishedItemIds));
+
+      const res = await fetch(
+        '/api/products/wished/guest?' + searchParams.toString(),
+      );
+
+      if (!res.ok) {
+        throw new Error('Could not get guest wished products');
+      }
+
+      return res.json();
+    },
+    queryKey: ['guestWishedProducts'],
+    enabled: unauthenticated,
+    gcTime: 0,
   });
 };
 

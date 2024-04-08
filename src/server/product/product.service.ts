@@ -126,6 +126,30 @@ export class ProductService {
     return productsWithSales;
   }
 
+  async findAllWishedFromIds(
+    productIds: string[],
+  ): Promise<ProductCardWithSalesDto[]> {
+    const wishedProducts = await prisma.product.findMany({
+      where: { id: { in: productIds }, deletedAt: null },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        images: {
+          take: 1,
+          select: {
+            path: true,
+          },
+        },
+      },
+    });
+
+    const productsWithSales = await this.getSalesFromProducts(wishedProducts);
+
+    return productsWithSales;
+  }
+
   async findAllAsCartItems(
     cartItemIds: string[],
   ): Promise<ProductCartItemWithoutAmountDto[]> {

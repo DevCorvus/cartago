@@ -53,7 +53,7 @@ export default function WishProduct({ product }: Props) {
       }
     } else {
       if (!isWished) {
-        localStorageWished.addItem(product);
+        localStorageWished.addItem(product.id);
         addWishedItem(product.id);
       } else {
         localStorageWished.remove(product.id);
