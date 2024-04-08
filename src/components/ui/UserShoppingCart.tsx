@@ -24,10 +24,17 @@ import { toastAmountSynced, toastError } from '@/lib/toast';
 export default function UserShoppingCart() {
   const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
 
-  const { isLoading, isError, error, data, refetch } = useCartItems();
+  const { isLoading, isError, data, refetch } = useCartItems();
 
   const { mutateAsync: syncCartItemAmounts, isPending } =
     useSyncCartItemAmounts();
+
+  const { setProductIds, removeProductId } = useCartStore(
+    ({ setProductIds, removeProductId }) => ({
+      setProductIds,
+      removeProductId,
+    }),
+  );
 
   useEffect(() => {
     if (data) {
@@ -37,6 +44,7 @@ export default function UserShoppingCart() {
 
       if (toSync.length === 0) {
         setCartItems(data);
+        setProductIds(data.map((item) => item.id));
       } else {
         (async () => {
           try {
@@ -51,11 +59,7 @@ export default function UserShoppingCart() {
         })();
       }
     }
-  }, [data, syncCartItemAmounts, refetch]);
-
-  useEffect(() => {
-    if (error) toastError(error);
-  }, [error]);
+  }, [data, syncCartItemAmounts, refetch, setProductIds]);
 
   const [order, setOrder] = useState<NewOrderDto | null>(null);
 
@@ -106,8 +110,6 @@ export default function UserShoppingCart() {
   };
 
   const removeCartItemMutation = useRemoveCartItem();
-
-  const removeProductId = useCartStore((state) => state.removeProductId);
 
   const removeCartItemFromUI = (productId: string) => {
     removeProductId(productId);

@@ -16,7 +16,9 @@ import Link from 'next/link';
 export default function GuestShoppingCart() {
   const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
 
-  const { isLoading, isError, error, data } = useGuestCartItems();
+  const { isLoading, isError, data } = useGuestCartItems();
+
+  const removeProductId = useCartStore((state) => state.removeProductId);
 
   useEffect(() => {
     if (data) {
@@ -29,6 +31,7 @@ export default function GuestShoppingCart() {
       if (removedItems.length !== 0) {
         toastError(new Error('Some items no longer exist'));
         removedItems.forEach((item) => {
+          removeProductId(item.id);
           localStorageCart.remove(item.id);
         });
       }
@@ -49,11 +52,7 @@ export default function GuestShoppingCart() {
 
       setCartItems(cartItems);
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (error) toastError(error);
-  }, [error]);
+  }, [data, removeProductId]);
 
   const incrementCartItemAmountFromUI = (productId: string) => {
     setCartItems((prev) => {
@@ -90,8 +89,6 @@ export default function GuestShoppingCart() {
     localStorageCart.decrementItemAmount(productId);
     decrementCartItemAmountFromUI(productId);
   };
-
-  const removeProductId = useCartStore((state) => state.removeProductId);
 
   const removeCartItemFromUI = (productId: string) => {
     removeProductId(productId);
