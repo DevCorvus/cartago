@@ -12,3 +12,15 @@ export function toastError(err?: unknown) {
 
   toast.error(message + ' .(');
 }
+
+export function toastAmountSynced(title: string) {
+  toast(
+    () => (
+      <p>
+        <strong>{title}</strong> amount is higher than current stock available.
+        It will now be equal to the remaining stock to keep you in sync.
+      </p>
+    ),
+    { duration: 5000 },
+  );
+}

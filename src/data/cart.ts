@@ -6,7 +6,7 @@ import {
 import { localStorageCart } from '@/utils/localStorageCart';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export const useCartItems = (authenticated: boolean) => {
+export const useCartItems = () => {
   return useQuery<ProductCartItemDto[]>({
     queryFn: async () => {
       const res = await fetch('/api/cart');
@@ -18,12 +18,11 @@ export const useCartItems = (authenticated: boolean) => {
       return res.json();
     },
     queryKey: ['cartItems'],
-    enabled: authenticated,
     gcTime: 0,
   });
 };
 
-export const useGuestCartItems = (unauthenticated: boolean) => {
+export const useGuestCartItems = () => {
   return useQuery<ProductCartItemWithoutAmountDto[]>({
     queryFn: async () => {
       const cartItemIds = localStorageCart.get().map((item) => item.id);
@@ -40,7 +39,6 @@ export const useGuestCartItems = (unauthenticated: boolean) => {
       return res.json();
     },
     queryKey: ['guestCartItems'],
-    enabled: unauthenticated,
     gcTime: 0,
   });
 };
