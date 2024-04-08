@@ -22,7 +22,7 @@ export default function Wished() {
   } = useGuestWishedProducts(!isAuthenticated);
 
   const removeWishedItem = useWishedItemStore(
-    (store) => store.removeWishedItem,
+    (state) => state.removeWishedItem,
   );
 
   useEffect(() => {
