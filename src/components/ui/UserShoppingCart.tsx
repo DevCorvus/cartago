@@ -135,6 +135,7 @@ export default function UserShoppingCart() {
     } catch (err) {
       toastError(err);
       setOrder(null);
+      refetch();
     }
   };
 
