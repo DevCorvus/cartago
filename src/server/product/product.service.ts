@@ -389,6 +389,7 @@ export class ProductService {
 
   async delete(id: string): Promise<void> {
     await prisma.$transaction(async (tx) => {
+      // TODO: Notify these
       await tx.cartItem.deleteMany({ where: { productId: id } });
 
       await tx.product.update({

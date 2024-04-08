@@ -19,18 +19,32 @@ import {
   useGuestCartItems,
   useIncrementCartItemAmount,
   useRemoveCartItem,
+  useSyncCartItemAmounts,
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastError } from '@/lib/toast';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
+const toastAmountSynced = (title: string) => {
+  toast(
+    () => (
+      <p>
+        <strong>{title}</strong> amount is higher than current stock available.
+        It will now be equal to the remaining stock to keep you in sync.
+      </p>
+    ),
+    { duration: 5000 },
+  );
+};
+
 export default function Cart() {
   const isAuthenticated = useIsAuthenticated();
 
   const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
 
-  const { isLoading, isError, error, data } = useCartItems(isAuthenticated);
+  const { isLoading, isError, error, data, refetch } =
+    useCartItems(isAuthenticated);
   const {
     isLoading: isGuestLoading,
     isError: isGuestError,
@@ -38,16 +52,38 @@ export default function Cart() {
     data: guestData,
   } = useGuestCartItems(!isAuthenticated);
 
+  const syncCartItemAmountsMutation = useSyncCartItemAmounts();
+
   useEffect(() => {
-    if (data) setCartItems(data);
-  }, [data]);
+    if (data) {
+      const toSync = data
+        .filter((item) => item.amount > item.stock)
+        .map((item) => item.title);
+
+      if (toSync.length !== 0) {
+        (async () => {
+          try {
+            await syncCartItemAmountsMutation.mutateAsync();
+            await refetch();
+            toSync.forEach((title) => {
+              toastAmountSynced(title);
+            });
+          } catch (err) {
+            toastError(err);
+          }
+        })();
+      } else {
+        setCartItems(data);
+      }
+    }
+  }, [data, syncCartItemAmountsMutation, refetch]);
 
   useEffect(() => {
     if (guestData) {
       const cart = localStorageCart.get();
 
-      const removedItems = cart.filter((item) =>
-        guestData.some((p) => p.id === item.id),
+      const removedItems = cart.filter(
+        (item) => !guestData.some((p) => p.id === item.id),
       );
 
       if (removedItems.length !== 0) {
@@ -65,16 +101,7 @@ export default function Cart() {
         if (amount > cartItem.stock) {
           amount = cartItem.stock;
           localStorageCart.setItemAmount(cartItem.id, cartItem.stock);
-          toast(
-            () => (
-              <p>
-                <strong>{cartItem.title}</strong> amount is higher than current
-                stock available. It will now be equal to the remaining stock to
-                keep you in sync.
-              </p>
-            ),
-            { duration: 5000 },
-          );
+          toastAmountSynced(cartItem.title);
         }
 
         return { ...cartItem, amount };

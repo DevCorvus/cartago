@@ -133,4 +133,26 @@ export class CartService {
       await prisma.cartItem.delete({ where: { id: cartItem.id } });
     }
   }
+
+  async syncCartItemAmountsToStock(cartId: string) {
+    const items = await prisma.cartItem.findMany({
+      where: { cartId },
+      select: {
+        id: true,
+        amount: true,
+        product: { select: { stock: true } },
+      },
+    });
+
+    const itemsToSync = items
+      .filter((item) => item.amount > item.product.stock)
+      .map((item) => ({
+        id: item.id,
+        amount: item.product.stock,
+      }));
+
+    for (const { id, amount } of itemsToSync) {
+      await prisma.cartItem.update({ where: { id }, data: { amount } });
+    }
+  }
 }

@@ -19,6 +19,7 @@ export const useCartItems = (authenticated: boolean) => {
     },
     queryKey: ['cartItems'],
     enabled: authenticated,
+    gcTime: 0,
   });
 };
 
@@ -40,6 +41,7 @@ export const useGuestCartItems = (unauthenticated: boolean) => {
     },
     queryKey: ['guestCartItems'],
     enabled: unauthenticated,
+    gcTime: 0,
   });
 };
 
@@ -104,6 +106,19 @@ export const useRemoveCartItem = () => {
       }
     },
     mutationKey: ['removeCartItem'],
+  });
+};
+
+export const useSyncCartItemAmounts = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const res = await fetch('/api/cart/sync', { method: 'PUT' });
+
+      if (!res.ok) {
+        throw new Error('Could not sync cart item amounts');
+      }
+    },
+    mutationKey: ['syncCartItemAmounts'],
   });
 };
 
