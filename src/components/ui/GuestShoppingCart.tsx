@@ -129,7 +129,7 @@ export default function GuestShoppingCart() {
         Total: <span className="text-xl">{formatMoney(total)}</span>
       </p>
       <Link
-        href="/register"
+        href="/register?from=/cart"
         className="btn flex w-full items-center justify-center gap-2 p-3"
       >
         <HiOutlineShoppingCart />

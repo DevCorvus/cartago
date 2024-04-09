@@ -2,7 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,7 @@ import { toastError } from '@/lib/toast';
 
 export default function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
 
@@ -62,7 +63,12 @@ export default function SignUpForm() {
       });
 
       if (signInRes?.ok && !signInRes.error) {
-        return router.refresh();
+        const from = searchParams.get('from');
+        if (from) {
+          return router.push(from);
+        } else {
+          return router.refresh();
+        }
       } else {
         toastError(signInRes?.error);
       }
