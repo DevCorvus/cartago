@@ -1,49 +1,41 @@
 'use client';
 
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
 import SearchForm from './SearchForm';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { HiShoppingCart, HiUser } from 'react-icons/hi2';
+import { useState } from 'react';
+import Menu from './Menu';
 
 export default function NavBar() {
-  const isAuthenticated = useIsAuthenticated();
-
-  const handleSubmit = async () => {
-    await signOut({ redirect: true, callbackUrl: '/' });
-  };
+  const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="fixed z-50 w-full bg-white px-4 py-2 font-semibold text-green-800 shadow-md">
-      <nav className="container mx-auto flex items-center justify-between">
-        <header>
-          <Link href="/">eCommerce</Link>
-        </header>
-        <SearchForm />
-        <ul className="flex items-center gap-5 text-sm">
-          <li>
-            <Link href="/cart">Cart</Link>
-          </li>
-          <li>
-            <Link href="/items/wished">Wish List</Link>
-          </li>
-          {!isAuthenticated ? (
-            <>
-              <li>
-                <Link href="/login">Login</Link>
-              </li>
-              <li>
-                <Link href="/register">Register</Link>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <button onClick={handleSubmit}>Sign out</button>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
+    <div>
+      <div className="fixed z-50 w-full bg-lime-500 px-4 py-2 font-semibold text-white shadow-md">
+        <nav className="container mx-auto flex items-center justify-between relative">
+          <header>
+            <Link href="/">eCommerce</Link>
+          </header>
+          <SearchForm />
+          <ul className="flex items-center gap-5 text-sm">
+            <li className="text-2xl">
+              <Link href="/cart">
+                <HiShoppingCart />
+              </Link>
+            </li>
+            <li className="text-2xl">
+              <button
+                type="button"
+                onClick={() => setShowMenu((prev) => !prev)}
+              >
+                <HiUser />
+              </button>
+            </li>
+          </ul>
+          {showMenu && <Menu />}
+        </nav>
+      </div>
     </div>
   );
 }

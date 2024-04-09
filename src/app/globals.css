@@ -23,7 +23,7 @@ select {
 }
 
 .btn {
-  @apply rounded-full bg-green-800 text-slate-50 shadow-md transition hover:bg-green-700 focus:bg-green-700;
+  @apply rounded-full bg-lime-500 text-slate-50 shadow-md transition hover:bg-lime-400 focus:bg-lime-400 text-center;
 }
 
 .btn-square {
@@ -31,9 +31,9 @@ select {
 }
 
 .btn-disabled {
-  @apply rounded-full bg-gray-500 text-slate-50 shadow-md;
+  @apply rounded-full bg-gray-500 text-slate-50 shadow-md text-center;
 }
 
 .btn-alternative {
-  @apply rounded-full border border-green-800 text-green-800 transition hover:bg-green-100 focus:bg-green-100;
+  @apply rounded-full border border-lime-500 text-lime-500 transition hover:bg-lime-100 focus:bg-lime-100 text-center;
 }
