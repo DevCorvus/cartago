@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import {
-  NewOrderDto,
+  CheckoutOrderDto,
   OrderCardDto,
   OrderDto,
   OrderItemDto,
@@ -138,7 +138,64 @@ export class OrderService {
     };
   }
 
-  async create(userId: string, cartId: string): Promise<NewOrderDto> {
+  async findCheckoutOrderById(
+    id: string,
+    userId: string,
+  ): Promise<CheckoutOrderDto | null> {
+    const checkoutOrder = await prisma.order.findUnique({
+      where: { id, userId, status: 'PENDING', payment: { is: null } },
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        items: {
+          select: {
+            price: true,
+            amount: true,
+            product: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                images: {
+                  take: 1,
+                  select: {
+                    path: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        createdAt: true,
+      },
+    });
+
+    if (!checkoutOrder) return null;
+
+    const checkoutOrderItems: OrderItemDto[] = checkoutOrder.items.map(
+      (item) => {
+        return {
+          id: item.product.id,
+          title: item.product.title,
+          description: item.product.description,
+          price: item.price,
+          amount: item.amount,
+          image: item.product.images[0],
+        };
+      },
+    );
+
+    return {
+      id: checkoutOrder.id,
+      total: checkoutOrder.total,
+      status: checkoutOrder.status,
+      items: checkoutOrderItems,
+      createdAt: checkoutOrder.createdAt,
+    };
+  }
+
+  async create(userId: string, cartId: string): Promise<{ id: string }> {
     // Delete "Ephimeral" orders
     await prisma.order.deleteMany({
       where: { status: 'PENDING', payment: { is: null } },
@@ -167,7 +224,7 @@ export class OrderService {
 
     const total = getTotalMoney(orderItems);
 
-    const newOrder = await prisma.order.create({
+    return prisma.order.create({
       data: {
         userId,
         total,
@@ -177,51 +234,8 @@ export class OrderService {
           },
         },
       },
-      select: {
-        id: true,
-        total: true,
-        status: true,
-        items: {
-          select: {
-            price: true,
-            amount: true,
-            product: {
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                images: {
-                  take: 1,
-                  select: {
-                    path: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        createdAt: true,
-      },
+      select: { id: true },
     });
-
-    const newOrderItems: OrderItemDto[] = newOrder.items.map((item) => {
-      return {
-        id: item.product.id,
-        title: item.product.title,
-        description: item.product.description,
-        price: item.price,
-        amount: item.amount,
-        image: item.product.images[0],
-      };
-    });
-
-    return {
-      id: newOrder.id,
-      total: newOrder.total,
-      status: newOrder.status,
-      items: newOrderItems,
-      createdAt: newOrder.createdAt,
-    };
   }
 
   async exists(id: string, userId?: string): Promise<boolean> {

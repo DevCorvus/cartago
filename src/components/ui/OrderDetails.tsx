@@ -93,8 +93,11 @@ export default function OrderDetails({ order }: Props) {
         <header className="text-lg font-bold text-green-800">
           <h3>Items</h3>
         </header>
-        {order.items.map((item, i) => (
-          <div key={i} className="flex gap-2 rounded-md bg-white shadow-md">
+        {order.items.map((item) => (
+          <div
+            key={item.id}
+            className="flex gap-2 rounded-md bg-white shadow-md"
+          >
             <Link
               href={`/items/${item.id}`}
               className="relative h-20 w-20 rounded-l-md bg-slate-100"

@@ -12,7 +12,11 @@ export interface OrderItemDto {
   image: ProductImageDto;
 }
 
-export interface NewOrderDto {
+export interface NewCheckoutOrderDto {
+  id: string;
+}
+
+export interface CheckoutOrderDto {
   id: string;
   total: number;
   status: OrderStatus;

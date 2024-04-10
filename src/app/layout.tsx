@@ -49,7 +49,6 @@ export default async function RootLayout({
                 {children}
               </main>
               <div id="modal-container"></div>
-              <div id="modal-container-alt"></div>
               <Toaster position="bottom-right" />
             </UserProvider>
           </ReactQueryProvider>

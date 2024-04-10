@@ -1,4 +1,4 @@
-import { NewOrderDto } from '@/shared/dtos/order.dto';
+import { NewCheckoutOrderDto } from '@/shared/dtos/order.dto';
 import {
   ProductCartItemDto,
   ProductCartItemWithoutAmountDto,
@@ -122,7 +122,7 @@ export const useSyncCartItemAmounts = () => {
 
 export const useCheckout = () => {
   return useMutation({
-    mutationFn: async (): Promise<NewOrderDto> => {
+    mutationFn: async (): Promise<NewCheckoutOrderDto> => {
       const res = await fetch('/api/orders', { method: 'POST' });
 
       if (!res.ok) {

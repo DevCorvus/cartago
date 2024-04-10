@@ -25,7 +25,11 @@ export function AddAddressForm({ addAddress, close }: Props) {
   const [selectedPhoneCountry, setSelectedPhoneCountry] =
     useState<CountryDto | null>(null);
 
-  const { isLoading, isError, data: countries } = useCountries();
+  const { isLoading, isError, error, data: countries } = useCountries();
+
+  useEffect(() => {
+    if (error) toastError(error);
+  }, [error]);
 
   const countryPhones = useMemo(() => {
     return countries
@@ -99,9 +103,10 @@ export function AddAddressForm({ addAddress, close }: Props) {
   };
 
   if (isLoading) return <LoadingModal />;
+  if (isError) return null;
 
   return (
-    <Modal id="modal-container-alt">
+    <Modal>
       <form
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
@@ -120,6 +125,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             id="nickname"
             placeholder="Address nickname"
             className="input p-3"
+            autoFocus
           />
           {errors.nickname && (
             <p className="text-red-400">{errors.nickname.message}</p>

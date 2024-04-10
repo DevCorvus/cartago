@@ -9,17 +9,17 @@ export function useClickOutside<T extends HTMLElement>(
   options?: Options,
 ) {
   const ref = useRef<T>(null);
-  const [disable, setDisable] = useState(options?.disable);
+  const [disabled, setDisabled] = useState(options?.disable);
 
   useEffect(() => {
     setTimeout(() => {
-      setDisable(!!options?.disable);
+      setDisabled(!!options?.disable);
     });
   }, [options?.disable]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (!disable && ref.current && !ref.current.contains(e.target as Node)) {
+      if (!disabled && ref.current && !ref.current.contains(e.target as Node)) {
         cb();
       }
     };
@@ -29,7 +29,7 @@ export function useClickOutside<T extends HTMLElement>(
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, [ref, cb, disable]);
+  }, [ref, cb, disabled]);
 
   return ref;
 }

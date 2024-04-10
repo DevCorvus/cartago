@@ -7,9 +7,7 @@ import { useMemo, useEffect, useState, FormEvent } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
 import { ImSpinner8 } from 'react-icons/im';
-import { NewOrderDto } from '@/shared/dtos/order.dto';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
-import AddOrderForm from '@/components/ui/AddOrderForm.tsx';
 import {
   useCartItems,
   useCheckout,
@@ -20,8 +18,10 @@ import {
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastAmountSynced, toastError } from '@/lib/toast';
+import { useRouter } from 'next/navigation';
 
 export default function UserShoppingCart() {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
 
   const { isLoading, isError, data, refetch } = useCartItems();
@@ -60,8 +60,6 @@ export default function UserShoppingCart() {
       }
     }
   }, [data, syncCartItemAmounts, refetch, setProductIds]);
-
-  const [order, setOrder] = useState<NewOrderDto | null>(null);
 
   const incrementMutation = useIncrementCartItemAmount();
 
@@ -132,11 +130,10 @@ export default function UserShoppingCart() {
   const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const newOrder = await checkoutMutation.mutateAsync();
-      setOrder(newOrder);
+      const checkoutOrder = await checkoutMutation.mutateAsync();
+      router.push('/checkout/' + checkoutOrder.id);
     } catch (err) {
       toastError(err);
-      setOrder(null);
       refetch();
     }
   };
@@ -186,7 +183,6 @@ export default function UserShoppingCart() {
           )}
         </button>
       </form>
-      {order && <AddOrderForm order={order} close={() => setOrder(null)} />}
     </div>
   );
 }
