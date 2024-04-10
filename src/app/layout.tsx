@@ -9,6 +9,7 @@ import { nextAuthOptions } from '@/server/auth/next-auth.config';
 import { cartService, wishedItemService } from '@/server/services';
 import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
 import { Toaster } from 'react-hot-toast';
+import NextTopLoader from 'nextjs-toploader';
 
 const merriweather = Merriweather({
   weight: '400',
@@ -42,6 +43,7 @@ export default async function RootLayout({
         <AuthProvider session={session}>
           <ReactQueryProvider>
             <UserProvider data={userData}>
+              <NextTopLoader color="#86EFAC" showSpinner={false} />
               <NavBar />
               <main className="min-h-screen w-full bg-amber-50">
                 {children}
