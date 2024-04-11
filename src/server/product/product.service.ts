@@ -5,8 +5,10 @@ import {
   CreateUpdateProductDto,
   ProductCardDto,
   ProductDetailsDto,
-  ProductCardWithSalesDto,
   ProductCartItemWithoutAmountDto,
+  ProductRating,
+  ProductCard,
+  NewProductDto,
 } from '@/shared/dtos/product.dto';
 
 interface CreateUpdateProductInterface
@@ -27,7 +29,7 @@ interface FindAllOptions {
 export class ProductService {
   constructor() {}
 
-  async findAll(options?: FindAllOptions): Promise<ProductCardWithSalesDto[]> {
+  async findAll(options?: FindAllOptions): Promise<ProductCardDto[]> {
     const products = await prisma.product.findMany({
       where: {
         deletedAt: null,
@@ -65,10 +67,13 @@ export class ProductService {
 
     const productsWithSales = await this.getSalesFromProducts(products);
 
-    return productsWithSales;
+    const productsWithSalesAndRating =
+      await this.getRatingFromProducts(productsWithSales);
+
+    return productsWithSalesAndRating;
   }
 
-  async findAllFromUser(userId: string): Promise<ProductCardWithSalesDto[]> {
+  async findAllFromUser(userId: string): Promise<ProductCardDto[]> {
     const products = await prisma.product.findMany({
       where: {
         userId,
@@ -93,12 +98,13 @@ export class ProductService {
 
     const productsWithSales = await this.getSalesFromProducts(products);
 
-    return productsWithSales;
+    const productsWithSalesAndRating =
+      await this.getRatingFromProducts(productsWithSales);
+
+    return productsWithSalesAndRating;
   }
 
-  async findAllWishedFromUser(
-    userId: string,
-  ): Promise<ProductCardWithSalesDto[]> {
+  async findAllWishedFromUser(userId: string): Promise<ProductCardDto[]> {
     const wishedItems = await prisma.wishedItem.findMany({
       where: { userId, product: { deletedAt: null } },
       select: {
@@ -123,12 +129,13 @@ export class ProductService {
 
     const productsWithSales = await this.getSalesFromProducts(products);
 
-    return productsWithSales;
+    const productsWithSalesAndRating =
+      await this.getRatingFromProducts(productsWithSales);
+
+    return productsWithSalesAndRating;
   }
 
-  async findAllWishedFromIds(
-    productIds: string[],
-  ): Promise<ProductCardWithSalesDto[]> {
+  async findAllWishedFromIds(productIds: string[]): Promise<ProductCardDto[]> {
     const wishedProducts = await prisma.product.findMany({
       where: { id: { in: productIds }, deletedAt: null },
       select: {
@@ -147,7 +154,10 @@ export class ProductService {
 
     const productsWithSales = await this.getSalesFromProducts(wishedProducts);
 
-    return productsWithSales;
+    const productsWithSalesAndRating =
+      await this.getRatingFromProducts(productsWithSales);
+
+    return productsWithSalesAndRating;
   }
 
   async findAllAsCartItems(
@@ -178,7 +188,7 @@ export class ProductService {
   }
 
   async findById(id: string, userId?: string): Promise<ProductDto | null> {
-    const product = await prisma.product.findUnique({
+    return prisma.product.findUnique({
       where: { id, userId, deletedAt: null },
       select: {
         id: true,
@@ -201,13 +211,6 @@ export class ProductService {
         },
       },
     });
-
-    if (!product) return null;
-
-    return {
-      ...product,
-      sales: await this.getSalesFromProduct(product.id),
-    };
   }
 
   async findByIdWithRelatedOnes(
@@ -245,7 +248,7 @@ export class ProductService {
       .toSorted(() => 0.5 - Math.random())
       .slice(0, amount);
 
-    const relatedProducts: ProductCardDto[] = [];
+    const relatedProducts: ProductCard[] = [];
 
     while (relatedProducts.length < amount && relatedCategories.length !== 0) {
       for (const { id: categoryId } of relatedCategories) {
@@ -291,12 +294,17 @@ export class ProductService {
     const relatedProductsWithSales =
       await this.getSalesFromProducts(relatedProducts);
 
+    const relatedProductsWithSalesAndRating = await this.getRatingFromProducts(
+      relatedProductsWithSales,
+    );
+
     return {
       product: {
         ...product,
         sales: await this.getSalesFromProduct(product.id),
+        rating: await this.getRatingFromProduct(product.id),
       },
-      relatedProducts: relatedProductsWithSales,
+      relatedProducts: relatedProductsWithSalesAndRating,
     };
   }
 
@@ -340,8 +348,8 @@ export class ProductService {
   async create(
     userId: string,
     data: CreateUpdateProductInterface,
-  ): Promise<ProductDto> {
-    const newProduct = await prisma.product.create({
+  ): Promise<NewProductDto> {
+    return prisma.product.create({
       data: {
         userId,
         title: data.title,
@@ -361,24 +369,18 @@ export class ProductService {
           })),
         },
       },
-      include: {
-        images: true,
-        categories: true,
+      select: {
+        id: true,
       },
     });
-
-    return {
-      ...newProduct,
-      sales: await this.getSalesFromProduct(newProduct.id),
-    };
   }
 
   async update(
     id: string,
     userId: string,
     data: CreateUpdateProductInterface,
-  ): Promise<ProductDto> {
-    const updatedProduct = await prisma.product.update({
+  ): Promise<void> {
+    await prisma.product.update({
       where: { id, userId },
       data: {
         userId,
@@ -399,16 +401,7 @@ export class ProductService {
           })),
         },
       },
-      include: {
-        images: true,
-        categories: true,
-      },
     });
-
-    return {
-      ...updatedProduct,
-      sales: await this.getSalesFromProduct(updatedProduct.id),
-    };
   }
 
   async delete(id: string): Promise<void> {
@@ -483,5 +476,58 @@ export class ProductService {
     const sales = productSales[0]?._sum.amount || 0;
 
     return sales;
+  }
+
+  private async getRatingFromProducts<T extends { id: string }>(
+    products: T[],
+  ): Promise<(T & { rating: ProductRating })[]> {
+    const productRatings = await prisma.productReview.groupBy({
+      by: ['productId'],
+      where: {
+        productId: {
+          in: products.map((product) => product.id),
+        },
+      },
+      _count: true,
+      _avg: {
+        rating: true,
+      },
+    });
+
+    const productsWithRatings = products.map((product) => {
+      const rating = productRatings.find((p) => p.productId === product.id);
+
+      const count = rating?._count || 0;
+      const score = rating?._avg.rating || 0;
+
+      return { ...product, rating: { count, score } };
+    });
+
+    return productsWithRatings;
+  }
+
+  private async getRatingFromProduct(id: string): Promise<ProductRating> {
+    const productRating = await prisma.productReview.groupBy({
+      by: ['productId'],
+      where: {
+        productId: id,
+      },
+      _avg: {
+        rating: true,
+      },
+      _sum: {
+        rating: true,
+      },
+    });
+
+    const product = productRating[0];
+
+    const count = product._sum.rating || 0;
+    const score = product._avg.rating || 0;
+
+    return {
+      count,
+      score,
+    };
   }
 }

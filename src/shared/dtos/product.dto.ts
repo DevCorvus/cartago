@@ -15,20 +15,28 @@ export interface ProductImageDto {
   path: string;
 }
 
+export interface ProductRating {
+  score: number;
+  count: number;
+}
+
 export interface ProductDto {
   id: string;
   title: string;
   description: string;
   price: number;
   stock: number;
-  sales: number;
   createdAt: Date;
   updatedAt: Date;
   images: ProductImageDto[];
   categories: CategoryTagDto[];
 }
 
-export interface ProductCardDto {
+export interface NewProductDto {
+  id: string;
+}
+
+export interface ProductCard {
   id: string;
   title: string;
   description: string;
@@ -36,13 +44,14 @@ export interface ProductCardDto {
   images: ProductImageDto[];
 }
 
-export interface ProductCardWithSalesDto extends ProductCardDto {
+export interface ProductCardDto extends ProductCard {
   sales: number;
+  rating: ProductRating;
 }
 
 export interface ProductDetailsDto {
-  product: ProductDto;
-  relatedProducts: ProductCardWithSalesDto[];
+  product: ProductDto & { sales: number; rating: ProductRating };
+  relatedProducts: ProductCardDto[];
 }
 
 export interface ProductCartItemDto {

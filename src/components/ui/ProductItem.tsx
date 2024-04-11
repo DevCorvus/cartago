@@ -1,11 +1,11 @@
 import { formatMoney } from '@/lib/dinero';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
+import { ProductCardDto } from '@/shared/dtos/product.dto';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 
 interface Props {
-  product: ProductCardWithSalesDto;
+  product: ProductCardDto;
 }
 
 export default function ProductItem({ product }: Props) {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Loading from './Loading';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
+import { ProductCardDto } from '@/shared/dtos/product.dto';
 import { HiOutlinePhoto, HiPencilSquare } from 'react-icons/hi2';
 import Link from 'next/link';
 import SearchInput from './SearchInput';
@@ -13,10 +13,10 @@ import SomethingWentWrong from './SomethingWentWrong';
 import { toastError } from '@/lib/toast';
 
 export default function ProductCardList() {
-  const [products, setProducts] = useState<ProductCardWithSalesDto[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<
-    ProductCardWithSalesDto[]
-  >([]);
+  const [products, setProducts] = useState<ProductCardDto[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<ProductCardDto[]>(
+    [],
+  );
 
   const { isLoading, isError, data } = useProductCards();
 

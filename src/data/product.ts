@@ -1,5 +1,5 @@
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
-import { ProductCardWithSalesDto, ProductDto } from '@/shared/dtos/product.dto';
+import { NewProductDto, ProductCardDto } from '@/shared/dtos/product.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
@@ -10,7 +10,7 @@ interface GetProductsOptions {
 
 const getProducts = async (
   options: GetProductsOptions,
-): Promise<ProductCardWithSalesDto[]> => {
+): Promise<ProductCardDto[]> => {
   let url = '/api/products';
 
   const searchParams = new URLSearchParams();
@@ -35,7 +35,7 @@ const getProducts = async (
 };
 
 export const useProducts = (categoryId?: number) => {
-  return useInfiniteQuery<ProductCardWithSalesDto[]>({
+  return useInfiniteQuery<ProductCardDto[]>({
     initialPageParam: undefined,
     queryFn: async ({ pageParam }) => {
       return getProducts({
@@ -53,7 +53,7 @@ export const useProducts = (categoryId?: number) => {
 
 export const useWishedProducts = (authenticated: boolean) => {
   return useQuery({
-    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+    queryFn: async (): Promise<ProductCardDto[]> => {
       const res = await fetch('/api/products/wished');
 
       if (!res.ok) {
@@ -69,7 +69,7 @@ export const useWishedProducts = (authenticated: boolean) => {
 
 export const useGuestWishedProducts = (unauthenticated: boolean) => {
   return useQuery({
-    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+    queryFn: async (): Promise<ProductCardDto[]> => {
       const wishedItemIds = localStorageWished.get();
 
       const searchParams = new URLSearchParams();
@@ -93,7 +93,7 @@ export const useGuestWishedProducts = (unauthenticated: boolean) => {
 
 export const useProductCards = () => {
   return useQuery({
-    queryFn: async (): Promise<ProductCardWithSalesDto[]> => {
+    queryFn: async (): Promise<ProductCardDto[]> => {
       const res = await fetch('/api/seller/products');
 
       if (!res.ok) {
@@ -108,7 +108,7 @@ export const useProductCards = () => {
 
 export const useCreateProduct = () => {
   return useMutation({
-    mutationFn: async (formData: FormData): Promise<ProductDto> => {
+    mutationFn: async (formData: FormData): Promise<NewProductDto> => {
       const res = await fetch('/api/products', {
         method: 'POST',
         body: formData,
@@ -134,7 +134,7 @@ export const useUpdateProduct = () => {
     mutationFn: async ({
       productId,
       formData,
-    }: UpdateProductInterface): Promise<ProductDto> => {
+    }: UpdateProductInterface): Promise<void> => {
       const res = await fetch(`/api/products/${productId}`, {
         method: 'PUT',
         body: formData,

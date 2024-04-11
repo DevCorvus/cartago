@@ -1,14 +1,14 @@
 import { useUnwishProduct, useWishProduct } from '@/data/wished';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import { toastError } from '@/lib/toast';
-import { ProductCardWithSalesDto } from '@/shared/dtos/product.dto';
+import { ProductCardDto } from '@/shared/dtos/product.dto';
 import { useWishedItemStore } from '@/stores/useWishedItemStore';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { FormEvent, useMemo } from 'react';
 import { HiHeart, HiOutlineHeart } from 'react-icons/hi2';
 
 interface Props {
-  product: ProductCardWithSalesDto;
+  product: ProductCardDto;
 }
 
 export default function WishProduct({ product }: Props) {

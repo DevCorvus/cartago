@@ -67,12 +67,12 @@ export async function PUT(req: NextRequest, { params }: Props) {
 
     const images = await storageService.saveMany(data.images);
 
-    const updatedProduct = await productService.update(productId, user.id, {
+    await productService.update(productId, user.id, {
       ...data,
       images,
     });
 
-    return NextResponse.json(updatedProduct, { status: 201 });
+    return NextResponse.json(null, { status: 201 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }
