@@ -21,6 +21,7 @@ export default function ProductReviewList({ productId }: Props) {
   useEffect(() => {
     if (data) {
       setReviews(data.reviews);
+      setCanReview(data.canReview);
     }
   }, [data]);
 
