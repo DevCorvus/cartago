@@ -33,7 +33,7 @@ export default function NavBar() {
               </button>
             </li>
           </ul>
-          {showMenu && <Menu />}
+          {showMenu && <Menu setShowMenu={setShowMenu} />}
         </nav>
       </div>
     </div>

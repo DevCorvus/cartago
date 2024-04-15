@@ -2,7 +2,7 @@ import { formatMoney } from '@/lib/dinero';
 import { ProductCardDto } from '@/shared/dtos/product.dto';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiOutlinePhoto } from 'react-icons/hi2';
+import { HiOutlinePhoto, HiStar } from 'react-icons/hi2';
 
 interface Props {
   product: ProductCardDto;
@@ -29,14 +29,21 @@ export default function ProductItem({ product }: Props) {
           </span>
         )}
       </div>
-      <section className="relative flex flex-col gap-2 p-4">
-        <header className="flex flex-wrap justify-between gap-2 text-sm font-bold uppercase text-green-800 md:text-lg">
+      <section className="relative flex flex-col gap-2 p-4 font-sans">
+        <header className="flex flex-wrap justify-between gap-2 text-base font-bold capitalize text-green-800 md:text-lg">
           <h2>{product.title}</h2>
-          <span>{formatMoney(product.price)}</span>
         </header>
-        <p className="line-clamp-2 font-sans text-sm opacity-75">
-          {product.description}
+        <p className="flex justify-between pb-4">
+          <span>{formatMoney(product.price)}</span>
+          {product.sales > 0 && <span>{product.sales} sold</span>}
         </p>
+        <div className="absolute bottom-1 right-2 text-base text-yellow-300 flex gap-1 py-2">
+          <HiStar />
+          <HiStar />
+          <HiStar />
+          <HiStar />
+          <HiStar />
+        </div>
       </section>
     </Link>
   );

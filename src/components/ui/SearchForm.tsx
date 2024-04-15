@@ -8,6 +8,7 @@ import Loading from './Loading';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getCategoryTags } from '@/data/category';
 import { toastError } from '@/lib/toast';
+import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 
 export default function SearchForm() {
   const pathname = usePathname();
@@ -47,17 +48,18 @@ export default function SearchForm() {
 
   return (
     <div className="font-sans font-normal">
-      <form>
+      <form className="relative">
         <input
           type="text"
-          className="resize-none rounded-lg bg-slate-50 p-2 text-black shadow-inner shadow-slate-300 outline-none"
+          className="resize-none rounded-full bg-zinc-50 py-2 px-4 text-lime-900 shadow-inner shadow-slate-300 outline-none w-40 sm:w-80 md:w-96"
           placeholder="Search"
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
         />
+        <HiMiniMagnifyingGlass className="absolute top-2 right-2 text-lime-500 text-xl" />
       </form>
       {input && (
-        <div className="absolute w-80 rounded-b-lg bg-white px-2 py-4">
+        <div className="absolute w-40 sm:w-80 md:w-96 rounded-b-lg bg-white px-2 py-4 text-lime-500">
           {categoryTags.length === 0 ? (
             <>
               {isLoading ? (
@@ -67,9 +69,12 @@ export default function SearchForm() {
               )}
             </>
           ) : (
-            <ul className="space-y-1">
+            <ul className="">
               {categoryTags.map((category) => (
-                <li key={category.id}>
+                <li
+                  key={category.id}
+                  className="px-2 py-1 hover:bg-lime-500 hover:text-white hover:rounded-md"
+                >
                   <Link href={`/items?categoryId=${category.id}`}>
                     {capitalize(category.title)}
                   </Link>
