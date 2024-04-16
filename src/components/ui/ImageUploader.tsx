@@ -83,7 +83,7 @@ export default function ImageUploader({
 
         for (const { path } of defaultImages) {
           try {
-            const res = await fetch(`/uploads/${path}`);
+            const res = await fetch(`/images/${path}`);
 
             if (!res.ok) {
               throw new Error(`Could not get image ${path}`);

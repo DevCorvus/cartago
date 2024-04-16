@@ -103,7 +103,7 @@ export default function OrderDetails({ order }: Props) {
               className="relative h-20 w-20 rounded-l-md bg-slate-100"
             >
               <Image
-                src={'/uploads/' + item.image.path}
+                src={'/images/' + item.image.path}
                 alt={item.title}
                 fill={true}
                 className="rounded-md object-contain"

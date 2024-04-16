@@ -68,7 +68,7 @@ export default function ProductCardList() {
               >
                 {product.images.length != 0 ? (
                   <Image
-                    src={'/uploads/' + product.images[0].path}
+                    src={'/images/' + product.images[0].path}
                     alt={product.title}
                     fill={true}
                     className="rounded-md object-contain"

@@ -18,7 +18,7 @@ export default function ProductItem({ product }: Props) {
       <div className="relative h-40 w-full rounded-md bg-neutral-100">
         {product.images.length != 0 ? (
           <Image
-            src={'/uploads/' + product.images[0].path}
+            src={'/images/' + product.images[0].path}
             alt={product.title}
             fill={true}
             className="rounded-md object-contain"
@@ -37,7 +37,7 @@ export default function ProductItem({ product }: Props) {
           <span>{formatMoney(product.price)}</span>
           {product.sales > 0 && <span>{product.sales} sold</span>}
         </p>
-        <div className="absolute bottom-1 right-2 text-base text-yellow-300 flex gap-1 py-2">
+        <div className="absolute bottom-1 right-2 flex gap-1 py-2 text-base text-yellow-300">
           <HiStar />
           <HiStar />
           <HiStar />

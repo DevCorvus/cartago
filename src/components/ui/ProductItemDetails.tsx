@@ -58,7 +58,7 @@ export default function ProductItemDetails({
         <div className="relative h-4/5 rounded-md bg-neutral-100 shadow-md">
           {selectedImage ? (
             <Image
-              src={'/uploads/' + selectedImage.path}
+              src={'/images/' + selectedImage.path}
               fill={true}
               alt={`${product.title} selected image`}
               className="rounded-md object-contain p-1"
@@ -81,7 +81,7 @@ export default function ProductItemDetails({
               }}
             >
               <Image
-                src={'/uploads/' + image.path}
+                src={'/images/' + image.path}
                 alt={`${product.title} image #${i + 1}`}
                 fill={true}
                 className="object-contain"

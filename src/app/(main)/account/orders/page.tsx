@@ -29,7 +29,7 @@ async function Orders({ user }: Props) {
             >
               <div className="relative h-28 w-28 rounded-l-md bg-slate-200">
                 <Image
-                  src={'/uploads/' + order.image.path}
+                  src={'/images/' + order.image.path}
                   alt="Order preview"
                   fill={true}
                   className="rounded-md object-contain"

@@ -27,7 +27,7 @@ export default function ProductCartItem({
         className="relative w-24 rounded-md bg-neutral-100"
       >
         <Image
-          src={'/uploads/' + product.images[0].path}
+          src={'/images/' + product.images[0].path}
           alt={`${product.title} image`}
           fill={true}
           className="object-contain"
