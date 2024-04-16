@@ -522,8 +522,8 @@ export class ProductService {
 
     const product = productRating[0];
 
-    const count = product._sum.rating || 0;
-    const score = product._avg.rating || 0;
+    const count = product?._sum.rating || 0;
+    const score = product?._avg.rating || 0;
 
     return {
       count,
