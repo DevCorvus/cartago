@@ -48,7 +48,7 @@ export default function SearchForm() {
 
   return (
     <div className="font-sans font-normal">
-      <form className="relative">
+      <form className="relative flex items-center">
         <input
           type="text"
           className="resize-none rounded-full bg-zinc-50 py-2 px-4 text-lime-900 shadow-inner shadow-slate-300 outline-none w-40 sm:w-80 md:w-96"
@@ -56,7 +56,7 @@ export default function SearchForm() {
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
         />
-        <HiMiniMagnifyingGlass className="absolute top-2 right-2 text-lime-500 text-xl" />
+        <HiMiniMagnifyingGlass className="absolute right-2 text-lime-500 text-xl" />
       </form>
       {input && (
         <div className="absolute w-40 sm:w-80 md:w-96 rounded-b-lg bg-white px-2 py-4 text-lime-500">

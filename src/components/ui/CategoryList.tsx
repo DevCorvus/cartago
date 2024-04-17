@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { capitalize } from '@/utils/capitalize';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   categories: CategoryTagDto[];
@@ -11,9 +11,28 @@ interface Props {
 }
 
 export default function CategoryList({ categories, skip }: Props) {
+  const [scroll, setScroll] = useState(true);
+
   const isEmpty = categories.length === 0 || (categories.length === 1 && skip);
 
   const scrollContainer = useRef<HTMLUListElement>(null);
+  const intervalId = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (scroll && scrollContainer.current) {
+      intervalId.current = setInterval(() => {
+        if (scrollContainer.current) {
+          scrollContainer.current.scrollBy(3, 0);
+        } else {
+          clearInterval(intervalId.current);
+        }
+      }, 50);
+    }
+
+    return () => {
+      clearInterval(intervalId.current);
+    };
+  }, [scroll]);
 
   return (
     <div className="w-full h-10 mb-6 flex justify-center items-center gap-1">
@@ -21,6 +40,7 @@ export default function CategoryList({ categories, skip }: Props) {
         type="button"
         onClick={() => {
           if (!scrollContainer.current) return;
+          if (scrollContainer.current.scrollLeft === 0) return;
           scrollContainer.current.scrollLeft -= 60;
         }}
       >
@@ -30,7 +50,8 @@ export default function CategoryList({ categories, skip }: Props) {
         <ul
           className={`flex w-full gap-1.5 overflow-hidden touch-auto scroll-smooth snap-start`}
           ref={scrollContainer}
-          onScroll={(e) => e.preventDefault()}
+          onMouseEnter={() => setScroll(false)}
+          onMouseLeave={() => setScroll(true)}
         >
           {categories.map(
             (category) =>
