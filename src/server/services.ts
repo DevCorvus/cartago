@@ -13,11 +13,11 @@ import { WishedItemService } from './wished/wished.service';
 
 export const passwordService = new PasswordService();
 export const countryService = new CountryService();
-export const productService = new ProductService();
+export const storageService = new StorageService();
+export const productService = new ProductService(storageService);
 export const cartService = new CartService(productService);
 export const userService = new UserService(passwordService);
 export const authService = new AuthService(userService, passwordService);
-export const storageService = new StorageService();
 export const categoryService = new CategoryService();
 export const wishedItemService = new WishedItemService();
 export const addressService = new AddressService();

@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import {
   createUpdatePartialProductSchema,
-  createUpdateProductSchema,
+  createProductSchema,
+  updateProductSchema,
 } from '../schemas/product.schema';
 import { CategoryTagDto } from './category.dto';
 
@@ -9,7 +10,8 @@ export type CreateUpdatePartialProductDto = z.infer<
   typeof createUpdatePartialProductSchema
 >;
 
-export type CreateUpdateProductDto = z.infer<typeof createUpdateProductSchema>;
+export type CreateProductDto = z.infer<typeof createProductSchema>;
+export type UpdateProductDto = z.infer<typeof updateProductSchema>;
 
 export interface ProductImageDto {
   path: string;

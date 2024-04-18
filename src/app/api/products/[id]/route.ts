@@ -1,17 +1,16 @@
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/server/auth/rbac';
-import { productService, storageService } from '@/server/services';
+import { productService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
-import { CreateUpdateProductDto } from '@/shared/dtos/product.dto';
+import { UpdateProductDto } from '@/shared/dtos/product.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { createUpdateProductSchema } from '@/shared/schemas/product.schema';
+import { updateProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface Props {
   params: Params;
 }
 
-// This is highly inefficient but way simpler to implement and good enough for now
 export async function PUT(req: NextRequest, { params }: Props) {
   const user = await getUserSession();
 
@@ -28,7 +27,7 @@ export async function PUT(req: NextRequest, { params }: Props) {
 
   if (!result.success) return NextResponse.json(null, { status: 400 });
 
-  let data: CreateUpdateProductDto;
+  let data: UpdateProductDto;
 
   try {
     const formData = await req.formData();
@@ -39,10 +38,13 @@ export async function PUT(req: NextRequest, { params }: Props) {
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       images: formData.getAll('images'),
+      imageFilenamesToKeep: JSON.parse(
+        formData.get('imageFilenamesToKeep') as string,
+      ),
       categories: JSON.parse(formData.get('categories') as string),
     };
 
-    data = await createUpdateProductSchema.parseAsync(input);
+    data = await updateProductSchema.parseAsync(input);
   } catch {
     return NextResponse.json(null, { status: 400 });
   }
@@ -50,27 +52,17 @@ export async function PUT(req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
-    const product = await productService.findWithOwnerAndImages(productId);
+    const productOwnerId = await productService.findOwnerId(productId);
 
-    if (!product) {
+    if (!productOwnerId) {
       return NextResponse.json(null, { status: 404 });
     }
 
-    if (product.userId !== user.id) {
+    if (productOwnerId !== user.id) {
       return NextResponse.json(null, { status: 403 });
     }
 
-    await productService.deleteImages(productId);
-    await storageService.deleteMany(product.images);
-
-    await productService.deleteCategories(productId);
-
-    const images = await storageService.saveMany(data.images);
-
-    await productService.update(productId, user.id, {
-      ...data,
-      images,
-    });
+    await productService.update(productId, user.id, data);
 
     return NextResponse.json(null, { status: 201 });
   } catch {

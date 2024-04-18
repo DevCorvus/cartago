@@ -33,9 +33,12 @@ export const productImageSchema = z
 
 export const productCategorySchema = z.number().int().positive();
 
-export const createUpdateProductSchema =
-  createUpdatePartialProductSchema.extend({
-    price: priceInCentsSchema,
-    images: z.array(productImageSchema).min(1).max(5),
-    categories: z.array(productCategorySchema).min(1).max(5),
-  });
+export const createProductSchema = createUpdatePartialProductSchema.extend({
+  price: priceInCentsSchema,
+  images: z.array(productImageSchema).min(1).max(5),
+  categories: z.array(productCategorySchema).min(1).max(5),
+});
+
+export const updateProductSchema = createProductSchema.extend({
+  imageFilenamesToKeep: z.array(z.string()).max(5),
+});

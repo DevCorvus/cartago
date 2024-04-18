@@ -6,7 +6,7 @@ import {
 } from '@/shared/dtos/product.dto';
 import { FocusEvent, FormEvent, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ImageUploader from '@/components/ui/ImageUploader';
+import ImageUploader, { FileUpload } from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schema';
@@ -25,7 +25,7 @@ interface Props {
 export default function EditProductForm({ product, categoryTags }: Props) {
   const router = useRouter();
 
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<FileUpload[]>([]);
   const [notEnoughImagesError, setNotEnoughImagesError] =
     useState<boolean>(false);
   const [imageUploadError, setImageUploadError] = useState<boolean>(false);
@@ -65,7 +65,16 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     formData.set('price', String(data.price));
     formData.set('stock', String(data.stock));
 
-    images.forEach((image) => formData.append('images', image));
+    images.forEach((image) => formData.append('images', image.file));
+    formData.append(
+      'imageFilenamesToKeep',
+      JSON.stringify(
+        images
+          .filter((image) => Boolean(image.keep))
+          .map((image) => image.file.name),
+      ),
+    );
+
     formData.append('categories', JSON.stringify(categoryIds));
 
     try {
@@ -105,10 +114,10 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     }
   };
 
-  const addImage = useCallback((file: File) => {
+  const addImage = useCallback(({ file, keep }: FileUpload) => {
     setImages((prev) => {
-      if (!prev.some((image) => image.name === file.name)) {
-        return [...prev, file];
+      if (!prev.some((image) => image.file.name === file.name)) {
+        return [...prev, { file, keep }];
       } else {
         return prev;
       }
@@ -120,7 +129,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     if (images.length === 1) {
       setNotEnoughImagesError(true);
     }
-    setImages((prev) => prev.filter((image) => image.name !== name));
+    setImages((prev) => prev.filter((image) => image.file.name !== name));
   };
 
   return (

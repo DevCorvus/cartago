@@ -3,7 +3,7 @@
 import { CreateUpdatePartialProductDto } from '@/shared/dtos/product.dto';
 import { FocusEvent, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ImageUploader from '@/components/ui/ImageUploader';
+import ImageUploader, { FileUpload } from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schema';
@@ -94,7 +94,7 @@ export default function AddProductForm({ categoryTags }: Props) {
     }
   };
 
-  const addImage = (file: File) => {
+  const addImage = ({ file }: FileUpload) => {
     setImages((prev) => [...prev, file]);
     setNotEnoughImagesError(false);
   };

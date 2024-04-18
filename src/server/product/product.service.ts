@@ -2,19 +2,16 @@ import { prisma } from '@/lib/prisma';
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import {
   ProductDto,
-  CreateUpdateProductDto,
+  CreateProductDto,
   ProductCardDto,
   ProductDetailsDto,
   ProductCartItemWithoutAmountDto,
   ProductRating,
   ProductCard,
   NewProductDto,
+  UpdateProductDto,
 } from '@/shared/dtos/product.dto';
-
-interface CreateUpdateProductInterface
-  extends Omit<CreateUpdateProductDto, 'images'> {
-  images: string[];
-}
+import { StorageService } from '../storage/storage.service';
 
 interface ProductWithOwnerAndImages {
   userId: string;
@@ -27,7 +24,7 @@ interface FindAllOptions {
 }
 
 export class ProductService {
-  constructor() {}
+  constructor(private storageService: StorageService) {}
 
   async findAll(options?: FindAllOptions): Promise<ProductCardDto[]> {
     const products = await prisma.product.findMany({
@@ -308,6 +305,19 @@ export class ProductService {
     };
   }
 
+  async findOwnerId(id: string): Promise<string | null> {
+    const product = await prisma.product.findUnique({
+      where: { id, deletedAt: null },
+      select: {
+        userId: true,
+      },
+    });
+
+    if (!product) return null;
+
+    return product.userId;
+  }
+
   async findWithOwnerAndImages(
     id: string,
   ): Promise<ProductWithOwnerAndImages | null> {
@@ -345,41 +355,74 @@ export class ProductService {
     return count > 0;
   }
 
-  async create(
-    userId: string,
-    data: CreateUpdateProductInterface,
-  ): Promise<NewProductDto> {
-    return prisma.product.create({
-      data: {
-        userId,
-        title: data.title,
-        description: data.description,
-        price: data.price,
-        stock: data.stock,
-        images: {
-          createMany: {
-            data: data.images.map((path) => ({
-              path,
+  async create(userId: string, data: CreateProductDto): Promise<NewProductDto> {
+    let images;
+
+    try {
+      images = await this.storageService.saveMany(data.images);
+
+      return prisma.product.create({
+        data: {
+          userId,
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          stock: data.stock,
+          images: {
+            createMany: {
+              data: images.map((path) => ({
+                path,
+              })),
+            },
+          },
+          categories: {
+            connect: data.categories.map((categoryId) => ({
+              id: categoryId,
             })),
           },
         },
-        categories: {
-          connect: data.categories.map((categoryId) => ({
-            id: categoryId,
-          })),
+        select: {
+          id: true,
         },
-      },
-      select: {
-        id: true,
-      },
-    });
+      });
+    } catch (err) {
+      if (images) {
+        // TODO: Handle error
+        await this.storageService.deleteMany(images);
+      }
+
+      throw err;
+    }
   }
 
   async update(
     id: string,
     userId: string,
-    data: CreateUpdateProductInterface,
+    data: UpdateProductDto,
   ): Promise<void> {
+    const productImages = await prisma.productImage.findMany({
+      where: { productId: id },
+      select: { id: true, path: true },
+    });
+
+    const productImagesToDelete = productImages.filter(
+      (image) =>
+        !data.imageFilenamesToKeep.some((filename) => filename === image.path),
+    );
+
+    // TODO: Restore delete images if something goes wrong
+    await this.storageService.deleteMany(
+      productImagesToDelete.map((image) => image.path),
+    );
+
+    const newProductImages = data.images.filter(
+      (file) =>
+        !data.imageFilenamesToKeep.some((filename) => filename === file.name),
+    );
+
+    const newProductImageFilenames =
+      await this.storageService.saveMany(newProductImages);
+
     await prisma.product.update({
       where: { id, userId },
       data: {
@@ -389,16 +432,17 @@ export class ProductService {
         price: data.price,
         stock: data.stock,
         images: {
+          deleteMany: {
+            id: { in: productImagesToDelete.map((image) => image.id) },
+          },
           createMany: {
-            data: data.images.map((path) => ({
-              path,
+            data: newProductImageFilenames.map((filename) => ({
+              path: filename,
             })),
           },
         },
         categories: {
-          connect: data.categories.map((categoryId) => ({
-            id: categoryId,
-          })),
+          set: data.categories.map((categoryId) => ({ id: categoryId })),
         },
       },
     });
@@ -413,25 +457,6 @@ export class ProductService {
         where: { id },
         data: { deletedAt: new Date() },
       });
-    });
-  }
-
-  async deleteImages(id: string): Promise<void> {
-    await prisma.productImage.deleteMany({
-      where: { productId: id },
-    });
-  }
-
-  async deleteCategories(id: string): Promise<void> {
-    await prisma.product.update({
-      where: {
-        id,
-      },
-      data: {
-        categories: {
-          set: [],
-        },
-      },
     });
   }
 

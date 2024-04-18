@@ -15,8 +15,13 @@ import {
 } from 'react-icons/hi2';
 import { extname } from 'path';
 import Loading from './Loading';
-import { ProductImageDto } from '@/shared/dtos/product.dto';
 import { toastError } from '@/lib/toast';
+import { ProductImageDto } from '@/shared/dtos/product.dto';
+
+export interface FileUpload {
+  file: File;
+  keep?: boolean;
+}
 
 interface ImagePreview {
   filename: string;
@@ -26,7 +31,7 @@ interface ImagePreview {
 
 interface Props {
   defaultImages?: ProductImageDto[];
-  addImage: (file: File) => void;
+  addImage: (options: FileUpload) => void;
   removeImage: (name: string) => void;
   setImageUploadError: Dispatch<SetStateAction<boolean>>;
   notEnoughImagesError: boolean;
@@ -54,7 +59,9 @@ export default function ImageUploader({
   };
 
   const handleNewImage = useCallback(
-    (file: File) => {
+    (options: FileUpload) => {
+      const file = options.file;
+
       const validation = productImageSchema.safeParse(file);
 
       const imagePreview: ImagePreview = {
@@ -65,7 +72,7 @@ export default function ImageUploader({
           : validation.error.errors.map((err) => err.message),
       };
 
-      addImage(file);
+      addImage(options);
       addImagePreview(imagePreview);
     },
     [addImage],
@@ -95,7 +102,7 @@ export default function ImageUploader({
               type: imageType,
             });
 
-            handleNewImage(imageFile);
+            handleNewImage({ file: imageFile, keep: true });
           } catch (err) {
             toastError(err);
           }
@@ -124,7 +131,7 @@ export default function ImageUploader({
         };
         reader.onload = () => {
           if (!imagePreviews.some((image) => image.filename === file.name)) {
-            handleNewImage(file);
+            handleNewImage({ file, keep: false });
           }
         };
 
