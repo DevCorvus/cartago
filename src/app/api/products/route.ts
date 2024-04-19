@@ -1,4 +1,4 @@
-import { productService } from '@/server/services';
+import { moderationService, productService } from '@/server/services';
 import { CreateProductDto } from '@/shared/dtos/product.dto';
 import { createProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -73,6 +73,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    for (const file of data.images) {
+      const isAdultRatedImage =
+        await moderationService.checkAdultRatedImage(file);
+
+      if (isAdultRatedImage) {
+        // TODO: Ban seller
+        return NextResponse.json(null, { status: 400 });
+      }
+    }
+
     const newProduct = await productService.create(user.id, data);
 
     return NextResponse.json(newProduct, { status: 201 });
