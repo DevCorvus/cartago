@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { createCartItemSchema } from './cartItem.schema';
+import { zodNotProfaneString } from '@/lib/zod';
 
 const passwordSchema = z.string().min(6).max(256);
 
@@ -10,7 +11,7 @@ export const loginUserSchema = z.object({
 
 export const createUserSchema = z
   .object({
-    fullname: z.string().min(4).trim(),
+    fullname: zodNotProfaneString(z.string().min(4).trim()),
     email: z.string().email().trim(),
     password: passwordSchema,
     confirmPassword: z.string(),

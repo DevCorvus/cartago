@@ -1,3 +1,4 @@
+import { zodNotProfaneString } from '@/lib/zod';
 import { z } from 'zod';
 
 const MAX_FILE_SIZE = 1000 * 1000 * 1; // 1 MB
@@ -16,8 +17,8 @@ const priceSchema = z
   .pipe(priceInCentsSchema);
 
 export const createUpdatePartialProductSchema = z.object({
-  title: z.string().min(10).max(150).trim(),
-  description: z.string().max(200).trim(),
+  title: zodNotProfaneString(z.string().min(10).max(150).trim()),
+  description: zodNotProfaneString(z.string().max(200).trim()),
   price: priceSchema,
   stock: z.number().int().min(1),
 });

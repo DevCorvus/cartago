@@ -5,12 +5,12 @@ const countryCodeSchema = z.string().length(2).trim();
 
 export const createUpdateAddressSchema = z.object({
   stateId: z.number().int().positive(),
-  nickname: z.string().nonempty().trim(),
+  nickname: z.string().min(1).trim(),
   contactName: z.string().min(4).trim(),
   phoneNumber: z.string().trim(),
-  city: z.string().nonempty().trim(),
+  city: z.string().min(1).trim(),
   postalCode: z.string().trim(),
-  street: z.string().nonempty().trim(),
+  street: z.string().min(1).trim(),
   streetDetails: z.string().trim(),
   default: z.boolean(),
 });
