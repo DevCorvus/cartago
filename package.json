@@ -20,6 +20,7 @@
     "@prisma/client": "^5.3.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.28.9",
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.1.1",
     "dinero.js": "^1.9.1",
     "libphonenumber-js": "^1.10.57",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.28.6",
+    "@types/bad-words": "^3.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/dinero.js": "^1.9.4",
     "@types/jest": "^29.5.6",
