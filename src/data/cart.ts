@@ -49,7 +49,7 @@ export const useAddCartItem = () => {
       const res = await fetch(`/api/cart/${productId}`, { method: 'POST' });
 
       if (!res.ok) {
-        throw new Error('Could not get cart items');
+        throw new Error('Could not add product to shopping cart');
       }
     },
     mutationKey: ['addCartItem'],
