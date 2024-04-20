@@ -218,6 +218,7 @@ export class ProductService {
     const product = await prisma.product.findUnique({
       where: { id, userId, deletedAt: null },
       select: {
+        userId: true,
         id: true,
         title: true,
         description: true,
@@ -296,8 +297,17 @@ export class ProductService {
     );
 
     return {
+      isOwner: !!userId && userId === product.userId,
       product: {
-        ...product,
+        id: product.id,
+        title: product.title,
+        description: product.description,
+        stock: product.stock,
+        price: product.price,
+        images: product.images,
+        categories: product.categories,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
         sales: await this.getSalesFromProduct(product.id),
         rating: await this.getRatingFromProduct(product.id),
       },

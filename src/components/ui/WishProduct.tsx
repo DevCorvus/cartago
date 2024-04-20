@@ -64,7 +64,7 @@ export default function WishProduct({ product }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <button type="submit">
+      <button type="submit" className="text-4xl">
         {isWished ? (
           <HiHeart className="text-rose-500" />
         ) : (

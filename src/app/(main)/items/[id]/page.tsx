@@ -3,6 +3,7 @@ import { productService } from '@/server/services';
 import { notFound } from 'next/navigation';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { Params } from '@/shared/dtos/params.dto';
+import { getUserSession } from '@/server/auth/auth.utils';
 
 interface Props {
   params: Params;
@@ -15,8 +16,11 @@ export default async function ProductItem({ params }: Props) {
     notFound();
   }
 
+  const user = await getUserSession();
+
   const productWithRelatedOnes = await productService.findByIdWithRelatedOnes(
     result.data.id,
+    user?.id,
   );
 
   if (!productWithRelatedOnes) {

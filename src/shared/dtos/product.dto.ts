@@ -54,6 +54,7 @@ interface SalesAndRating {
 export interface ProductCardDto extends ProductCard, SalesAndRating {}
 
 export interface ProductDetailsDto {
+  isOwner: boolean;
   product: ProductDto & SalesAndRating;
   relatedProducts: ProductCardDto[];
 }

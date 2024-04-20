@@ -17,6 +17,7 @@ import { useAddCartItem } from '@/data/cart';
 import { toastError } from '@/lib/toast';
 
 export default function ProductItemDetails({
+  isOwner,
   product,
   relatedProducts,
 }: ProductDetailsDto) {
@@ -125,32 +126,41 @@ export default function ProductItemDetails({
           ))}
         </ul>
       </section>
-      <div className="flex w-full flex-row-reverse items-center justify-center gap-3">
-        <div className=" text-4xl">
-          <WishProduct product={product} />
-        </div>
-        {productIds.includes(product.id) ? (
+      <div className="flex w-full items-center justify-center gap-3">
+        {isOwner ? (
           <Link
-            href="/cart"
+            href={`/items/${product.id}/edit`}
             className="btn flex w-full flex-1 items-center justify-center gap-2 p-4"
           >
-            <HiShoppingCart />
-            View in shopping cart
+            Edit
           </Link>
         ) : (
-          <form onSubmit={handleSubmit} className="w-full flex-1">
-            <button
-              type="submit"
-              disabled={noStock}
-              className={`flex w-full items-center justify-center gap-2 p-4 ${
-                noStock ? 'btn-disabled' : 'btn'
-              }`}
-            >
-              <HiShoppingCart />
-              Add to shopping cart
-            </button>
-          </form>
+          <>
+            {productIds.includes(product.id) ? (
+              <Link
+                href="/cart"
+                className="btn flex w-full flex-1 items-center justify-center gap-2 p-4"
+              >
+                <HiShoppingCart />
+                View in shopping cart
+              </Link>
+            ) : (
+              <form onSubmit={handleSubmit} className="w-full flex-1">
+                <button
+                  type="submit"
+                  disabled={noStock}
+                  className={`flex w-full items-center justify-center gap-2 p-4 ${
+                    noStock ? 'btn-disabled' : 'btn'
+                  }`}
+                >
+                  <HiShoppingCart />
+                  Add to shopping cart
+                </button>
+              </form>
+            )}
+          </>
         )}
+        {!isOwner && <WishProduct product={product} />}
       </div>
       <ProductList products={relatedProducts} />
       <ProductReviewList productId={product.id} />

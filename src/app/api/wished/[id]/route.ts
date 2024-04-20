@@ -1,5 +1,5 @@
 import { getUserSession } from '@/server/auth/auth.utils';
-import { wishedItemService } from '@/server/services';
+import { productService, wishedItemService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -25,6 +25,12 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
+    const productOwnerId = await productService.findOwnerId(productId);
+
+    if (productOwnerId === userId) {
+      return NextResponse.json(null, { status: 409 });
+    }
+
     await wishedItemService.create(userId, productId);
     return NextResponse.json(null, { status: 201 });
   } catch {

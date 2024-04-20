@@ -25,9 +25,9 @@ export async function POST(_req: NextRequest, { params }: Props) {
   const productId = result.data.id;
 
   try {
-    const productHasStock = await productService.hasStock(productId);
+    const productOwnerId = await productService.findOwnerId(productId);
 
-    if (!productHasStock) {
+    if (productOwnerId === user.id) {
       return NextResponse.json(null, { status: 409 });
     }
 
@@ -37,6 +37,12 @@ export async function POST(_req: NextRequest, { params }: Props) {
     );
 
     if (cartItemAlreadyExists) {
+      return NextResponse.json(null, { status: 409 });
+    }
+
+    const productHasStock = await productService.hasStock(productId);
+
+    if (!productHasStock) {
       return NextResponse.json(null, { status: 409 });
     }
 
