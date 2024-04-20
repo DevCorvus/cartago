@@ -106,7 +106,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
   if (isError) return null;
 
   return (
-    <Modal>
+    <Modal close={close}>
       <form
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}

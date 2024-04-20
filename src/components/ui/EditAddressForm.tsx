@@ -132,7 +132,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
   if (isLoading) return <LoadingModal />;
 
   return (
-    <Modal>
+    <Modal close={close}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:gap-6 lg:rounded-lg lg:p-12"
