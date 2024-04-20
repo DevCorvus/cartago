@@ -21,6 +21,7 @@ export default function ProductItem({ product }: Props) {
             src={'/images/' + product.images[0].path}
             alt={product.title}
             fill={true}
+            sizes="200px"
             className="rounded-md object-contain"
           />
         ) : (

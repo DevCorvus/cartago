@@ -60,7 +60,9 @@ export default function ProductItemDetails({
           {selectedImage ? (
             <Image
               src={'/images/' + selectedImage.path}
+              priority={true}
               fill={true}
+              sizes="500px"
               alt={`${product.title} selected image`}
               className="rounded-md object-contain p-1"
             />
@@ -84,7 +86,9 @@ export default function ProductItemDetails({
               <Image
                 src={'/images/' + image.path}
                 alt={`${product.title} image #${i + 1}`}
+                priority={true}
                 fill={true}
+                sizes="100px"
                 className="object-contain"
               />
             </button>
