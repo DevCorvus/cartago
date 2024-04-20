@@ -46,13 +46,15 @@ export interface ProductCard {
   images: ProductImageDto[];
 }
 
-export interface ProductCardDto extends ProductCard {
+interface SalesAndRating {
   sales: number;
   rating: ProductRating;
 }
 
+export interface ProductCardDto extends ProductCard, SalesAndRating {}
+
 export interface ProductDetailsDto {
-  product: ProductDto & { sales: number; rating: ProductRating };
+  product: ProductDto & SalesAndRating;
   relatedProducts: ProductCardDto[];
 }
 
