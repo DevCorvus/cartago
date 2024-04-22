@@ -15,6 +15,7 @@ import ProductReviewList from './ProductReviewList';
 import ProductList from './ProductList';
 import { useAddCartItem } from '@/data/cart';
 import { toastError } from '@/lib/toast';
+import { ProductImageVisualizer } from './ProductImageVisualizer';
 
 export default function ProductItemDetails({
   isOwner,
@@ -56,22 +57,18 @@ export default function ProductItemDetails({
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-6">
       <div className="relative flex h-96 w-full flex-col gap-2">
-        <div className="relative h-4/5 rounded-md bg-neutral-100 shadow-md">
-          {selectedImage ? (
-            <Image
-              src={'/images/' + selectedImage.path}
-              priority={true}
-              fill={true}
-              sizes="500px"
-              alt={`${product.title} selected image`}
-              className="rounded-md object-contain p-1"
-            />
-          ) : (
+        {selectedImage ? (
+          <ProductImageVisualizer
+            path={selectedImage.path}
+            title={product.title}
+          />
+        ) : (
+          <div className="h-4/5 rounded-md bg-neutral-100 shadow-md">
             <span className="flex h-full items-center justify-center bg-neutral-200">
               Image not found
             </span>
-          )}
-        </div>
+          </div>
+        )}
         <div className="grid flex-1 grid-cols-5 gap-1">
           {product.images.map((image, i) => (
             <button
