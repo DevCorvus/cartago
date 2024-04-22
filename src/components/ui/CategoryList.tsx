@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { capitalize } from '@/utils/capitalize';
@@ -11,20 +12,26 @@ interface Props {
 }
 
 export default function CategoryList({ categories, skip }: Props) {
-  const [scroll, setScroll] = useState(true);
+  const [autoplay, setAutoplay] = useState(true);
 
-  const isEmpty = categories.length === 0 || (categories.length === 1 && skip);
-
-  const scrollContainer = useRef<HTMLUListElement>(null);
+  const sliderRef = useRef<HTMLUListElement>(null);
   const intervalId = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (scroll && scrollContainer.current) {
+    const slider = sliderRef.current;
+
+    if (autoplay && slider) {
+      let backwards = false;
+
       intervalId.current = setInterval(() => {
-        if (scrollContainer.current) {
-          scrollContainer.current.scrollBy(3, 0);
-        } else {
-          clearInterval(intervalId.current);
+        slider.scrollBy(backwards ? -3 : 3, 0);
+
+        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+
+        if (slider.scrollLeft === maxScrollLeft) {
+          backwards = true;
+        } else if (slider.scrollLeft === 0) {
+          backwards = false;
         }
       }, 50);
     }
@@ -32,49 +39,57 @@ export default function CategoryList({ categories, skip }: Props) {
     return () => {
       clearInterval(intervalId.current);
     };
-  }, [scroll]);
+  }, [autoplay]);
+
+  const handleSlideLeftClick = () => {
+    const slider = sliderRef.current;
+    if (slider) slider.scrollBy(-70, 0);
+  };
+
+  const handleSlideRightClick = () => {
+    const slider = sliderRef.current;
+    if (slider) slider.scrollBy(70, 0);
+  };
+
+  const timeoutId = useRef<NodeJS.Timeout>();
+
+  const handleEnterSliderContainer = () => {
+    clearTimeout(timeoutId.current);
+    setAutoplay(false);
+  };
+
+  const handleLeaveSliderContainer = () => {
+    timeoutId.current = setTimeout(() => setAutoplay(true), 2500);
+  };
 
   return (
-    <div className="w-full h-10 mb-6 flex justify-center items-center gap-1">
-      <button
-        type="button"
-        onClick={() => {
-          if (!scrollContainer.current) return;
-          if (scrollContainer.current.scrollLeft === 0) return;
-          scrollContainer.current.scrollLeft -= 60;
-        }}
-      >
+    <div
+      className="mb-6 flex h-10 w-full items-center justify-center gap-1"
+      onMouseEnter={handleEnterSliderContainer}
+      onMouseLeave={handleLeaveSliderContainer}
+    >
+      <button type="button" onClick={handleSlideLeftClick}>
         <HiChevronLeft />
       </button>
-      {!isEmpty && (
-        <ul
-          className={`flex w-full gap-1.5 overflow-hidden touch-auto scroll-smooth snap-start`}
-          ref={scrollContainer}
-          onMouseEnter={() => setScroll(false)}
-          onMouseLeave={() => setScroll(true)}
-        >
-          {categories.map(
-            (category) =>
-              category.id !== skip && (
-                <li
-                  key={category.id}
-                  className="rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm text-nowrap"
-                >
-                  <Link href={`/items?categoryId=${category.id}`}>
-                    {capitalize(category.title)}
-                  </Link>
-                </li>
-              ),
-          )}
-        </ul>
-      )}
-      <button
-        type="button"
-        onClick={() => {
-          if (!scrollContainer.current) return;
-          scrollContainer.current.scrollLeft += 60;
-        }}
+      <ul
+        ref={sliderRef}
+        className="flex w-full gap-1.5 overflow-hidden scroll-smooth"
       >
+        {categories.map(
+          (category) =>
+            category.id !== skip && (
+              <li
+                key={category.id}
+                className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
+              >
+                <Link href={`/items?categoryId=${category.id}`}>
+                  {capitalize(category.title)}
+                </Link>
+              </li>
+            ),
+        )}
+      </ul>
+      <button type="button" onClick={handleSlideRightClick}>
         <HiChevronRight />
       </button>
     </div>
