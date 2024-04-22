@@ -76,7 +76,7 @@ export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
           backgroundPositionX: `${-(position.x - padding.x) * zoom + magnifierSize / 2}px`,
           backgroundPositionY: `${-(position.y - padding.y) * zoom + magnifierSize / 2}px`,
         }}
-        className="pointer-events-none absolute border border-white bg-white bg-no-repeat"
+        className="pointer-events-none absolute z-10 border border-white bg-white bg-no-repeat"
       />
     </div>
   );
