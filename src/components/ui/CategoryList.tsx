@@ -11,44 +11,80 @@ interface Props {
   skip?: number;
 }
 
-export default function CategoryList({ categories, skip }: Props) {
+// This could've been done "easier" or more optimized just by using CSS animations I guess
+export default function CategorySlider({ categories, skip }: Props) {
   const [autoplay, setAutoplay] = useState(true);
 
+  const sliderContainerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLUListElement>(null);
-  const intervalId = useRef<NodeJS.Timeout>();
+
+  const xRef = useRef(0);
+  const animationFrameRef = useRef<number>();
 
   useEffect(() => {
+    const sliderContainer = sliderContainerRef.current;
     const slider = sliderRef.current;
 
-    if (autoplay && slider) {
-      let backwards = false;
+    if (autoplay && sliderContainer && slider) {
+      const rightBoundary = slider.clientWidth - sliderContainer.clientWidth;
 
-      intervalId.current = setInterval(() => {
-        slider.scrollBy(backwards ? -3 : 3, 0);
+      const slideToX = () => {
+        const x = xRef.current;
 
-        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+        if (x < rightBoundary) {
+          slider.style.transform = `translateX(-${x}px)`;
+          xRef.current += 0.3;
+          animationFrameRef.current = requestAnimationFrame(slideToX);
+        } else {
+          const gapSize = 8; // gap-2
+          const xSnapBackPosition =
+            x / 2 - sliderContainer.clientWidth / 2 - gapSize / 2;
 
-        if (slider.scrollLeft === maxScrollLeft) {
-          backwards = true;
-        } else if (slider.scrollLeft === 0) {
-          backwards = false;
+          slider.style.transform = `translateX(-${xSnapBackPosition}px)`;
+          xRef.current = xSnapBackPosition;
+          animationFrameRef.current = requestAnimationFrame(slideToX);
         }
-      }, 50);
+      };
+
+      animationFrameRef.current = requestAnimationFrame(slideToX);
     }
 
     return () => {
-      clearInterval(intervalId.current);
+      const animationFrameId = animationFrameRef.current;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [autoplay]);
 
   const handleSlideLeftClick = () => {
+    const sliderContainer = sliderContainerRef.current;
     const slider = sliderRef.current;
-    if (slider) slider.scrollBy(-70, 0);
+
+    if (sliderContainer && slider) {
+      const newPosition = Math.max(
+        xRef.current - sliderContainer.clientWidth,
+        0,
+      );
+
+      slider.style.transform = `translateX(-${newPosition}px)`;
+      xRef.current = newPosition;
+    }
   };
 
   const handleSlideRightClick = () => {
+    const sliderContainer = sliderContainerRef.current;
     const slider = sliderRef.current;
-    if (slider) slider.scrollBy(70, 0);
+
+    if (sliderContainer && slider) {
+      const rightBoundary = slider.clientWidth - sliderContainer.clientWidth;
+
+      const newPosition = Math.min(
+        xRef.current + sliderContainer.clientWidth,
+        rightBoundary,
+      );
+
+      slider.style.transform = `translateX(-${newPosition}px)`;
+      xRef.current = newPosition;
+    }
   };
 
   const timeoutId = useRef<NodeJS.Timeout>();
@@ -71,24 +107,40 @@ export default function CategoryList({ categories, skip }: Props) {
       <button type="button" onClick={handleSlideLeftClick}>
         <HiChevronLeft />
       </button>
-      <ul
-        ref={sliderRef}
-        className="flex w-full gap-1.5 overflow-hidden scroll-smooth"
-      >
-        {categories.map(
-          (category) =>
-            category.id !== skip && (
-              <li
-                key={category.id}
-                className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
-              >
-                <Link href={`/items?categoryId=${category.id}`}>
-                  {capitalize(category.title)}
-                </Link>
-              </li>
-            ),
-        )}
-      </ul>
+      <div className="overflow-hidden" ref={sliderContainerRef}>
+        <ul
+          ref={sliderRef}
+          className={`flex w-max gap-2 ${autoplay ? '' : 'transition-transform duration-1000'}`}
+        >
+          {categories.map(
+            (category) =>
+              category.id !== skip && (
+                <li
+                  key={category.id}
+                  className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
+                >
+                  <Link href={`/items?categoryId=${category.id}`}>
+                    {capitalize(category.title)}
+                  </Link>
+                </li>
+              ),
+          )}
+          {categories.map(
+            (category) =>
+              category.id !== skip && (
+                <li
+                  key={`${category.id}-duplicate`}
+                  aria-hidden={true}
+                  className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
+                >
+                  <Link href={`/items?categoryId=${category.id}`}>
+                    {capitalize(category.title)}
+                  </Link>
+                </li>
+              ),
+          )}
+        </ul>
+      </div>
       <button type="button" onClick={handleSlideRightClick}>
         <HiChevronRight />
       </button>
