@@ -34,7 +34,6 @@ export default function CategorySlider({ categories, skip }: Props) {
         if (x < rightBoundary) {
           slider.style.transform = `translateX(-${x}px)`;
           xRef.current += 0.3;
-          animationFrameRef.current = requestAnimationFrame(slideToX);
         } else {
           const gapSize = 8; // gap-2
           const xSnapBackPosition =
@@ -42,8 +41,9 @@ export default function CategorySlider({ categories, skip }: Props) {
 
           slider.style.transform = `translateX(-${xSnapBackPosition}px)`;
           xRef.current = xSnapBackPosition;
-          animationFrameRef.current = requestAnimationFrame(slideToX);
         }
+
+        animationFrameRef.current = requestAnimationFrame(slideToX);
       };
 
       animationFrameRef.current = requestAnimationFrame(slideToX);
@@ -89,20 +89,33 @@ export default function CategorySlider({ categories, skip }: Props) {
 
   const timeoutId = useRef<NodeJS.Timeout>();
 
-  const handleEnterSliderContainer = () => {
+  const handleMouseEnterSliderContainer = () => {
     clearTimeout(timeoutId.current);
     setAutoplay(false);
   };
 
-  const handleLeaveSliderContainer = () => {
+  const handleMouseLeaveSliderContainer = () => {
     timeoutId.current = setTimeout(() => setAutoplay(true), 2500);
+  };
+
+  const touchTimeoutId = useRef<NodeJS.Timeout>();
+
+  const handleTouchStartSliderContainer = () => {
+    clearTimeout(touchTimeoutId.current);
+    setAutoplay(false);
+  };
+
+  const handleTouchEndSliderContainer = () => {
+    touchTimeoutId.current = setTimeout(() => setAutoplay(true), 3500);
   };
 
   return (
     <div
       className="mb-6 flex h-10 w-full items-center justify-center gap-1"
-      onMouseEnter={handleEnterSliderContainer}
-      onMouseLeave={handleLeaveSliderContainer}
+      onMouseEnter={handleMouseEnterSliderContainer}
+      onMouseLeave={handleMouseLeaveSliderContainer}
+      onTouchStart={handleTouchStartSliderContainer}
+      onTouchEnd={handleTouchEndSliderContainer}
     >
       <button type="button" onClick={handleSlideLeftClick}>
         <HiChevronLeft />
