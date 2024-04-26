@@ -410,6 +410,8 @@ export class ProductService {
     userId: string,
     data: UpdateProductDto,
   ): Promise<void> {
+    // TODO: A lot more edge cases to take into consideration
+
     const productImages = await prisma.productImage.findMany({
       where: { productId: id },
       select: { id: true, path: true },
@@ -420,10 +422,11 @@ export class ProductService {
         !data.imageFilenamesToKeep.some((filename) => filename === image.path),
     );
 
-    // TODO: Restore delete images if something goes wrong
-    await this.storageService.deleteMany(
-      productImagesToDelete.map((image) => image.path),
+    const productImageFilenamesToDelete = productImagesToDelete.map(
+      (image) => image.path,
     );
+
+    await this.storageService.deleteMany(productImageFilenamesToDelete);
 
     const newProductImages = data.images.filter(
       (file) =>
@@ -433,29 +436,34 @@ export class ProductService {
     const newProductImageFilenames =
       await this.storageService.saveMany(newProductImages);
 
-    await prisma.product.update({
-      where: { id, userId },
-      data: {
-        userId,
-        title: data.title,
-        description: data.description,
-        price: data.price,
-        stock: data.stock,
-        images: {
-          deleteMany: {
-            id: { in: productImagesToDelete.map((image) => image.id) },
+    try {
+      await prisma.product.update({
+        where: { id, userId },
+        data: {
+          userId,
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          stock: data.stock,
+          images: {
+            deleteMany: {
+              id: { in: productImagesToDelete.map((image) => image.id) },
+            },
+            createMany: {
+              data: newProductImageFilenames.map((filename) => ({
+                path: filename,
+              })),
+            },
           },
-          createMany: {
-            data: newProductImageFilenames.map((filename) => ({
-              path: filename,
-            })),
+          categories: {
+            set: data.categories.map((categoryId) => ({ id: categoryId })),
           },
         },
-        categories: {
-          set: data.categories.map((categoryId) => ({ id: categoryId })),
-        },
-      },
-    });
+      });
+    } catch {
+      await this.storageService.restoreMany(productImageFilenamesToDelete);
+      await this.storageService.deleteMany(newProductImageFilenames);
+    }
   }
 
   async delete(id: string): Promise<void> {
