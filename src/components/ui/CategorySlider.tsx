@@ -111,7 +111,7 @@ export default function CategorySlider({ categories, skip }: Props) {
 
   return (
     <div
-      className="mb-6 flex h-10 w-full items-center justify-center gap-1"
+      className="flex w-full items-center gap-1"
       onMouseEnter={handleMouseEnterSliderContainer}
       onMouseLeave={handleMouseLeaveSliderContainer}
       onTouchStart={handleTouchStartSliderContainer}

@@ -1,5 +1,5 @@
 import CategoryWithProducts from '@/components/ui/CategoryWithProducts';
-import CategoryList from '@/components/ui/CategoryList';
+import CategorySlider from '@/components/ui/CategorySlider';
 import ProductList from '@/components/ui/ProductList';
 import { categoryService, productService } from '@/server/services';
 import { notFound } from 'next/navigation';
@@ -36,8 +36,8 @@ export default async function ProductItems({ searchParams }: Props) {
     const categories = await categoryService.findAllTags();
 
     return (
-      <div>
-        <CategoryList categories={categories} skip={category.id} />
+      <div className="w-full space-y-6">
+        <CategorySlider categories={categories} skip={category.id} />
         <CategoryWithProducts category={category} />
       </div>
     );
@@ -47,8 +47,8 @@ export default async function ProductItems({ searchParams }: Props) {
   const categories = await categoryService.findAllTags();
 
   return (
-    <div>
-      <CategoryList categories={categories} />
+    <div className="w-full space-y-6">
+      <CategorySlider categories={categories} />
       <ProductList products={products} />
     </div>
   );
