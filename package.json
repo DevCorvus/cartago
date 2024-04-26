@@ -24,6 +24,7 @@
     "bcrypt": "^5.1.1",
     "dinero.js": "^1.9.1",
     "libphonenumber-js": "^1.10.57",
+    "nanoid": "^5.0.7",
     "next": "latest",
     "next-auth": "^4.24.7",
     "nextjs-toploader": "^1.6.11",
