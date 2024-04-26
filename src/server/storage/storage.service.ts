@@ -5,6 +5,7 @@ import {
   PutObjectCommand,
   ListObjectVersionsCommand,
 } from '@aws-sdk/client-s3';
+import { nanoid } from 'nanoid';
 
 export class StorageService {
   constructor() {}
@@ -12,7 +13,8 @@ export class StorageService {
   async save(file: File): Promise<string> {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const filename = `${Date.now()}-${file.name}`;
+    const filetype = file.type.split('/')[1];
+    const filename = `${nanoid()}.${filetype}`;
 
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
