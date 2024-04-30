@@ -48,7 +48,6 @@ export class ProductService {
       select: {
         id: true,
         title: true,
-        description: true,
         price: true,
         images: {
           take: 1,
@@ -79,7 +78,6 @@ export class ProductService {
       select: {
         id: true,
         title: true,
-        description: true,
         price: true,
         images: {
           take: 1,
@@ -109,7 +107,6 @@ export class ProductService {
           select: {
             id: true,
             title: true,
-            description: true,
             price: true,
             images: {
               take: 1,
@@ -138,7 +135,6 @@ export class ProductService {
       select: {
         id: true,
         title: true,
-        description: true,
         price: true,
         images: {
           take: 1,
@@ -168,7 +164,6 @@ export class ProductService {
       select: {
         id: true,
         title: true,
-        description: true,
         stock: true,
         price: true,
         images: {
@@ -264,7 +259,6 @@ export class ProductService {
           select: {
             id: true,
             title: true,
-            description: true,
             price: true,
             images: {
               take: 1,

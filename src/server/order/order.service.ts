@@ -79,7 +79,6 @@ export class OrderService {
               select: {
                 id: true,
                 title: true,
-                description: true,
                 images: {
                   take: 1,
                   select: {
@@ -116,7 +115,6 @@ export class OrderService {
       return {
         id: item.product.id,
         title: item.product.title,
-        description: item.product.description,
         price: item.price,
         amount: item.amount,
         image: item.product.images[0],
@@ -156,7 +154,6 @@ export class OrderService {
               select: {
                 id: true,
                 title: true,
-                description: true,
                 images: {
                   take: 1,
                   select: {
@@ -178,7 +175,6 @@ export class OrderService {
         return {
           id: item.product.id,
           title: item.product.title,
-          description: item.product.description,
           price: item.price,
           amount: item.amount,
           image: item.product.images[0],

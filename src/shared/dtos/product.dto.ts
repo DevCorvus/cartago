@@ -41,7 +41,6 @@ export interface NewProductDto {
 export interface ProductCard {
   id: string;
   title: string;
-  description: string;
   price: number;
   images: ProductImageDto[];
 }
@@ -62,7 +61,6 @@ export interface ProductDetailsDto {
 export interface ProductCartItemDto {
   id: string;
   title: string;
-  description: string;
   price: number;
   stock: number;
   amount: number;
@@ -72,7 +70,6 @@ export interface ProductCartItemDto {
 export interface ProductCartItemWithoutAmountDto {
   id: string;
   title: string;
-  description: string;
   price: number;
   stock: number;
   images: ProductImageDto[];

@@ -6,7 +6,6 @@ import { PaymentMethod } from './payment.dto';
 export interface OrderItemDto {
   id: string;
   title: string;
-  description: string;
   amount: number;
   price: number;
   image: ProductImageDto;
