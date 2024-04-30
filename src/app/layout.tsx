@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Merriweather } from 'next/font/google';
+import { Open_Sans } from 'next/font/google';
 import AuthProvider from '@/components/providers/AuthProvider';
 import NavBar from '@/components/ui/NavBar';
 import UserProvider, { UserData } from '@/components/providers/UserProvider';
@@ -11,8 +11,7 @@ import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
 import { Toaster } from 'react-hot-toast';
 import NextTopLoader from 'nextjs-toploader';
 
-const merriweather = Merriweather({
-  weight: '400',
+const openSans = Open_Sans({
   subsets: ['latin'],
 });
 
@@ -38,7 +37,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={merriweather.className}>
+    <html lang="en" className={openSans.className}>
       <body className="relative bg-neutral-50">
         <AuthProvider session={session}>
           <ReactQueryProvider>
