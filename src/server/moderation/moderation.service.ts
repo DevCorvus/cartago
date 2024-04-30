@@ -20,8 +20,13 @@ export class ModerationService {
       body: searchParams.toString(),
     });
 
-    const json: { rating_index: 1 | 2 | 3 } = await res.json();
+    const json = await res.json();
 
-    return json.rating_index !== 1;
+    if ('rating_index' in json) {
+      return json.rating_index !== 1;
+    } else {
+      // TODO: Report this case
+      return false;
+    }
   }
 }
