@@ -8,7 +8,7 @@ export default function Rating({ score }: Props) {
   return (
     <ul
       title={`Rating ${score}/5`}
-      className="flex items-center text-lg text-yellow-500"
+      className="flex items-center text-yellow-500"
     >
       {Array(score)
         .fill(null)
