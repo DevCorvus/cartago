@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <div>
-      <div className="h-[30vh] pt-12 lg:h-[30vh] lg:pt-12">
+      <div className="h-[34vh] pt-14 md:h-[40vh] lg:h-[54vh] lg:pt-14">
         <HeroImage />
       </div>
       <div className="container mx-auto space-y-6 p-6">
