@@ -211,7 +211,7 @@ export class ProductService {
     amount: number = 6,
   ): Promise<ProductDetailsDto | null> {
     const product = await prisma.product.findUnique({
-      where: { id, userId, deletedAt: null },
+      where: { id, deletedAt: null },
       select: {
         userId: true,
         id: true,
