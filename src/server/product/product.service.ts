@@ -55,6 +55,7 @@ export class ProductService {
             path: true,
           },
         },
+        createdAt: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -85,6 +86,7 @@ export class ProductService {
             path: true,
           },
         },
+        createdAt: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -114,6 +116,7 @@ export class ProductService {
                 path: true,
               },
             },
+            createdAt: true,
           },
         },
       },
@@ -142,6 +145,7 @@ export class ProductService {
             path: true,
           },
         },
+        createdAt: true,
       },
     });
 
@@ -266,6 +270,7 @@ export class ProductService {
                 path: true,
               },
             },
+            createdAt: true,
           },
           orderBy: {
             createdAt: 'desc',

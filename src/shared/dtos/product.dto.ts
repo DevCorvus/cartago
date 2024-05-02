@@ -43,6 +43,7 @@ export interface ProductCard {
   title: string;
   price: number;
   images: ProductImageDto[];
+  createdAt: Date;
 }
 
 interface SalesAndRating {
