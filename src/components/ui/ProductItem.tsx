@@ -33,8 +33,8 @@ export default function ProductItem({ product }: Props) {
             {formatMoney(product.price)}
           </span>
         </header>
-        <div className="flex justify-between text-neutral-500">
-          <p>
+        <div className="flex items-center justify-between text-neutral-500">
+          <p className="text-sm">
             <span className="font-medium">{product.sales}</span> sold
           </p>
           <div className="flex items-center gap-1">
