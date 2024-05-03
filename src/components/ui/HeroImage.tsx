@@ -4,7 +4,13 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 
-const HERO_IMAGES = [{ src: '/background-tiny.jpeg', alt: 'Hero Image' }];
+const HERO_IMAGES = [
+  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+];
 
 export default function HeroImage() {
   const [current, setCurrent] = useState(0);
@@ -94,6 +100,19 @@ export default function HeroImage() {
             </div>
           ))}
         </div>
+      </div>
+      <div className="absolute w-full bottom-2 flex items-center justify-center gap-2">
+        {HERO_IMAGES.map((_, i) => (
+          <button key={i} onClick={() => setCurrent(i)} className="flex">
+            <span
+              className={`size-3 rounded-full border-2 shadow-md transition duration-300 ${
+                current === i
+                  ? 'bg-white border-white'
+                  : 'bg-transparent border-neutral-200'
+              }`}
+            />
+          </button>
+        ))}
       </div>
       <button
         type="button"
