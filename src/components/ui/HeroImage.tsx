@@ -15,34 +15,58 @@ const HERO_IMAGES = [
 export default function HeroImage() {
   const [current, setCurrent] = useState(0);
   const [isResizing, setResizing] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  const autoplayTimeoutIdRef = useRef<NodeJS.Timeout>();
+
+  const stopAutoplay = () => {
+    clearTimeout(autoplayTimeoutIdRef.current);
+    setAutoplay(false);
+    autoplayTimeoutIdRef.current = setTimeout(() => setAutoplay(true), 2000);
+  };
+
   const handleLeft = () => {
     setCurrent((prev) => {
-      if (prev > 0) {
-        return prev - 1;
-      } else {
-        return prev;
-      }
+      return prev > 0 ? prev - 1 : HERO_IMAGES.length - 1;
     });
+    stopAutoplay();
   };
 
   const handleRight = () => {
     setCurrent((prev) => {
-      if (prev < HERO_IMAGES.length - 1) {
-        return prev + 1;
-      } else {
-        return prev;
-      }
+      return prev < HERO_IMAGES.length - 1 ? prev + 1 : 0;
     });
+    stopAutoplay();
   };
 
-  const timeoutId = useRef<NodeJS.Timeout>();
+  const handleDot = (i: number) => {
+    setCurrent(i);
+    stopAutoplay();
+  };
+
+  const intervalIdRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (autoplay) {
+      intervalIdRef.current = setInterval(() => {
+        setCurrent((prev) => {
+          return prev < HERO_IMAGES.length - 1 ? prev + 1 : 0;
+        });
+      }, 5000);
+    }
+
+    return () => {
+      clearInterval(intervalIdRef.current);
+    };
+  }, [autoplay]);
+
+  const resizeTimeoutIdRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const moveSlider = () => {
-      clearTimeout(timeoutId.current);
+      clearTimeout(resizeTimeoutIdRef.current);
       setResizing(true);
 
       const slider = sliderRef.current;
@@ -52,7 +76,7 @@ export default function HeroImage() {
           slider.clientWidth * current
         }px)`;
 
-        timeoutId.current = setTimeout(() => {
+        resizeTimeoutIdRef.current = setTimeout(() => {
           setResizing(false);
         }, 100);
       }
@@ -103,7 +127,7 @@ export default function HeroImage() {
       </div>
       <div className="absolute w-full bottom-2 flex items-center justify-center gap-2">
         {HERO_IMAGES.map((_, i) => (
-          <button key={i} onClick={() => setCurrent(i)} className="flex">
+          <button key={i} onClick={() => handleDot(i)} className="flex">
             <span
               className={`size-3 rounded-full border-2 shadow-md transition duration-300 ${
                 current === i
