@@ -98,13 +98,13 @@ export default function HeroImage() {
   }, [current]);
 
   return (
-    <section className="h-full flex relative text-xl md:text-4xl text-lime-900">
+    <section className="relative flex h-full text-xl text-lime-900 md:text-4xl">
       <button
         type="button"
-        className="h-full w-16 bg-zinc-50 bg-opacity-0 z-10 absolute left-0  cursor-pointer group/iconLeft hover:bg-zinc-100 hover:opacity-40 flex items-center justify-center"
+        className="bg-opacity-35 absolute left-0 z-10 flex h-full w-8 items-center justify-center bg-neutral-200 text-white opacity-0 transition duration-300 hover:opacity-100 md:w-16"
         onClick={handleLeft}
       >
-        <HiChevronLeft className="invisible group-hover/iconLeft:visible" />
+        <HiChevronLeft />
       </button>
       <div className="size-full overflow-hidden">
         <div
@@ -114,7 +114,7 @@ export default function HeroImage() {
           ref={sliderRef}
         >
           {HERO_IMAGES.map((image, i) => (
-            <div key={i} className="relative h-full basis-full shrink-0 grow-0">
+            <div key={i} className="relative h-full shrink-0 grow-0 basis-full">
               <Image
                 src={image.src}
                 alt={image.alt}
@@ -125,14 +125,14 @@ export default function HeroImage() {
           ))}
         </div>
       </div>
-      <div className="absolute w-full bottom-2 flex items-center justify-center gap-2">
+      <div className="absolute bottom-2 flex w-full items-center justify-center gap-2">
         {HERO_IMAGES.map((_, i) => (
           <button key={i} onClick={() => handleDot(i)} className="flex">
             <span
               className={`size-3 rounded-full border-2 shadow-md transition duration-300 ${
                 current === i
-                  ? 'bg-white border-white'
-                  : 'bg-transparent border-neutral-200'
+                  ? 'border-white bg-white'
+                  : 'border-neutral-200 bg-transparent hover:border-white'
               }`}
             />
           </button>
@@ -140,10 +140,10 @@ export default function HeroImage() {
       </div>
       <button
         type="button"
-        className="h-full w-16 bg-zinc-50 bg-opacity-0 z-10 absolute right-0 cursor-pointer group/iconRight  hover:bg-zinc-100 hover:opacity-40 flex items-center justify-center"
+        className="bg-opacity-35 absolute right-0 z-10 flex h-full w-8 items-center justify-center bg-neutral-200 text-white opacity-0 transition duration-300 hover:opacity-100 md:w-16"
         onClick={handleRight}
       >
-        <HiChevronRight className="invisible group-hover/iconRight:visible" />
+        <HiChevronRight />
       </button>
     </section>
   );
