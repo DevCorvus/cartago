@@ -110,17 +110,24 @@ export default function CategorySlider({ categories, skip }: Props) {
   };
 
   return (
-    <div
-      className="flex w-full items-center gap-1"
+    <section
+      className="flex w-full items-center gap-2"
       onMouseEnter={handleMouseEnterSliderContainer}
       onMouseLeave={handleMouseLeaveSliderContainer}
       onTouchStart={handleTouchStartSliderContainer}
       onTouchEnd={handleTouchEndSliderContainer}
     >
-      <button type="button" onClick={handleSlideLeftClick}>
+      <button
+        type="button"
+        onClick={handleSlideLeftClick}
+        className="rounded-full border border-neutral-100 bg-neutral-100 p-2 text-neutral-700 shadow-md transition hover:text-lime-600"
+      >
         <HiChevronLeft />
       </button>
-      <div className="overflow-hidden" ref={sliderContainerRef}>
+      <div
+        className="overflow-hidden rounded-full py-2.5"
+        ref={sliderContainerRef}
+      >
         <ul
           ref={sliderRef}
           className={`flex w-max gap-2 ${autoplay ? '' : 'transition-transform duration-1000'}`}
@@ -128,11 +135,11 @@ export default function CategorySlider({ categories, skip }: Props) {
           {categories.map(
             (category) =>
               category.id !== skip && (
-                <li
-                  key={category.id}
-                  className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
-                >
-                  <Link href={`/items?categoryId=${category.id}`}>
+                <li key={category.id}>
+                  <Link
+                    href={`/items?categoryId=${category.id}`}
+                    className="text-nowrap rounded-full border bg-neutral-50 px-2 py-1 text-neutral-500 shadow-md transition hover:border-lime-500 hover:bg-lime-500 hover:text-neutral-50"
+                  >
                     {capitalize(category.title)}
                   </Link>
                 </li>
@@ -141,12 +148,11 @@ export default function CategorySlider({ categories, skip }: Props) {
           {categories.map(
             (category) =>
               category.id !== skip && (
-                <li
-                  key={`${category.id}-duplicate`}
-                  aria-hidden={true}
-                  className="text-nowrap rounded-full bg-green-100 px-2 py-1 text-green-700 shadow-sm"
-                >
-                  <Link href={`/items?categoryId=${category.id}`}>
+                <li key={`${category.id}-duplicate`} aria-hidden={true}>
+                  <Link
+                    href={`/items?categoryId=${category.id}`}
+                    className="text-nowrap rounded-full border bg-neutral-50 px-2 py-1 text-neutral-500 shadow-md transition hover:border-lime-500 hover:bg-lime-500 hover:text-neutral-50"
+                  >
                     {capitalize(category.title)}
                   </Link>
                 </li>
@@ -154,9 +160,13 @@ export default function CategorySlider({ categories, skip }: Props) {
           )}
         </ul>
       </div>
-      <button type="button" onClick={handleSlideRightClick}>
+      <button
+        type="button"
+        onClick={handleSlideRightClick}
+        className="rounded-full border border-neutral-100 bg-neutral-100 p-2 text-neutral-700 shadow-md transition hover:text-lime-600"
+      >
         <HiChevronRight />
       </button>
-    </div>
+    </section>
   );
 }
