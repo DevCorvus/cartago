@@ -44,7 +44,9 @@ export default async function RootLayout({
             <UserProvider data={userData}>
               <NextTopLoader color="#86EFAC" showSpinner={false} />
               <NavBar />
-              <main className="min-h-screen w-full bg-zinc-50">{children}</main>
+              <main className="min-h-screen w-full bg-neutral-50">
+                {children}
+              </main>
               <div id="modal-container"></div>
               <Toaster position="bottom-right" />
             </UserProvider>
