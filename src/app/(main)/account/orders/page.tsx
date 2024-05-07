@@ -1,7 +1,7 @@
 import OrderStatusTag from '@/components/ui/OrderStatusTag';
 import PaymentStatusTag from '@/components/ui/PaymentStatusTag';
 import { formatMoney } from '@/lib/dinero';
-import { UserSession } from '@/server/auth/auth.types';
+import { UserSession } from '@/shared/auth/auth.types';
 import withAuth from '@/server/middlewares/withAuth';
 import { orderService } from '@/server/services';
 import { formatDate } from '@/utils/formatDate';

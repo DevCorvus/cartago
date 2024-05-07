@@ -1,4 +1,4 @@
-import { UserSession } from '@/server/auth/auth.types';
+import { UserSession } from '@/shared/auth/auth.types';
 import withAuth from '@/server/middlewares/withAuth';
 import { userService } from '@/server/services';
 import Link from 'next/link';

@@ -1,6 +1,6 @@
 import EditProductForm from '@/components/ui/EditProductForm';
-import { UserSession } from '@/server/auth/auth.types';
-import { Permissions } from '@/server/auth/rbac';
+import { UserSession } from '@/shared/auth/auth.types';
+import { Permissions } from '@/shared/auth/rbac';
 import withAuth from '@/server/middlewares/withAuth';
 import { categoryService, productService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';

@@ -1,16 +1,11 @@
 import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from './next-auth.config';
-import { PermissionType, RolePermissions, RoleType } from './rbac';
+import { PermissionType, RoleType } from '@/shared/auth/rbac';
+import { hasPermissions } from '@/shared/auth/auth.utils';
 
 export async function getUserSession() {
   const session = await getServerSession(nextAuthOptions);
   return session ? session.user : null;
-}
-
-function hasPermissions(role: RoleType, permissions: PermissionType[]) {
-  return permissions.every((permission) =>
-    RolePermissions[role].has(permission),
-  );
 }
 
 export async function checkUserPermissions(

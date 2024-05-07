@@ -1,5 +1,5 @@
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import { categoryService } from '@/server/services';
 import { CreateUpdateCategoryDto } from '@/shared/dtos/category.dto';
 import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';

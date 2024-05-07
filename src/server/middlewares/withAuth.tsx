@@ -1,7 +1,7 @@
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
-import { PermissionType } from '@/server/auth/rbac';
+import { PermissionType } from '@/shared/auth/rbac';
 import { redirect } from 'next/navigation';
-import { UserSession } from '../auth/auth.types';
+import { UserSession } from '@/shared/auth/auth.types';
 
 interface WithAuthProps {
   user: UserSession;

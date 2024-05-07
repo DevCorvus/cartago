@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { loginUserSchema } from '@/shared/schemas/user.schema';
 import { authService, cartService } from '../services';
-import { UserSession } from './auth.types';
+import { UserSession } from '@/shared/auth/auth.types';
 
 declare module 'next-auth' {
   interface Session {

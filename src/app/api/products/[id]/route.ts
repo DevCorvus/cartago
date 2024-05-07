@@ -1,5 +1,5 @@
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import { moderationService, productService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { UpdateProductDto } from '@/shared/dtos/product.dto';

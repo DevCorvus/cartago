@@ -1,4 +1,4 @@
-import { UserSession } from '@/server/auth/auth.types';
+import { UserSession } from '@/shared/auth/auth.types';
 import withAuth from '@/server/middlewares/withAuth';
 import { orderService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';

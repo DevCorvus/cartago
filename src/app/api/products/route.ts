@@ -3,7 +3,7 @@ import { CreateProductDto } from '@/shared/dtos/product.dto';
 import { createProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import { z } from 'zod';
 
 const lastIdSchema = z.string().uuid().nullable();
