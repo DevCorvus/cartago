@@ -6,6 +6,7 @@ import ProductList from './ProductList';
 import { useEffect, useMemo, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
 import SomethingWentWrong from './SomethingWentWrong';
+import { HiOutlineEmojiSad } from 'react-icons/hi';
 
 interface Props {
   categoryId?: number;
@@ -66,7 +67,9 @@ export default function ProductScroller({ categoryId }: Props) {
           </>
         )}
         {!isLoading && !hasNextPage && (
-          <p className="text-lg text-green-800">No more items for you .(</p>
+          <p className="flex items-center gap-1 text-sm text-slate-500">
+            You reached the end <HiOutlineEmojiSad className="text-base" />
+          </p>
         )}
         {isError && <SomethingWentWrong />}
       </div>

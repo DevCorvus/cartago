@@ -9,6 +9,7 @@ import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getCategoryTags } from '@/data/category';
 import { toastError } from '@/lib/toast';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
+import { HiOutlineEmojiSad } from 'react-icons/hi';
 
 export default function SearchForm() {
   const pathname = usePathname();
@@ -47,35 +48,37 @@ export default function SearchForm() {
   }, [pathname]);
 
   return (
-    <div className="font-sans font-normal">
-      <form className="relative flex items-center">
+    <div className="max-w-72 relative flex-1 font-sans font-normal text-slate-700">
+      <form className="flex items-center">
         <input
           type="text"
-          className="resize-none rounded-full bg-zinc-50 py-2 px-4 text-lime-900 shadow-inner shadow-slate-300 outline-none w-40 sm:w-80 md:w-96"
+          className="w-full resize-none rounded-full bg-slate-50 px-4 py-2  shadow-inner shadow-slate-300 outline-none"
           placeholder="Search"
           onChange={(e) => setInput(e.target.value.trim())}
           value={input}
         />
-        <HiMiniMagnifyingGlass className="absolute right-2 text-lime-500 text-xl" />
+        <HiMiniMagnifyingGlass className="absolute right-2 text-xl text-cyan-700" />
       </form>
       {input && (
-        <div className="absolute w-40 sm:w-80 md:w-96 rounded-b-lg bg-white px-2 py-4 text-lime-500">
+        <div className="absolute top-12 w-full rounded-b-lg border-t border-slate-100 bg-slate-50 px-3 py-2 shadow-md">
           {categoryTags.length === 0 ? (
             <>
               {isLoading ? (
                 <Loading />
               ) : (
-                <p className="text-center">Nothing here .(</p>
+                <p className="flex items-center justify-center gap-1 text-sm text-slate-500">
+                  Nothing found <HiOutlineEmojiSad className="text-base" />
+                </p>
               )}
             </>
           ) : (
-            <ul className="">
+            <ul>
               {categoryTags.map((category) => (
-                <li
-                  key={category.id}
-                  className="px-2 py-1 hover:bg-lime-500 hover:text-white hover:rounded-md"
-                >
-                  <Link href={`/items?categoryId=${category.id}`}>
+                <li key={category.id}>
+                  <Link
+                    href={`/items?categoryId=${category.id}`}
+                    className="transition hover:text-cyan-500 focus:text-cyan-500"
+                  >
                     {capitalize(category.title)}
                   </Link>
                 </li>

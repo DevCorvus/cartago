@@ -12,12 +12,15 @@ export default function NavBar() {
 
   return (
     <div>
-      <div className="fixed z-50 w-full bg-lime-500 px-4 py-2 font-semibold text-white shadow-md">
-        <nav className="container relative mx-auto flex items-center justify-between">
+      <div className="fixed z-50 w-full bg-white px-4 py-2 font-semibold text-cyan-700 shadow-md">
+        <nav className="container relative mx-auto flex items-center justify-between gap-1">
           <header className="flex justify-center">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="size-8 flex items-center justify-center rounded-full border-2 border-white">
-                <CartagoIcon className="w-3.5 text-white" />
+            <Link
+              href="/"
+              className="group flex items-center gap-2 hover:text-cyan-500 focus:text-cyan-500"
+            >
+              <div className="size-8 flex items-center justify-center rounded-full border-2 border-cyan-700 transition group-hover:border-cyan-500 group-focus:border-cyan-500">
+                <CartagoIcon className="w-3.5" />
               </div>
               <span className="text-xl">Cartago</span>
             </Link>
@@ -25,7 +28,10 @@ export default function NavBar() {
           <SearchForm />
           <ul className="flex items-center justify-center gap-5 text-2xl">
             <li className="flex items-center justify-center">
-              <Link href="/cart">
+              <Link
+                href="/cart"
+                className="rounded-full bg-cyan-50 p-1 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
+              >
                 <HiShoppingCart />
               </Link>
             </li>
@@ -33,6 +39,7 @@ export default function NavBar() {
               <button
                 type="button"
                 onClick={() => setShowMenu((prev) => !prev)}
+                className="rounded-full bg-cyan-50 p-1 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
               >
                 <HiUser />
               </button>

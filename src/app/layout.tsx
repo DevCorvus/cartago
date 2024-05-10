@@ -38,16 +38,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={openSans.className}>
-      <body className="relative bg-neutral-50">
+      <body className="relative bg-neutral-100">
         <AuthProvider session={session}>
           <ReactQueryProvider>
             <UserProvider data={userData}>
-              <NextTopLoader color="#86EFAC" showSpinner={false} />
+              <NextTopLoader color="#06B6D4" showSpinner={false} />
               <NavBar />
-              <main className="min-h-screen w-full bg-neutral-50">
-                {children}
-              </main>
-              <div id="modal-container"></div>
+              <main className="min-h-screen w-full">{children}</main>
+              <div id="modal-container" />
               <Toaster position="bottom-right" />
             </UserProvider>
           </ReactQueryProvider>

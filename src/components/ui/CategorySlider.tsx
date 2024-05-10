@@ -120,7 +120,7 @@ export default function CategorySlider({ categories, skip }: Props) {
       <button
         type="button"
         onClick={handleSlideLeftClick}
-        className="rounded-full border border-neutral-100 bg-neutral-100 p-2 text-neutral-700 shadow-md transition hover:text-lime-600"
+        className="rounded-full bg-white p-2 text-slate-700 shadow-md transition hover:text-cyan-700"
       >
         <HiChevronLeft />
       </button>
@@ -138,7 +138,7 @@ export default function CategorySlider({ categories, skip }: Props) {
                 <li key={category.id}>
                   <Link
                     href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full border bg-neutral-50 px-2 py-1 text-neutral-500 shadow-md transition hover:border-lime-500 hover:bg-lime-500 hover:text-neutral-50"
+                    className="text-nowrap rounded-full bg-white px-2 py-1 text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500"
                   >
                     {capitalize(category.title)}
                   </Link>
@@ -151,7 +151,7 @@ export default function CategorySlider({ categories, skip }: Props) {
                 <li key={`${category.id}-duplicate`} aria-hidden={true}>
                   <Link
                     href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full border bg-neutral-50 px-2 py-1 text-neutral-500 shadow-md transition hover:border-lime-500 hover:bg-lime-500 hover:text-neutral-50"
+                    className="text-nowrap rounded-full bg-white px-2 py-1 text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500"
                   >
                     {capitalize(category.title)}
                   </Link>
@@ -163,7 +163,7 @@ export default function CategorySlider({ categories, skip }: Props) {
       <button
         type="button"
         onClick={handleSlideRightClick}
-        className="rounded-full border border-neutral-100 bg-neutral-100 p-2 text-neutral-700 shadow-md transition hover:text-lime-600"
+        className="rounded-full bg-white p-2 text-slate-700 shadow-md transition hover:text-cyan-700"
       >
         <HiChevronRight />
       </button>

@@ -22,7 +22,7 @@ export default function ProductItem({ product }: Props) {
     <Link
       href={'/items/' + product.id}
       key={product.id}
-      className="group relative flex flex-col rounded-lg border-b-2 border-r-2 border-gray-100 bg-white shadow-md"
+      className="group relative flex flex-col rounded-lg border-b-2 border-r-2 border-neutral-100 bg-white shadow-md"
     >
       {isNew && (
         <span className="absolute -left-3 -top-3 z-10 rounded-md bg-lime-100 px-2 py-1 text-xs text-lime-600 shadow-md">
@@ -40,14 +40,17 @@ export default function ProductItem({ product }: Props) {
       </div>
       <section className="relative flex flex-1 flex-col gap-1 p-2">
         <header className="flex items-center justify-between gap-0.5 capitalize">
-          <h2 className="line-clamp-1 font-medium" title={product.title}>
+          <h2
+            className="line-clamp-1 font-medium text-slate-700"
+            title={product.title}
+          >
             {product.title}
           </h2>
-          <span className="rounded-xl bg-lime-100 px-1 text-lg font-semibold text-lime-600 shadow-sm">
+          <span className="rounded-xl bg-green-50 px-1 text-lg font-bold text-green-600 shadow-sm">
             {formatMoney(product.price)}
           </span>
         </header>
-        <div className="flex items-center justify-between text-neutral-500">
+        <div className="flex items-center justify-between text-slate-500">
           <p className="text-sm">
             <span className="font-medium">{product.sales}</span> sold
           </p>
