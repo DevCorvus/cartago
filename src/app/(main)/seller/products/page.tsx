@@ -1,5 +1,5 @@
 import ProductCardList from '@/components/ui/ProductCardList';
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import withAuth from '@/server/middlewares/withAuth';
 
 async function SellerProducts() {

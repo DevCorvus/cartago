@@ -1,5 +1,5 @@
 import AddProductForm from '@/components/ui/AddProductForm';
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import withAuth from '@/server/middlewares/withAuth';
 import { categoryService } from '@/server/services';
 

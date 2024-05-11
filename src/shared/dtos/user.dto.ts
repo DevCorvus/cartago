@@ -4,7 +4,7 @@ import {
   loginUserSchema,
   updateUserPasswordSchema,
 } from '@/shared/schemas/user.schema';
-import { RoleType } from '@/server/auth/rbac';
+import { RoleType } from '@/shared/auth/rbac';
 
 export type LoginUserDto = z.infer<typeof loginUserSchema>;
 export type CreateUserDto = z.infer<typeof createUserSchema>;

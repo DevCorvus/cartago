@@ -1,4 +1,4 @@
-import { Permissions } from '@/server/auth/rbac';
+import { Permissions } from '@/shared/auth/rbac';
 import withAuth from '@/server/middlewares/withAuth';
 import Link from 'next/link';
 
