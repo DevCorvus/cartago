@@ -4,7 +4,7 @@ import Link from 'next/link';
 import SearchForm from './SearchForm';
 import { HiShoppingCart, HiUser } from 'react-icons/hi2';
 import { useState } from 'react';
-import Menu from './Menu';
+import DropdownMenu from './DropdownMenu';
 import CartagoIcon from './svg/CartagoIcon';
 
 export default function NavBar() {
@@ -45,7 +45,7 @@ export default function NavBar() {
               </button>
             </li>
           </ul>
-          {showMenu && <Menu setShowMenu={setShowMenu} />}
+          {showMenu && <DropdownMenu setShowMenu={setShowMenu} />}
         </nav>
       </div>
     </div>
