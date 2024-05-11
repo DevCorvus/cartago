@@ -19,6 +19,7 @@ import {
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastAmountSynced, toastError } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
+import EmptyCart from './EmptyCart';
 
 export default function UserShoppingCart() {
   const router = useRouter();
@@ -142,6 +143,8 @@ export default function UserShoppingCart() {
 
   if (isLoading || isPending) return <Loading />;
   if (isError) return <SomethingWentWrong />;
+
+  if (cartItems.length === 0) return <EmptyCart />;
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-6">

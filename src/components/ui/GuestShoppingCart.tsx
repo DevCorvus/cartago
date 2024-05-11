@@ -12,6 +12,7 @@ import { useGuestCartItems } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastAmountSynced, toastError } from '@/lib/toast';
 import Link from 'next/link';
+import EmptyCart from './EmptyCart';
 
 export default function GuestShoppingCart() {
   const [cartItems, setCartItems] = useState<ProductCartItemDto[]>([]);
@@ -106,6 +107,8 @@ export default function GuestShoppingCart() {
 
   if (isLoading) return <Loading />;
   if (isError) return <SomethingWentWrong />;
+
+  if (cartItems.length === 0) return <EmptyCart />;
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-6">
