@@ -11,11 +11,11 @@ select {
 }
 
 .input {
-  @apply w-full resize-none rounded-lg border border-transparent bg-slate-50 text-black shadow-inner shadow-slate-300 drop-shadow-sm transition focus:border-green-700;
+  @apply w-full resize-none rounded-lg border border-transparent bg-slate-50 text-black shadow-inner shadow-slate-300 drop-shadow-sm transition focus:border-cyan-700;
 }
 
 .input-alternative {
-  @apply w-full resize-none rounded-lg border border-transparent bg-white text-black shadow-md focus:border-green-700;
+  @apply w-full resize-none rounded-lg border border-transparent bg-white text-black shadow-md focus:border-cyan-700;
 }
 
 .textarea {
@@ -23,17 +23,17 @@ select {
 }
 
 .btn {
-  @apply rounded-full bg-lime-500 text-slate-50 shadow-md transition hover:bg-lime-400 focus:bg-lime-400 text-center;
+  @apply rounded-full bg-cyan-600 text-center font-medium text-slate-50 shadow-sm transition hover:bg-cyan-500 hover:shadow-md focus:bg-cyan-500 focus:shadow-md;
 }
 
 .btn-square {
-  @apply rounded-md bg-green-800 text-slate-50 shadow-md transition hover:bg-green-700 focus:bg-green-700;
+  @apply rounded-md bg-green-800 font-medium text-slate-50 shadow-sm transition hover:bg-green-700 hover:shadow-md focus:bg-green-700 focus:shadow-md;
 }
 
 .btn-disabled {
-  @apply rounded-full bg-gray-500 text-slate-50 shadow-md text-center;
+  @apply rounded-full bg-gray-500 text-center font-medium text-slate-50 shadow-sm;
 }
 
 .btn-alternative {
-  @apply rounded-full border border-lime-500 text-lime-500 transition hover:bg-lime-100 focus:bg-lime-100 text-center;
+  @apply rounded-full bg-cyan-50 text-center font-medium text-cyan-600 transition hover:bg-cyan-100 hover:text-cyan-700 focus:bg-cyan-100 focus:text-cyan-700;
 }
