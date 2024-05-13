@@ -28,34 +28,9 @@ class LocalStorageCart {
     this.set(cart.filter((product) => product.id !== productId));
   }
 
-  incrementItemAmount(productId: string, stock: number) {
-    const cart = this.get();
-    this.set(
-      cart.map((product) => {
-        if (product.id === productId && product.amount < stock) {
-          product.amount += 1;
-        }
-        return product;
-      }),
-    );
-  }
-
-  decrementItemAmount(productId: string) {
-    const cart = this.get();
-    this.set(
-      cart.map((product) => {
-        if (product.id === productId && product.amount > 1) {
-          product.amount -= 1;
-        }
-        return product;
-      }),
-    );
-  }
-
   setItemAmount(productId: string, amount: number) {
-    if (amount <= 0) return;
-
     const cart = this.get();
+
     this.set(
       cart.map((product) => {
         if (product.id === productId) {

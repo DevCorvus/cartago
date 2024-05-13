@@ -56,39 +56,24 @@ export const useAddCartItem = () => {
   });
 };
 
-export const useIncrementCartItemAmount = () => {
+export const useSetCartItemAmount = () => {
   return useMutation({
-    mutationFn: async (productId: string) => {
-      const res = await fetch(
-        `/api/cart/${productId}/amount?action=increment`,
-        {
-          method: 'PUT',
-        },
-      );
+    mutationFn: async ({
+      productId,
+      amount,
+    }: {
+      productId: string;
+      amount: number;
+    }) => {
+      const res = await fetch(`/api/cart/${productId}/amount?value=${amount}`, {
+        method: 'PUT',
+      });
 
       if (!res.ok) {
-        throw new Error('Could not increment cart item amount');
+        throw new Error('Could not set cart item amount to ' + amount);
       }
     },
-    mutationKey: ['incrementCartItemAmount'],
-  });
-};
-
-export const useDecrementCartItemAmount = () => {
-  return useMutation({
-    mutationFn: async (productId: string) => {
-      const res = await fetch(
-        `/api/cart/${productId}/amount?action=decrement`,
-        {
-          method: 'PUT',
-        },
-      );
-
-      if (!res.ok) {
-        throw new Error('Could not decrement cart item amount');
-      }
-    },
-    mutationKey: ['decrementCartItemAmount'],
+    mutationKey: ['setCartItemAmount'],
   });
 };
 

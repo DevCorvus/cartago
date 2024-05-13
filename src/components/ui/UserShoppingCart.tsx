@@ -3,7 +3,7 @@
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import ProductCartItem from '@/components/ui/ProductCartItem';
-import { useMemo, useEffect, useState, FormEvent } from 'react';
+import { useMemo, useEffect, useState, FormEvent, useCallback } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
 import { ImSpinner8 } from 'react-icons/im';
@@ -11,9 +11,8 @@ import { formatMoney, getTotalMoney } from '@/lib/dinero';
 import {
   useCartItems,
   useCheckout,
-  useDecrementCartItemAmount,
-  useIncrementCartItemAmount,
   useRemoveCartItem,
+  useSetCartItemAmount,
   useSyncCartItemAmounts,
 } from '@/data/cart';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
@@ -62,51 +61,35 @@ export default function UserShoppingCart() {
     }
   }, [data, syncCartItemAmounts, refetch, setProductIds]);
 
-  const incrementMutation = useIncrementCartItemAmount();
+  const setCartItemAmountMutation = useSetCartItemAmount();
 
-  const incrementCartItemAmountFromUI = (productId: string) => {
+  const setCartItemAmountFromUI = (productId: string, amount: number) => {
     setCartItems((prev) => {
       return prev.map((product) => {
-        if (product.id === productId && product.amount < product.stock) {
-          return { ...product, amount: product.amount + 1 };
+        if (product.id === productId) {
+          return { ...product, amount };
         }
         return product;
       });
     });
   };
 
-  const incrementAmount = async (productId: string) => {
-    try {
-      incrementCartItemAmountFromUI(productId);
-      await incrementMutation.mutateAsync(productId);
-    } catch (err) {
-      toastError(err);
-      decrementCartItemAmountFromUI(productId);
-    }
-  };
+  const setItemAmount = useCallback(
+    async (productId: string, amount: number) => {
+      const prevAmount = cartItems.find(
+        (item) => item.id === productId,
+      )!.amount;
 
-  const decrementCartItemAmountMutation = useDecrementCartItemAmount();
-
-  const decrementCartItemAmountFromUI = (productId: string) => {
-    setCartItems((prev) => {
-      return prev.map((product) => {
-        if (product.id === productId && product.amount > 1) {
-          return { ...product, amount: product.amount - 1 };
-        }
-        return product;
-      });
-    });
-  };
-
-  const decrementAmount = async (productId: string) => {
-    try {
-      decrementCartItemAmountFromUI(productId);
-      await decrementCartItemAmountMutation.mutateAsync(productId);
-    } catch (err) {
-      toastError(err);
-      incrementCartItemAmountFromUI(productId);
-    }
-  };
+      try {
+        setCartItemAmountFromUI(productId, amount);
+        await setCartItemAmountMutation.mutateAsync({ productId, amount });
+      } catch (err) {
+        toastError(err);
+        setCartItemAmountFromUI(productId, prevAmount);
+      }
+    },
+    [cartItems, setCartItemAmountMutation],
+  );
 
   const removeCartItemMutation = useRemoveCartItem();
 
@@ -147,25 +130,28 @@ export default function UserShoppingCart() {
   if (cartItems.length === 0) return <EmptyCart />;
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-6 rounded-lg bg-white p-8 shadow-md">
       <header>
-        <h1 className="text-2xl font-bold text-green-800">
-          Shopping cart ({cartItems.length})
+        <h1 className="text-2xl font-bold text-cyan-700">
+          Shopping Cart ({cartItems.length})
         </h1>
       </header>
-      <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-3">
         {cartItems.map((product) => (
           <ProductCartItem
             key={product.id}
             product={product}
-            incrementAmount={incrementAmount}
-            decrementAmount={decrementAmount}
+            setItemAmount={setItemAmount}
             removeItem={removeItem}
           />
         ))}
       </div>
-      <p className="text-right">
-        Total: <span className="text-xl">{formatMoney(total)}</span>
+      <hr />
+      <p className="flex items-center justify-between">
+        <span className="font-medium text-slate-500">Total</span>
+        <span className="rounded-xl bg-green-50 px-2 py-1 text-xl font-bold text-green-600 shadow-sm">
+          {formatMoney(total)}
+        </span>
       </p>
       <form onSubmit={handleCheckout}>
         <button

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const searchParamsSchema = z.object({
-  action: z.enum(['increment', 'decrement']),
+  value: z.coerce.number().int().positive().min(1),
 });
 
 interface Props {
@@ -29,33 +29,22 @@ export async function PUT(req: NextRequest, { params }: Props) {
   const searchParams = req.nextUrl.searchParams;
 
   const searchParamsResult = await searchParamsSchema.safeParseAsync({
-    action: searchParams.get('action'),
+    value: searchParams.get('value'),
   });
 
   if (!searchParamsResult.success) {
     return NextResponse.json(null, { status: 400 });
   }
 
-  const action = searchParamsResult.data.action;
+  const amount = searchParamsResult.data.value;
+
   const cartId = user.cartId;
   const productId = paramsResult.data.id;
 
-  let success = false;
-
-  switch (action) {
-    case 'increment': {
-      success = await cartService.incrementCartItemAmount(cartId, productId);
-      break;
-    }
-    case 'decrement': {
-      success = await cartService.decrementCartItemAmount(cartId, productId);
-      break;
-    }
-  }
-
-  if (!success) {
+  try {
+    await cartService.setCartItemAmount(cartId, productId, amount);
+    return NextResponse.json(null);
+  } catch {
     return NextResponse.json(null, { status: 500 });
   }
-
-  return NextResponse.json(null);
 }

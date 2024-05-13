@@ -75,52 +75,26 @@ export class CartService {
     return cartItems ? cartItems.map((item) => item.productId) : null;
   }
 
-  async incrementCartItemAmount(
-    cartId: string,
-    productId: string,
-  ): Promise<boolean> {
+  async setCartItemAmount(cartId: string, productId: string, amount: number) {
     const cartItem = await prisma.cartItem.findFirst({
       where: { cartId, productId, product: { deletedAt: null } },
       select: { id: true, amount: true, product: { select: { stock: true } } },
     });
 
-    if (cartItem && cartItem.amount < cartItem.product.stock) {
+    if (!cartItem) throw new Error('Cart item does not exist');
+
+    if (amount >= 1 && amount <= cartItem.product.stock) {
       await prisma.cartItem.update({
         where: { id: cartItem.id },
         data: {
           amount: {
-            increment: 1,
+            set: amount,
           },
         },
       });
-      return true;
+    } else {
+      throw new Error('New cart item amount is out of boundaries');
     }
-
-    return false;
-  }
-
-  async decrementCartItemAmount(
-    cartId: string,
-    productId: string,
-  ): Promise<boolean> {
-    const cartItem = await prisma.cartItem.findFirst({
-      where: { cartId, productId, product: { deletedAt: null } },
-      select: { id: true, amount: true, product: { select: { stock: true } } },
-    });
-
-    if (cartItem && cartItem.amount > 1) {
-      await prisma.cartItem.update({
-        where: { id: cartItem.id },
-        data: {
-          amount: {
-            decrement: 1,
-          },
-        },
-      });
-      return true;
-    }
-
-    return false;
   }
 
   async removeItemFromCart(cartId: string, productId: string): Promise<void> {
