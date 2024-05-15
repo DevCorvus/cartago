@@ -52,7 +52,7 @@ export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
   return (
     <div
       ref={ref}
-      className="relative h-4/5 cursor-none rounded-md bg-neutral-100 shadow-md"
+      className="relative h-72 cursor-none rounded-md bg-neutral-100 shadow-md"
       onMouseEnter={() => setShowMagnifier(true)}
       onMouseLeave={() => setShowMagnifier(false)}
     >
@@ -76,7 +76,7 @@ export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
           backgroundPositionX: `${-(position.x - padding.x) * zoom + magnifierSize / 2}px`,
           backgroundPositionY: `${-(position.y - padding.y) * zoom + magnifierSize / 2}px`,
         }}
-        className="pointer-events-none absolute z-10 border border-white bg-white bg-no-repeat"
+        className="pointer-events-none absolute z-10 rounded-lg border border-white bg-neutral-100 bg-no-repeat"
       />
     </div>
   );

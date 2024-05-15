@@ -64,12 +64,14 @@ export default function WishProduct({ product }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <button type="submit" className="text-4xl">
-        {isWished ? (
-          <HiHeart className="text-rose-500" />
-        ) : (
-          <HiOutlineHeart className="text-rose-500" />
-        )}
+      <button
+        title={isWished ? 'Unwish product' : 'Wish product'}
+        type="submit"
+        className={`group flex items-center rounded-full p-2 text-3xl text-rose-400 shadow-sm transition ${isWished ? 'bg-rose-50' : 'hover:bg-rose-50'}`}
+      >
+        <span className="inline-block transition group-hover:scale-110">
+          {isWished ? <HiHeart /> : <HiOutlineHeart />}
+        </span>
       </button>
     </form>
   );
