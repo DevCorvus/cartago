@@ -22,6 +22,7 @@
     "@tanstack/react-query": "^5.28.9",
     "bad-words": "^3.0.4",
     "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.11",
     "dinero.js": "^1.9.1",
     "libphonenumber-js": "^1.10.57",
     "nanoid": "^5.0.7",
