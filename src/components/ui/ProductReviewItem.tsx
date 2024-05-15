@@ -23,12 +23,12 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
   }
 
   return (
-    <div className="flex gap-1.5 rounded-md border-2 border-gray-50 bg-white p-3 shadow-md">
-      <HiUserCircle className="-mt-0.5 text-3xl text-green-800" />
+    <div className="flex gap-1.5 rounded-lg border-b-2 border-r-2 border-neutral-100 bg-white p-4 shadow-sm">
+      <HiUserCircle className="-mt-0.5 text-3xl text-cyan-700" />
       <div className="flex flex-1 flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-green-800">
+            <span className="font-semibold text-cyan-700">
               {review.user.fullname}
             </span>
             {review.edited && (
@@ -46,14 +46,16 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
               <button
                 onClick={() => setEditMode(true)}
                 title="Edit review"
-                className="text-lg transition hover:text-green-800 focus:text-green-800"
+                className="text-lg text-slate-500 transition hover:text-cyan-500 focus:text-cyan-500"
               >
                 <HiPencilSquare />
               </button>
             )}
           </div>
         </div>
-        <p className="whitespace-pre-line">{review.content}</p>
+        <p className="hyphens-auto whitespace-pre-line break-words font-sans text-slate-600">
+          {review.content}
+        </p>
       </div>
     </div>
   );

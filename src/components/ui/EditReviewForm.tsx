@@ -19,8 +19,12 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
     setValue,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useForm<CreateUpdateReviewDto>({
     resolver: zodResolver(createUpdateReviewSchema),
+    defaultValues: {
+      content: review.content,
+    },
   });
 
   const updateReviewMutation = useUpdateReview();
@@ -45,15 +49,17 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
     [setValue],
   );
 
+  const content = watch('content');
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 rounded-lg border-2 border-gray-50 bg-white p-4 shadow-md"
+      className="space-y-4 rounded-lg border-2 border-neutral-100 bg-white p-4 shadow-md"
     >
       <header className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-green-800">Edit review</h3>
+        <h3 className="text-lg font-semibold text-cyan-700">Edit review</h3>
         <div className="flex items-center gap-2">
-          <label htmlFor="edit-rating" className="text-green-800 opacity-75">
+          <label htmlFor="edit-rating" className="text-slate-400">
             Rating
           </label>
           <RatingInput
@@ -63,22 +69,22 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
           />
         </div>
       </header>
-      <div className="flex flex-col gap-1">
-        <label
-          hidden
-          htmlFor="edit-content"
-          className="text-green-800 opacity-75"
-        >
+      <div className="space-y-1">
+        <label hidden htmlFor="edit-content">
           Content
         </label>
-        <textarea
-          {...register('content')}
-          id="edit-content"
-          className="textarea p-3"
-          placeholder="Enter content"
-          defaultValue={review.content}
-          autoFocus
-        ></textarea>
+        <div>
+          <textarea
+            {...register('content')}
+            id="edit-content"
+            className="textarea p-3"
+            placeholder="Enter content"
+            autoFocus
+          />
+          <span className="block text-right text-xs text-slate-500/50">
+            ({content.length}/500)
+          </span>
+        </div>
         {errors.content && (
           <p className="text-red-400">{errors.content.message}</p>
         )}
@@ -89,7 +95,7 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
         </button>
         <button
           type="button"
-          className="btn-alternative px-3 py-2"
+          className="rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-700 focus:bg-slate-100 focus:text-slate-700"
           onClick={close}
         >
           Cancel

@@ -43,16 +43,16 @@ export default function ProductReviewList({ productId }: Props) {
   if (isError) return <SomethingWentWrong />;
 
   return (
-    <section className="mt-10 flex w-full flex-col gap-6">
+    <section className="w-full space-y-6">
       <header>
-        <h2 className="text-xl font-bold text-green-800">
+        <h2 className="text-xl font-bold leading-loose text-slate-400/50">
           Reviews ({reviews.length})
         </h2>
       </header>
       {canReview && (
         <AddReviewForm productId={productId} addReview={addReview} />
       )}
-      <ul className="flex flex-col gap-2">
+      <ul className="space-y-3">
         {reviews.map((review, i) => (
           <li key={i}>
             <ProductReviewItem review={review} updateReview={updateReview} />

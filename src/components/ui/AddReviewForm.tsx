@@ -21,8 +21,12 @@ export default function AddReviewForm({ productId, addReview }: Props) {
     setValue,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useForm<CreateUpdateReviewDto>({
     resolver: zodResolver(createUpdateReviewSchema),
+    defaultValues: {
+      content: '',
+    },
   });
 
   const createReviewMutation = useCreateReview();
@@ -46,11 +50,13 @@ export default function AddReviewForm({ productId, addReview }: Props) {
     [setValue],
   );
 
+  const content = watch('content');
+
   if (!showForm) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="flex w-full items-center justify-center gap-2 rounded-full border border-transparent border-t-gray-100 bg-white p-3 font-semibold text-green-800 shadow-md transition hover:border-green-700 focus:border-green-700"
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-neutral-100 bg-white p-3 font-semibold text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
       >
         <HiMiniPlus className="text-3xl" />
         Write review
@@ -61,28 +67,33 @@ export default function AddReviewForm({ productId, addReview }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 rounded-lg border-2 border-gray-50 bg-white p-4 shadow-md"
+      className="space-y-4 rounded-lg border-2 border-neutral-100 bg-white p-4 shadow-md"
     >
       <header className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-green-800">New review</h3>
+        <h3 className="text-lg font-semibold text-cyan-700">New review</h3>
         <div className="flex items-center gap-2">
-          <label htmlFor="rating" className="text-green-800 opacity-75">
+          <label htmlFor="rating" className="text-slate-400">
             Rating
           </label>
           <RatingInput handler={handleRating} error={Boolean(errors.rating)} />
         </div>
       </header>
-      <div className="flex flex-col gap-1">
-        <label hidden htmlFor="content" className="text-green-800 opacity-75">
+      <div className="space-y-1">
+        <label hidden htmlFor="content">
           Content
         </label>
-        <textarea
-          {...register('content')}
-          id="content"
-          className="textarea p-3"
-          placeholder="Enter content"
-          autoFocus
-        ></textarea>
+        <div>
+          <textarea
+            {...register('content')}
+            id="content"
+            className="textarea p-3"
+            placeholder="Enter content"
+            autoFocus
+          />
+          <span className="block text-right text-xs text-slate-500/50">
+            ({content.length}/500)
+          </span>
+        </div>
         {errors.content && (
           <p className="text-red-400">{errors.content.message}</p>
         )}
@@ -93,7 +104,7 @@ export default function AddReviewForm({ productId, addReview }: Props) {
         </button>
         <button
           type="button"
-          className="btn-alternative px-3 py-2"
+          className="rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-700 focus:bg-slate-100 focus:text-slate-700"
           onClick={() => setShowForm(false)}
         >
           Cancel
