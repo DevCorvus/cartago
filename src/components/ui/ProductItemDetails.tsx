@@ -5,6 +5,9 @@ import { FormEvent, useState } from 'react';
 import {
   HiCalendarDays,
   HiOutlineCircleStack,
+  HiOutlineCurrencyDollar,
+  HiOutlinePresentationChartLine,
+  HiOutlineShoppingBag,
   HiShoppingCart,
 } from 'react-icons/hi2';
 import WishProduct from './WishProduct';
@@ -21,6 +24,7 @@ import { useAddCartItem } from '@/data/cart';
 import { toastError } from '@/lib/toast';
 import { ProductImageVisualizer } from './ProductImageVisualizer';
 import { formatTimeFromNow } from '@/lib/dayjs';
+import Rating from './Rating';
 
 export default function ProductItemDetails({
   isOwner,
@@ -111,21 +115,33 @@ export default function ProductItemDetails({
             ) : (
               <p className="italic text-slate-400">No description</p>
             )}
-            <div className="flex w-full items-center justify-between text-slate-400">
-              {noStock ? (
-                <p className="rounded-md border border-red-600 bg-red-100 px-2 py-1 text-red-600">
-                  Out of stock
-                </p>
-              ) : (
-                <p className="flex items-center gap-1">
-                  <HiOutlineCircleStack />
-                  {product.stock} left in stock
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-3 text-slate-400">
+              <p className="flex items-center gap-1">
+                <HiOutlineShoppingBag />
+                <span className="font-medium">{product.sales}</span> sold
+              </p>
               <p className="flex items-center gap-1">
                 <HiCalendarDays />
                 Created {formatTimeFromNow(product.createdAt)}
               </p>
+              <p className="flex items-center gap-1">
+                <HiOutlineCircleStack />
+                {noStock ? (
+                  <span className="font-medium">Out of stock</span>
+                ) : (
+                  <>
+                    <span className="font-semibold">{product.stock}</span> left
+                    in stock
+                  </>
+                )}
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <HiOutlinePresentationChartLine />
+                  Rating
+                </div>
+                <Rating score={product.rating.score} />
+              </div>
             </div>
             <ul className="flex w-full flex-wrap gap-1">
               {product.categories.map((category) => (
