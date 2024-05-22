@@ -206,7 +206,14 @@ export class OrderService {
       },
     });
 
-    if (items.some((item) => item.amount > item.product.stock)) {
+    const insufficientStock = items.some((item) => {
+      const noStock = item.product.stock === 0;
+      const amountExceedsLimit = item.amount > item.product.stock;
+
+      return noStock || amountExceedsLimit;
+    });
+
+    if (insufficientStock) {
       throw new Error('Product stock does not fulfill order');
     }
 
