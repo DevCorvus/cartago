@@ -41,14 +41,16 @@ export class UserService {
         },
       });
 
-      await tx.cart.create({
-        data: {
-          userId: newUser.id,
-          items: {
-            createMany: { data: data.cartItems || [], skipDuplicates: true },
+      if (data.cartItems) {
+        await tx.cart.create({
+          data: {
+            userId: newUser.id,
+            items: {
+              createMany: { data: data.cartItems, skipDuplicates: true },
+            },
           },
-        },
-      });
+        });
+      }
 
       if (data.wishedItems) {
         await tx.wishedItem.createMany({
