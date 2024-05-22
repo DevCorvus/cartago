@@ -42,8 +42,10 @@ export interface ProductCard {
   id: string;
   title: string;
   price: number;
+  stock: number;
   images: ProductImageDto[];
   createdAt: Date;
+  isOwner: boolean;
 }
 
 interface SalesAndRating {

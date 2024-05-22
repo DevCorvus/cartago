@@ -124,6 +124,10 @@ export default function UserShoppingCart() {
 
   const total = useMemo(() => getTotalMoney(cartItems), [cartItems]);
 
+  const insufficientStock = useMemo(() => {
+    return cartItems.some((item) => item.stock === 0);
+  }, [cartItems]);
+
   if (isLoading || isPending) return <Loading />;
   if (isError) return <SomethingWentWrong />;
 
@@ -156,8 +160,8 @@ export default function UserShoppingCart() {
       <form onSubmit={handleCheckout}>
         <button
           type="submit"
-          disabled={checkoutMutation.isPending}
-          className="btn flex w-full items-center justify-center gap-2 p-3"
+          disabled={checkoutMutation.isPending || insufficientStock}
+          className={`${insufficientStock ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
         >
           {!checkoutMutation.isPending ? (
             <>

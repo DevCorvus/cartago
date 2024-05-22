@@ -5,7 +5,6 @@ import { FormEvent, useState } from 'react';
 import {
   HiCalendarDays,
   HiOutlineCircleStack,
-  HiOutlineCurrencyDollar,
   HiOutlinePresentationChartLine,
   HiOutlineShoppingBag,
   HiShoppingCart,
@@ -14,53 +13,28 @@ import WishProduct from './WishProduct';
 import { ProductDetailsDto } from '@/shared/dtos/product.dto';
 import Link from 'next/link';
 import { capitalize } from '@/utils/capitalize';
-import { useCartStore } from '@/stores/useCartStore';
-import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
-import { localStorageCart } from '@/utils/localStorageCart';
 import { formatMoney } from '@/lib/dinero';
 import ProductReviewList from './ProductReviewList';
-import ProductList from './ProductList';
-import { useAddCartItem } from '@/data/cart';
-import { toastError } from '@/lib/toast';
 import { ProductImageVisualizer } from './ProductImageVisualizer';
 import { formatTimeFromNow } from '@/lib/dayjs';
 import Rating from './Rating';
+import ProductRelatedList from './ProductRelatedList';
+import { useCartItem } from '@/hooks/useCartItem';
 
 export default function ProductItemDetails({
   isOwner,
   product,
   relatedProducts,
 }: ProductDetailsDto) {
-  const isAuthenticated = useIsAuthenticated();
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
-  const { productIds, addProductId, removeProductId } = useCartStore(
-    ({ productIds, addProductId, removeProductId }) => ({
-      productIds,
-      addProductId,
-      removeProductId,
-    }),
-  );
+  const { addCartItem, inCart } = useCartItem(product.id);
 
   const noStock = product.stock === 0;
 
-  const addCartItemMutation = useAddCartItem();
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isAuthenticated) {
-      try {
-        addProductId(product.id);
-        await addCartItemMutation.mutateAsync(product.id);
-      } catch (err) {
-        toastError(err);
-        removeProductId(product.id);
-      }
-    } else {
-      localStorageCart.addItem({ id: product.id, amount: 1 });
-      addProductId(product.id);
-    }
+    await addCartItem();
   };
 
   return (
@@ -167,7 +141,7 @@ export default function ProductItemDetails({
             </Link>
           ) : (
             <>
-              {productIds.includes(product.id) ? (
+              {inCart ? (
                 <Link
                   href="/cart"
                   className="btn flex w-full flex-1 items-center justify-center gap-2 p-4"
@@ -191,10 +165,10 @@ export default function ProductItemDetails({
               )}
             </>
           )}
-          {!isOwner && <WishProduct product={product} />}
+          {!isOwner && <WishProduct productId={product.id} />}
         </div>
       </section>
-      <ProductList products={relatedProducts} />
+      <ProductRelatedList products={relatedProducts} />
       <ProductReviewList productId={product.id} />
     </div>
   );

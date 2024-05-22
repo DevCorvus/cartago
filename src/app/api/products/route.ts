@@ -10,6 +10,8 @@ const lastIdSchema = z.string().uuid().nullable();
 const categoryIdSchema = z.coerce.number().int().positive().nullable();
 
 export async function GET(req: NextRequest) {
+  const user = await getUserSession();
+
   const searchParams = req.nextUrl.searchParams;
 
   const lastIdResult = await lastIdSchema.safeParseAsync(
@@ -28,6 +30,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const products = await productService.findAll({
+      userId: user?.id,
       lastId,
       categoryId,
     });

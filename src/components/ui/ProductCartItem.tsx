@@ -5,7 +5,7 @@ import { HiMinus, HiOutlineTrash, HiPlus } from 'react-icons/hi2';
 import Link from 'next/link';
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 import { formatMoney } from '@/lib/dinero';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface Props {
@@ -22,19 +22,19 @@ export default function ProductCartItem({
   const [input, setInput] = useState(product.amount);
   const debouncedInput = useDebounce(input);
 
-  const canDecreaseAmount = input !== 1;
+  const canDecreaseAmount = input > 1;
   const canIncreaseAmount = input < product.stock;
+
+  const noStock = product.stock === 0;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setInput(Math.min(Math.max(value, 1), product.stock));
   };
 
-  useEffect(() => {
-    if (debouncedInput !== product.amount) {
-      setItemAmount(product.id, debouncedInput);
-    }
-  }, [setItemAmount, debouncedInput, product.amount, product.id]);
+  if (debouncedInput !== product.amount) {
+    setItemAmount(product.id, debouncedInput);
+  }
 
   return (
     <div className="flex h-20 w-full rounded-md bg-slate-50/75 shadow-md">
@@ -64,28 +64,34 @@ export default function ProductCartItem({
           </span>
         </div>
         <div className="flex w-full justify-between">
-          <div className="flex items-center justify-center gap-2 rounded-full bg-slate-100 text-slate-700">
-            <button
-              className={`rounded-full p-1 text-xs transition ${canDecreaseAmount ? 'bg-slate-300/50 hover:bg-red-100 hover:text-red-700 hover:shadow-sm' : 'text-slate-400'}`}
-              onClick={() => setInput((prev) => prev - 1)}
-              disabled={!canDecreaseAmount}
-            >
-              <HiMinus />
-            </button>
-            <input
-              type="text"
-              className="w-6 bg-transparent text-center text-sm font-semibold text-slate-700"
-              value={input}
-              onChange={handleInputChange}
-            />
-            <button
-              className={`rounded-full p-1 text-xs transition ${canIncreaseAmount ? 'bg-slate-300/50 hover:bg-green-100 hover:text-green-700 hover:shadow-sm' : 'text-slate-400'}`}
-              onClick={() => setInput((prev) => prev + 1)}
-              disabled={!canIncreaseAmount}
-            >
-              <HiPlus />
-            </button>
-          </div>
+          {noStock ? (
+            <span className="rounded-full bg-red-50 px-1.5 py-0.5 font-semibold text-red-400 shadow-sm">
+              Out of stock
+            </span>
+          ) : (
+            <div className="flex items-center justify-center gap-2 rounded-full bg-slate-100 text-slate-700">
+              <button
+                className={`rounded-full p-1 text-xs transition ${canDecreaseAmount ? 'bg-slate-300/50 hover:bg-red-100 hover:text-red-700 hover:shadow-sm' : 'text-slate-400'}`}
+                onClick={() => setInput((prev) => prev - 1)}
+                disabled={!canDecreaseAmount}
+              >
+                <HiMinus />
+              </button>
+              <input
+                type="text"
+                className="w-6 bg-transparent text-center text-sm font-semibold text-slate-700"
+                value={input}
+                onChange={handleInputChange}
+              />
+              <button
+                className={`rounded-full p-1 text-xs transition ${canIncreaseAmount ? 'bg-slate-300/50 hover:bg-green-100 hover:text-green-700 hover:shadow-sm' : 'text-slate-400'}`}
+                onClick={() => setInput((prev) => prev + 1)}
+                disabled={!canIncreaseAmount}
+              >
+                <HiPlus />
+              </button>
+            </div>
+          )}
           <button
             onClick={() => removeItem(product.id)}
             title="Remove item"

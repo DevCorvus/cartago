@@ -19,6 +19,7 @@ interface ProductWithOwnerAndImages {
 }
 
 interface FindAllOptions {
+  userId?: string;
   lastId?: string;
   categoryId?: number;
 }
@@ -47,8 +48,10 @@ export class ProductService {
       skip: options?.lastId ? 1 : 0,
       select: {
         id: true,
+        userId: true,
         title: true,
         price: true,
+        stock: true,
         images: {
           take: 1,
           select: {
@@ -67,7 +70,9 @@ export class ProductService {
     const productsWithSalesAndRating =
       await this.getRatingFromProducts(productsWithSales);
 
-    return productsWithSalesAndRating;
+    return productsWithSalesAndRating.map((product) =>
+      this.getIsOwnerFromProduct(product, options?.userId),
+    );
   }
 
   async findAllFromUser(userId: string): Promise<ProductCardDto[]> {
@@ -80,6 +85,7 @@ export class ProductService {
         id: true,
         title: true,
         price: true,
+        stock: true,
         images: {
           take: 1,
           select: {
@@ -98,7 +104,10 @@ export class ProductService {
     const productsWithSalesAndRating =
       await this.getRatingFromProducts(productsWithSales);
 
-    return productsWithSalesAndRating;
+    return productsWithSalesAndRating.map((product) => ({
+      ...product,
+      isOwner: true,
+    }));
   }
 
   async findAllWishedFromUser(userId: string): Promise<ProductCardDto[]> {
@@ -108,8 +117,10 @@ export class ProductService {
         product: {
           select: {
             id: true,
+            userId: true,
             title: true,
             price: true,
+            stock: true,
             images: {
               take: 1,
               select: {
@@ -129,7 +140,9 @@ export class ProductService {
     const productsWithSalesAndRating =
       await this.getRatingFromProducts(productsWithSales);
 
-    return productsWithSalesAndRating;
+    return productsWithSalesAndRating.map((product) =>
+      this.getIsOwnerFromProduct(product, userId),
+    );
   }
 
   async findAllWishedFromIds(productIds: string[]): Promise<ProductCardDto[]> {
@@ -139,6 +152,7 @@ export class ProductService {
         id: true,
         title: true,
         price: true,
+        stock: true,
         images: {
           take: 1,
           select: {
@@ -154,7 +168,10 @@ export class ProductService {
     const productsWithSalesAndRating =
       await this.getRatingFromProducts(productsWithSales);
 
-    return productsWithSalesAndRating;
+    return productsWithSalesAndRating.map((product) => ({
+      ...product,
+      isOwner: false,
+    }));
   }
 
   async findAllAsCartItems(
@@ -212,7 +229,7 @@ export class ProductService {
   async findByIdWithRelatedOnes(
     id: string,
     userId?: string,
-    amount: number = 6,
+    amount: number = 3,
   ): Promise<ProductDetailsDto | null> {
     const product = await prisma.product.findUnique({
       where: { id, deletedAt: null },
@@ -262,8 +279,10 @@ export class ProductService {
           },
           select: {
             id: true,
+            userId: true,
             title: true,
             price: true,
+            stock: true,
             images: {
               take: 1,
               select: {
@@ -278,7 +297,7 @@ export class ProductService {
         });
 
         if (relatedProductCard) {
-          relatedProducts.push(relatedProductCard);
+          relatedProducts.push(this.getIsOwnerFromProduct(relatedProductCard));
           if (relatedProducts.length === amount) break;
         } else {
           relatedCategories = relatedCategories.filter(
@@ -570,6 +589,18 @@ export class ProductService {
     return {
       count,
       score,
+    };
+  }
+
+  private getIsOwnerFromProduct<T extends { userId: string }>(
+    product: T,
+    userId?: string,
+  ): Omit<T, 'userId'> & { isOwner: boolean } {
+    const { userId: productUserId, ...rest } = product;
+
+    return {
+      ...rest,
+      isOwner: productUserId === userId,
     };
   }
 }

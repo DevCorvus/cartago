@@ -1,3 +1,5 @@
+'use client';
+
 import { useWished } from '@/hooks/useWished';
 import { FormEvent } from 'react';
 import { HiHeart, HiOutlineHeart } from 'react-icons/hi2';
@@ -6,7 +8,7 @@ interface Props {
   productId: string;
 }
 
-export default function WishProduct({ productId }: Props) {
+export default function WishProductItem({ productId }: Props) {
   const { toggleWishness, isWished } = useWished(productId);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -15,15 +17,13 @@ export default function WishProduct({ productId }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex items-center">
       <button
-        title={isWished ? 'Unwish product' : 'Wish product'}
         type="submit"
-        className={`group flex items-center rounded-full p-2 text-3xl text-rose-400 shadow-sm transition ${isWished ? 'bg-rose-50' : 'hover:bg-rose-50'}`}
+        title={isWished ? 'Remove from Wish List' : 'Add to Wish List'}
+        className={`rounded-full bg-white p-0.5 text-xl shadow-md transition ${isWished ? 'text-rose-400' : 'hover:text-rose-400'}`}
       >
-        <span className="inline-block transition group-hover:scale-110">
-          {isWished ? <HiHeart /> : <HiOutlineHeart />}
-        </span>
+        {isWished ? <HiHeart /> : <HiOutlineHeart />}
       </button>
     </form>
   );
