@@ -58,7 +58,7 @@ export default function ProductScroller({ categoryId }: Props) {
         {!isLoading && hasNextPage && (
           <>
             {showLoadMoreBtn ? (
-              <button onClick={() => fetchNextPage()} className="btn p-3">
+              <button onClick={() => fetchNextPage()} className="btn px-3 py-2">
                 Load more
               </button>
             ) : (
