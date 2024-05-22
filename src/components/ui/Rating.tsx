@@ -43,7 +43,7 @@ export default function Rating({ score }: Props) {
     return Array(fullStars)
       .fill(Star.Full)
       .concat(hasHalf ? [Star.Half] : [], Array(emptyStars).fill(Star.Empty));
-  }, []);
+  }, [score]);
 
   return (
     <ul
