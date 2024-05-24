@@ -11,11 +11,11 @@ select {
 }
 
 .input {
-  @apply w-full resize-none rounded-lg border border-transparent bg-slate-50 text-black shadow-inner shadow-slate-300 drop-shadow-sm transition focus:border-cyan-700;
+  @apply w-full resize-none rounded-lg border border-transparent bg-slate-50 text-black shadow-inner shadow-slate-300 drop-shadow-sm transition focus:border-cyan-500;
 }
 
 .input-alternative {
-  @apply w-full resize-none rounded-lg border border-transparent bg-white text-black shadow-md focus:border-cyan-700;
+  @apply w-full resize-none rounded-lg border border-transparent bg-white text-black shadow-md focus:border-cyan-500;
 }
 
 .textarea {
