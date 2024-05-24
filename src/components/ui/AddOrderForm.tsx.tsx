@@ -90,36 +90,50 @@ export default function AddOrderForm({ order }: Props) {
   if (isLoading) return <Loading />;
 
   return (
-    <form onSubmit={submitWrapper} className="space-y-10">
+    <form
+      onSubmit={submitWrapper}
+      className="w-full max-w-md space-y-10 rounded-lg bg-white p-8 text-slate-700 shadow-md"
+    >
       <div className="space-y-10">
-        <header className="text-2xl font-bold text-green-800">
-          <h2 className="flex items-center gap-2">
+        <header className="text-2xl font-bold text-cyan-700">
+          <h2 className="flex items-center justify-between gap-2">
             Placing order
             <OrderStatusTag status={order.status} className="text-lg" />
           </h2>
         </header>
-        <section className="space-y-1 text-sm">
-          <p>
-            <strong>ID</strong>{' '}
-            <span className="rounded-md bg-white px-1 py-0.5">{order.id}</span>
-          </p>
-          <p>
-            <strong>Date</strong> {formatDate(new Date(order.createdAt))}{' '}
-            <HiOutlineQuestionMarkCircle
-              className="inline-block text-green-800"
-              title="MM/DD/YYYY"
-            />
-          </p>
+        <section className="text-sm">
+          <table>
+            <tr>
+              <th className="px-2 py-0.5 text-left">ID</th>
+              <td>
+                <span className="rounded-md bg-slate-50 px-1 py-0.5 shadow-sm">
+                  {order.id}
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th className="px-2 py-0.5 text-left">Date</th>
+              <td>
+                <p className="flex items-center gap-1 px-1 py-0.5">
+                  <span>{formatDate(new Date(order.createdAt))}</span>
+                  <HiOutlineQuestionMarkCircle
+                    className="text-cyan-700"
+                    title="MM/DD/YYYY"
+                  />
+                </p>
+              </td>
+            </tr>
+          </table>
         </section>
-        <section className="flex flex-col gap-2">
-          <header className="flex items-center justify-between text-lg font-bold text-green-800">
+        <section className="space-y-2">
+          <header className="flex items-center justify-between text-lg font-semibold text-cyan-700">
             <h3>Shipping address</h3>
             <div>
               <button
                 onClick={() => setShowAddressForm(true)}
                 title="Add new address"
                 type="button"
-                className="btn-square p-0.5"
+                className="rounded-md border border-cyan-600 p-0.5 text-cyan-600 shadow-sm transition hover:border-cyan-500 hover:bg-cyan-500 hover:text-slate-50 hover:shadow-md focus:border-cyan-500 focus:bg-cyan-500 focus:text-slate-50 focus:shadow-md"
               >
                 <HiPlus className="text-base" />
               </button>
@@ -128,7 +142,7 @@ export default function AddOrderForm({ order }: Props) {
           <div>
             <div className="flex gap-2">
               <select
-                className="input-alternative p-3"
+                className="input p-3"
                 {...register('address')}
                 defaultValue={
                   addresses.find((address) => address.default)?.id || ''
@@ -149,13 +163,13 @@ export default function AddOrderForm({ order }: Props) {
             )}
           </div>
         </section>
-        <section className="flex flex-col gap-2">
-          <header className="text-lg font-bold text-green-800">
+        <section className="space-y-2">
+          <header className="text-lg font-semibold text-cyan-700">
             <h3>Payment method</h3>
           </header>
           <div>
             <select
-              className="input-alternative p-3"
+              className="input p-3"
               {...register('method')}
               defaultValue=""
             >
@@ -171,18 +185,18 @@ export default function AddOrderForm({ order }: Props) {
             )}
           </div>
         </section>
-        <section className="flex flex-col gap-2">
-          <header className="text-lg font-bold text-green-800">
+        <section className="space-y-2">
+          <header className="text-lg font-semibold text-cyan-700">
             <h3>Items</h3>
           </header>
           {order.items.map((item) => (
             <div
               key={item.id}
-              className="flex gap-2 rounded-md bg-white shadow-md"
+              className="flex gap-2 rounded-md bg-slate-50/75 shadow-md"
             >
               <Link
                 href={`/items/${item.id}`}
-                className="relative h-20 w-20 rounded-l-md bg-slate-100"
+                className="relative h-20 w-20 rounded-l-md bg-neutral-100"
               >
                 <Image
                   src={'/images/' + item.image.path}
@@ -194,21 +208,18 @@ export default function AddOrderForm({ order }: Props) {
               <section className="flex flex-1 flex-col justify-around p-1">
                 <div>
                   <p>{item.title}</p>
-                  <p className="line-clamp-1 font-sans text-sm opacity-70">
-                    {item.description}
-                  </p>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className="grid grid-cols-2 text-sm">
                   <p>
-                    <span className="text-slate-500">Price</span>{' '}
-                    <span className="rounded-md bg-green-100 px-1 py-0.5 text-green-800">
-                      {formatMoney(item.price)}
+                    <span className="text-slate-500">Amount</span>{' '}
+                    <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
+                      {item.amount}
                     </span>
                   </p>
                   <p>
-                    <span className="text-slate-500">Quantity</span>{' '}
-                    <span className="rounded-md bg-green-100 px-1 py-0.5 text-green-800">
-                      {item.amount}
+                    <span className="text-slate-500">Price</span>{' '}
+                    <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
+                      {formatMoney(item.price)}
                     </span>
                   </p>
                 </div>
@@ -217,26 +228,28 @@ export default function AddOrderForm({ order }: Props) {
           ))}
         </section>
       </div>
-      <div className="flex w-full max-w-xs flex-col gap-10">
+      <div className="flex w-full flex-col gap-10">
         <section className="flex flex-col gap-2">
-          <header className="text-lg font-bold text-green-800">
+          <header className="text-lg font-semibold text-cyan-700">
             <h3>Summary</h3>
           </header>
-          <div className="input-alternative flex flex-col gap-3 p-6">
+          <div className="flex flex-col gap-3 rounded-lg bg-slate-50/75 p-6 shadow-md">
             <div className="flex flex-col gap-1">
               <p className="flex justify-between">
-                Total items cost <span>{formatMoney(order.total)}</span>
+                Total items cost{' '}
+                <span className="font-medium">{formatMoney(order.total)}</span>
               </p>
               <p className="flex justify-between">
-                Shipping cost <span>{formatMoney(0)}</span>
+                Shipping cost{' '}
+                <span className="font-medium">{formatMoney(0)}</span>
               </p>
             </div>
             <hr />
-            <p className="flex justify-between font-bold">
+            <p className="flex items-center justify-between font-bold">
               Total
-              <strong className="text-green-800">
+              <span className="rounded-xl bg-green-50 px-1 py-0.5 text-xl text-green-600 shadow-sm">
                 {formatMoney(order.total)}
-              </strong>
+              </span>
             </p>
           </div>
         </section>
