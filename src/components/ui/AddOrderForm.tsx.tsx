@@ -250,7 +250,7 @@ export default function AddOrderForm({ order }: Props) {
             <hr />
             <p className="flex items-center justify-between font-bold">
               Total
-              <span className="rounded-xl bg-green-50 px-1 py-0.5 text-xl text-green-600 shadow-sm">
+              <span className="rounded-lg bg-green-50 px-1 py-0.5 text-lg text-green-600 shadow-sm">
                 {formatMoney(order.total)}
               </span>
             </p>

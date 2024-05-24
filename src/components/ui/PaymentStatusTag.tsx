@@ -30,7 +30,7 @@ export default function PaymentStatusTag({ status, className = '' }: Props) {
     <span
       className={`${getStatusColor(
         status,
-      )} rounded-md border border-gray-100 px-1.5 py-0.5 ${className}`}
+      )} rounded-md px-1.5 py-0.5 font-medium ${className}`}
     >
       {status}
     </span>
