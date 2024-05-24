@@ -16,42 +16,45 @@ async function Orders({ user }: Props) {
   const orders = await orderService.findAll(user.id);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 rounded-lg bg-white p-8 text-slate-700 shadow-md">
       <header>
-        <h1 className="text-2xl font-bold text-green-800">Orders</h1>
+        <h1 className="text-2xl font-bold text-cyan-700">Orders</h1>
       </header>
-      <ul className="flex flex-col gap-3">
+      <ul className="space-y-3">
         {orders.map((order) => (
           <li key={order.id}>
             <Link
               href={`/account/orders/${order.id}`}
-              className="flex items-center rounded-md bg-white shadow-md"
+              className="flex flex-col items-center rounded-lg bg-slate-50/75 shadow-md md:flex-row"
             >
-              <div className="relative h-28 w-28 rounded-l-md bg-slate-200">
+              <div className="md:size-28 relative h-32 w-full rounded-l-md bg-neutral-100">
                 <Image
                   src={'/images/' + order.image.path}
                   alt="Order preview"
                   fill={true}
-                  className="rounded-md object-contain"
+                  sizes="200px"
+                  className="rounded-lg object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-1.5 p-4">
+              <div className="flex flex-col gap-2 p-4 md:p-2">
                 <span
                   title="Order ID"
-                  className="rounded-md bg-slate-100 px-1 py-0.5"
+                  className="rounded-md bg-slate-200/50 px-1 py-0.5 text-center text-sm md:text-base"
                 >
                   {order.id}
                 </span>
-                <div className="grid grid-cols-2 gap-1.5 text-sm text-slate-500">
-                  <p className="col-span-1">
-                    <span>Total</span>{' '}
-                    <span className="text-green-800">
+                <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 md:text-sm">
+                  <p className="col-span-1 flex gap-3">
+                    <span>Total</span>
+                    <span className="font-medium text-slate-600">
                       {formatMoney(order.total)}
                     </span>
                   </p>
                   <p className="col-span-1">
                     <span>Created at</span>{' '}
-                    <span>{formatDate(order.createdAt)}</span>
+                    <span className="font-medium text-slate-600">
+                      {formatDate(order.createdAt)}
+                    </span>
                   </p>
                   <p className="col-span-1">
                     <span>Order</span> <OrderStatusTag status={order.status} />
