@@ -26,14 +26,10 @@ select {
   @apply rounded-full bg-cyan-600 text-center font-medium text-slate-50 shadow-sm transition hover:bg-cyan-500 hover:shadow-md focus:bg-cyan-500 focus:shadow-md;
 }
 
-.btn-square {
-  @apply rounded-md bg-green-800 font-medium text-slate-50 shadow-sm transition hover:bg-green-700 hover:shadow-md focus:bg-green-700 focus:shadow-md;
-}
-
 .btn-disabled {
   @apply rounded-full bg-slate-500/75 text-center text-slate-50;
 }
 
 .btn-alternative {
-  @apply rounded-full bg-cyan-50 text-center font-medium text-cyan-600 transition hover:bg-cyan-100 hover:text-cyan-700 focus:bg-cyan-100 focus:text-cyan-700;
+  @apply rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-700 focus:bg-slate-100 focus:text-slate-700;
 }

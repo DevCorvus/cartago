@@ -104,7 +104,7 @@ export default function AddReviewForm({ productId, addReview }: Props) {
         </button>
         <button
           type="button"
-          className="rounded-full px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-700 focus:bg-slate-100 focus:text-slate-700"
+          className="btn-alternative px-3 py-2"
           onClick={() => setShowForm(false)}
         >
           Cancel
