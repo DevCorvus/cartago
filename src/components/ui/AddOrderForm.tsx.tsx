@@ -103,26 +103,28 @@ export default function AddOrderForm({ order }: Props) {
         </header>
         <section className="text-sm">
           <table>
-            <tr>
-              <th className="px-2 py-0.5 text-left">ID</th>
-              <td>
-                <span className="rounded-md bg-slate-50 px-1 py-0.5 shadow-sm">
-                  {order.id}
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <th className="px-2 py-0.5 text-left">Date</th>
-              <td>
-                <p className="flex items-center gap-1 px-1 py-0.5">
-                  <span>{formatDate(new Date(order.createdAt))}</span>
-                  <HiOutlineQuestionMarkCircle
-                    className="text-cyan-700"
-                    title="MM/DD/YYYY"
-                  />
-                </p>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <th className="px-2 py-0.5 text-left">ID</th>
+                <td>
+                  <span className="rounded-md bg-slate-50 px-1 py-0.5 shadow-sm">
+                    {order.id}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th className="px-2 py-0.5 text-left">Date</th>
+                <td>
+                  <p className="flex items-center gap-1 px-1 py-0.5">
+                    <span>{formatDate(new Date(order.createdAt))}</span>
+                    <HiOutlineQuestionMarkCircle
+                      className="text-cyan-700"
+                      title="MM/DD/YYYY"
+                    />
+                  </p>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </section>
         <section className="space-y-2">
@@ -202,6 +204,7 @@ export default function AddOrderForm({ order }: Props) {
                   src={'/images/' + item.image.path}
                   alt={item.title}
                   fill={true}
+                  sizes="100px"
                   className="rounded-md object-contain"
                 />
               </Link>
@@ -212,13 +215,13 @@ export default function AddOrderForm({ order }: Props) {
                 <div className="grid grid-cols-2 text-sm">
                   <p>
                     <span className="text-slate-500">Amount</span>{' '}
-                    <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
+                    <span className="rounded-xl bg-slate-100 px-1 font-medium text-slate-600 shadow-sm">
                       {item.amount}
                     </span>
                   </p>
                   <p>
                     <span className="text-slate-500">Price</span>{' '}
-                    <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
+                    <span className="rounded-xl bg-slate-100 px-1 font-medium text-slate-600 shadow-sm">
                       {formatMoney(item.price)}
                     </span>
                   </p>
