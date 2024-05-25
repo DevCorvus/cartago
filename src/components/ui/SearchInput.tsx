@@ -5,9 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 interface Props {
   term: string;
   handleSearch(input: string): void;
+  alternative?: boolean;
 }
 
-export default function SearchInput({ term, handleSearch }: Props) {
+export default function SearchInput({
+  term,
+  handleSearch,
+  alternative = false,
+}: Props) {
   const [input, setInput] = useState('');
   const timeoutRef = useRef<NodeJS.Timeout>();
 
@@ -23,7 +28,7 @@ export default function SearchInput({ term, handleSearch }: Props) {
     <input
       type="text"
       placeholder={`Search for ${term}`}
-      className="input p-3"
+      className={`${alternative ? 'input-alternative' : 'alternative'} p-3`}
       onChange={(e) => setInput(e.target.value)}
     />
   );
