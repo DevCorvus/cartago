@@ -28,7 +28,7 @@ export default function SearchInput({
     <input
       type="text"
       placeholder={`Search for ${term}`}
-      className={`${alternative ? 'input-alternative' : 'alternative'} p-3`}
+      className={`${alternative ? 'input-alternative' : 'input'} p-3`}
       onChange={(e) => setInput(e.target.value)}
     />
   );
