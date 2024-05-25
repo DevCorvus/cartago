@@ -78,6 +78,7 @@ export default function EditCategoryForm({
             id={`title-${category.id}`}
             placeholder="Enter category title"
             className="input p-3"
+            autoFocus
           />
           {errors.title && (
             <p className="text-red-400">{errors.title.message}</p>

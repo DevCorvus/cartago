@@ -70,6 +70,7 @@ export default function AddCategoryForm({ addCategory, close }: Props) {
             id="title"
             placeholder="Enter category title"
             className="input p-3"
+            autoFocus
           />
           {errors.title && (
             <p className="text-red-400">{errors.title.message}</p>
