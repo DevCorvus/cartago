@@ -8,8 +8,11 @@ import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { useCategories } from '@/data/category';
 import { CategoryDto } from '@/shared/dtos/category.dto';
 import { useEffect, useState } from 'react';
+import { HiMiniPlus } from 'react-icons/hi2';
 
 export default function Categories() {
+  const [showForm, setShowForm] = useState(false);
+
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<CategoryDto[]>(
     [],
@@ -63,13 +66,23 @@ export default function Categories() {
   if (isError) return <SomethingWentWrong />;
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className="flex w-full max-w-md flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-green-800">Categories</h1>
+        <h1 className="text-2xl font-bold text-cyan-700">Categories</h1>
       </header>
-      <AddCategoryForm addCategory={addCategory} />
-      <SearchInput term="categories" handleSearch={searchCategories} />
-      <ul className="flex flex-col gap-3">
+      <button
+        onClick={() => setShowForm(true)}
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-neutral-100 bg-white p-3 font-semibold text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
+      >
+        <HiMiniPlus className="text-3xl" />
+        Add category
+      </button>
+      <SearchInput
+        term="categories"
+        handleSearch={searchCategories}
+        alternative
+      />
+      <ul className="space-y-3">
         {selectedCategories.map((category) => (
           <li key={category.id}>
             <CategoryItem
@@ -80,6 +93,12 @@ export default function Categories() {
           </li>
         ))}
       </ul>
+      {showForm && (
+        <AddCategoryForm
+          addCategory={addCategory}
+          close={() => setShowForm(false)}
+        />
+      )}
     </div>
   );
 }
