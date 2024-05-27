@@ -7,6 +7,7 @@ import { orderService } from '@/server/services';
 import { formatDate } from '@/utils/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HiOutlineTruck } from 'react-icons/hi2';
 
 interface Props {
   user: UserSession;
@@ -14,6 +15,25 @@ interface Props {
 
 async function Orders({ user }: Props) {
   const orders = await orderService.findAll(user.id);
+
+  if (orders.length === 0) {
+    return (
+      <div className="absolute inset-0 flex h-screen w-screen items-center justify-center">
+        <section className="max-w-md space-y-3 rounded-lg text-center text-slate-400">
+          <header className="space-y-1">
+            <HiOutlineTruck className="mx-auto text-5xl" />
+            <h1 className="font-semibold">No orders yet</h1>
+          </header>
+          <Link
+            href="/items"
+            className="inline-block w-56 text-xs italic hover:underline"
+          >
+            Add something to keep the wheels of capitalism rolling!
+          </Link>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 rounded-lg bg-white p-8 text-slate-700 shadow-md">
