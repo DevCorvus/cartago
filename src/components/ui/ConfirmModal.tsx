@@ -1,6 +1,6 @@
 import { useClickOutside } from '@/hooks/useClickOutside';
 import Modal from './Modal';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { ImSpinner8 } from 'react-icons/im';
 
 interface Props {
@@ -12,7 +12,9 @@ export default function ConfirmModal({ action, close }: Props) {
   const [isLoading, setLoading] = useState(false);
   const ref = useClickOutside<HTMLFormElement>(close);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
     setLoading(true);
     try {
       await action();
