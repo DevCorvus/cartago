@@ -82,17 +82,21 @@ export default function Categories() {
         handleSearch={searchCategories}
         alternative
       />
-      <ul className="space-y-3">
-        {selectedCategories.map((category) => (
-          <li key={category.id}>
-            <CategoryItem
-              category={category}
-              updateCategory={updateCategory}
-              deleteCategory={deleteCategory}
-            />
-          </li>
-        ))}
-      </ul>
+      {categories.length > 0 ? (
+        <ul className="space-y-3">
+          {selectedCategories.map((category) => (
+            <li key={category.id}>
+              <CategoryItem
+                category={category}
+                updateCategory={updateCategory}
+                deleteCategory={deleteCategory}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-slate-500">There are no categories yet.</p>
+      )}
       {showForm && (
         <AddCategoryForm
           addCategory={addCategory}
