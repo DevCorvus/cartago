@@ -7,6 +7,7 @@ import { HiTrash, HiChevronDown, HiChevronUp, HiPencil } from 'react-icons/hi2';
 import EditCategoryForm from './EditCategoryForm';
 import { useDeleteCategory } from '@/data/category';
 import { toastError } from '@/lib/toast';
+import ConfirmModal from './ConfirmModal';
 
 interface Props {
   category: CategoryDto;
@@ -21,6 +22,8 @@ export default function CategoryItem({
 }: Props) {
   const [showDetails, setShowDetails] = useState(false);
   const [showForm, setShowForm] = useState(false);
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const deleteCategoryMutation = useDeleteCategory();
 
@@ -54,7 +57,7 @@ export default function CategoryItem({
             <button
               title="Delete category"
               className="transition hover:text-red-400 focus:text-red-400"
-              onClick={() => handleDelete(category.id)}
+              onClick={() => setShowDeleteConfirmation(true)}
             >
               <HiTrash />
             </button>
@@ -85,6 +88,12 @@ export default function CategoryItem({
           category={category}
           updateCategory={updateCategory}
           close={() => setShowForm(false)}
+        />
+      )}
+      {showDeleteConfirmation && (
+        <ConfirmModal
+          action={() => handleDelete(category.id)}
+          close={() => setShowDeleteConfirmation(false)}
         />
       )}
     </>
