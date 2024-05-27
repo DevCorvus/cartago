@@ -13,6 +13,7 @@ import { EditAddressForm } from './EditAddressForm';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDeleteAddress } from '@/data/address';
 import { toastError } from '@/lib/toast';
+import ConfirmModal from './ConfirmModal';
 
 interface Props {
   address: AddressDto;
@@ -27,6 +28,8 @@ export default function AddressItem({
 }: Props) {
   const [showActions, setShowActions] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const menuRef = useClickOutside<HTMLDivElement>(() => setShowActions(false));
 
@@ -83,7 +86,7 @@ export default function AddressItem({
                   type="submit"
                   title="Delete address"
                   className="transition hover:text-rose-400 focus:text-rose-400"
-                  onClick={() => handleDelete(address.id)}
+                  onClick={() => setShowDeleteConfirmation(true)}
                 >
                   <HiTrash />
                 </button>
@@ -157,6 +160,12 @@ export default function AddressItem({
           address={address}
           updateAddress={updateAddress}
           close={() => setShowEditForm(false)}
+        />
+      )}
+      {showDeleteConfirmation && (
+        <ConfirmModal
+          action={() => handleDelete(address.id)}
+          close={() => setShowDeleteConfirmation(false)}
         />
       )}
     </>
