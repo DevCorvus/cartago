@@ -44,18 +44,19 @@ export default function AddressItem({
   return (
     <>
       <div
-        className={`grid grid-cols-2 gap-4 rounded-md border-2 border-gray-50 bg-white p-8 shadow-md ring ${
-          address.default ? 'ring-green-700' : 'ring-transparent'
-        }`}
+        className={
+          'grid grid-cols-2 gap-4 rounded-lg border-2 border-slate-100 bg-white p-8 text-slate-700 shadow-md'
+        }
       >
         {address.default && (
-          <p className="col-span-2 mb-4 flex items-center gap-1 text-green-800">
-            <HiMiniCheckCircle /> This is your default address
+          <p className="col-span-2 mb-4 flex items-center gap-1 font-medium text-cyan-700">
+            <HiMiniCheckCircle className="text-xl" /> This is your default
+            address
           </p>
         )}
         <div className="col-span-2 flex justify-between">
           <div className="flex-1 space-y-1">
-            <span className="text-green-800 opacity-75">Address nickname</span>
+            <span className="text-slate-400">Address nickname</span>
             <p>{address.nickname}</p>
           </div>
           <div className="relative flex items-center gap-2 self-start">
@@ -69,11 +70,11 @@ export default function AddressItem({
             {showActions && (
               <div
                 ref={menuRef}
-                className="absolute -right-2 top-7 z-10 flex flex-col gap-3 rounded-md bg-slate-50 p-3 text-slate-700 shadow-md"
+                className="absolute -right-2 top-7 z-10 flex flex-col gap-3 rounded-lg bg-slate-50 p-3 text-slate-600 shadow-md"
               >
                 <button
                   title="Edit address"
-                  className="transition hover:text-green-700 focus:text-green-700"
+                  className="transition hover:text-green-500 focus:text-green-500"
                   onClick={() => setShowEditForm(true)}
                 >
                   <HiPencil />
@@ -81,7 +82,7 @@ export default function AddressItem({
                 <button
                   type="submit"
                   title="Delete address"
-                  className="transition hover:text-red-600 focus:text-red-600"
+                  className="transition hover:text-rose-400 focus:text-rose-400"
                   onClick={() => handleDelete(address.id)}
                 >
                   <HiTrash />
@@ -91,17 +92,17 @@ export default function AddressItem({
           </div>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Contact name</span>
+          <span className="text-slate-400">Contact name</span>
           <p>{address.contactName}</p>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Phone number</span>
+          <span className="text-slate-400">Phone number</span>
           <p className="flex items-center gap-1">
             <HiMiniPhone /> {address.phoneNumber}
           </p>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Country</span>
+          <span className="text-slate-500">Country</span>
           <p className="flex items-center gap-1">
             <Image
               src={`https://flagcdn.com/${address.country.id.toLowerCase()}.svg`}
@@ -114,19 +115,19 @@ export default function AddressItem({
           </p>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">State</span>
+          <span className="text-slate-400">State</span>
           {address.state.name ? (
             <p>{address.state.name}</p>
           ) : (
-            <p className="italic text-slate-400">No state</p>
+            <p className="italic">No state</p>
           )}
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">City</span>
+          <span className="text-slate-400">City</span>
           <p>{address.city}</p>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Zip/Postal code</span>
+          <span className="text-slate-400">Zip/Postal code</span>
           {address.postalCode ? (
             <p>{address.postalCode}</p>
           ) : (
@@ -134,20 +135,20 @@ export default function AddressItem({
           )}
         </div>
         <div className="col-span-2 space-y-1">
-          <span className="text-green-800 opacity-75">Street</span>
+          <span className="text-slate-400">Street</span>
           <p>{address.street}</p>
           {address.streetDetails ? (
             <p>{address.streetDetails}</p>
           ) : (
-            <p className="italic text-slate-400">No more details</p>
+            <p className="italic">No more details</p>
           )}
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Created at</span>
+          <span className="text-slate-400">Created at</span>
           <p>{new Date(address.createdAt).toDateString()}</p>
         </div>
         <div className="col-span-2 space-y-1 sm:col-span-1">
-          <span className="text-green-800 opacity-75">Last update</span>
+          <span className="text-slate-400">Last update</span>
           <p>{new Date(address.updatedAt).toDateString()}</p>
         </div>
       </div>
