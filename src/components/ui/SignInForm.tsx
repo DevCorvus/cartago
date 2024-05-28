@@ -41,17 +41,17 @@ export function SignInForm() {
   };
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="space-y-12 w-full max-w-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex max-w-sm flex-col items-center justify-center gap-10"
+        className="space-y-10 p-10 rounded-lg shadow-md bg-white"
       >
         <header className="w-full">
-          <h1 className="text-2xl font-bold text-green-800">Login</h1>
+          <h1 className="text-2xl font-bold text-cyan-700">Login</h1>
         </header>
-        <div className="flex w-full flex-col gap-6">
-          <div className="flex flex-col justify-center gap-2">
-            <label htmlFor="email" className="text-green-800 opacity-75">
+        <section className="w-full space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-slate-500">
               Email
             </label>
             <input
@@ -59,14 +59,15 @@ export function SignInForm() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="input-alternative p-4"
+              autoFocus
+              className="input p-3"
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
             )}
           </div>
-          <div className="flex flex-col justify-center gap-2">
-            <label htmlFor="password" className="text-green-800 opacity-75">
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-slate-500">
               Password
             </label>
             <input
@@ -74,7 +75,7 @@ export function SignInForm() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="input-alternative p-4"
+              className="input p-3"
             />
             {errors.password && (
               <p className="text-red-400">{errors.password.message}</p>
@@ -83,17 +84,17 @@ export function SignInForm() {
           {loginError && (
             <p className="text-red-400">Wrong email or password</p>
           )}
-        </div>
+        </section>
         <button type="submit" className="btn w-full p-3">
           Sign In
         </button>
       </form>
-      <div className="flex flex-col items-center justify-center text-sm text-green-800 opacity-75">
+      <div className="text-center text-sm text-slate-500">
         <p>
           You do not have an account?
           <Link
             href="/register"
-            className="font-semibold transition hover:text-lime-700"
+            className="font-semibold transition hover:text-cyan-500"
           >
             {' '}
             Sign up here.

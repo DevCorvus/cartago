@@ -85,32 +85,33 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="flex max-w-sm flex-col gap-12">
+    <div className="space-y-12 w-full max-w-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center justify-center gap-10"
+        className="space-y-10 p-10 rounded-lg shadow-md bg-white"
       >
         <header className="w-full">
-          <h1 className="text-2xl font-bold text-green-800">Register</h1>
+          <h1 className="text-2xl font-bold text-cyan-700">Register</h1>
         </header>
-        <div className="flex w-full flex-col gap-6">
-          <div className="flex flex-col justify-center gap-2">
-            <label htmlFor="fullname" className="text-green-800 opacity-75">
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="fullname" className="text-slate-500">
               Name
             </label>
             <input
               {...register('fullname')}
               id="fullname"
               type="text"
+              autoFocus
               placeholder="Enter your name"
-              className="input-alternative p-4"
+              className="input p-3"
             />
             {errors.fullname && (
               <p className="text-red-400">{errors.fullname.message}</p>
             )}
           </div>
-          <div className="flex flex-col justify-center gap-2">
-            <label htmlFor="email" className="text-green-800 opacity-75">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-slate-500">
               Email
             </label>
             <input
@@ -118,14 +119,14 @@ export default function SignUpForm() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="input-alternative p-4"
+              className="input p-3"
             />
             {errors.email && (
               <p className="text-red-400">{errors.email.message}</p>
             )}
           </div>
-          <div className="flex flex-col justify-center gap-2">
-            <label htmlFor="password" className="text-green-800 opacity-75">
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-slate-500">
               Password
             </label>
             <input
@@ -133,7 +134,7 @@ export default function SignUpForm() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="input-alternative p-4"
+              className="input p-3"
               onChange={handlePasswordChange}
             />
             {errors.password && (
@@ -142,13 +143,10 @@ export default function SignUpForm() {
           </div>
           <div
             className={`${
-              displayConfirmPassword ? 'flex' : 'hidden'
-            } flex-col justify-center gap-2`}
+              displayConfirmPassword ? 'block' : 'hidden'
+            } space-y-2`}
           >
-            <label
-              htmlFor="confirmPassword"
-              className="text-green-800 opacity-75"
-            >
+            <label htmlFor="confirmPassword" className="text-slate-500">
               Confirm password
             </label>
             <input
@@ -156,38 +154,38 @@ export default function SignUpForm() {
               id="confirmPassword"
               type="password"
               placeholder="Repeat your password"
-              className="input-alternative p-4"
+              className="input p-3"
             />
             {errors.confirmPassword && (
               <p className="text-red-400">{errors.confirmPassword.message}</p>
             )}
           </div>
-          <div className="col-span-2 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <input
               type="checkbox"
               id="export"
-              className="h-4 w-4 bg-slate-50 accent-green-800"
+              className="size-4 bg-slate-50 transition accent-cyan-600 hover:accent-cyan-600"
               checked={isExportingData}
               onChange={(e) => setExportingData(e.target.checked)}
             />
-            <label htmlFor="export" className="text-green-800 opacity-75">
+            <label htmlFor="export" className="text-sm text-cyan-600">
               Export cart and wished items
             </label>
           </div>
           {registerMutation.isError && (
             <p className="text-red-400">User already exists</p>
           )}
-        </div>
+        </section>
         <button type="submit" className="btn w-full p-3">
           Sign Up
         </button>
       </form>
-      <div className="flex flex-col items-center justify-center text-green-800 opacity-75">
+      <div className="text-center text-sm text-slate-500">
         <p>
           Do you already have an account?{' '}
           <Link
             href="/login"
-            className="font-semibold transition hover:text-lime-700"
+            className="font-semibold transition hover:text-cyan-500"
           >
             Sign In
           </Link>
