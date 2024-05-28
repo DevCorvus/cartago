@@ -156,12 +156,12 @@ export default function ImageUploader({
   }, [imagePreviews]);
 
   return (
-    <div className="relative flex h-96 w-full flex-col gap-1">
+    <section className="relative w-full space-y-1">
       <button
         title="Upload images"
         {...getRootProps()}
         type="button"
-        className="input relative h-4/5"
+        className="input relative h-60"
       >
         <input {...getInputProps()} />
         {isLoading ? (
@@ -169,7 +169,7 @@ export default function ImageUploader({
         ) : (
           <>
             {!selectedImage ? (
-              <span className="mx-auto flex h-full w-60 items-center justify-center opacity-50">
+              <span className="mx-auto flex h-full w-60 items-center justify-center text-slate-500/75">
                 {isDragActive
                   ? 'Drop your files here'
                   : 'Drag and drop some files here or click to select files'}
@@ -195,23 +195,25 @@ export default function ImageUploader({
               </>
             )}
             {selectedImage && (
-              <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center bg-green-100 bg-opacity-25 opacity-0 transition hover:opacity-100">
-                <HiPlusCircle className="text-7xl text-green-300 text-opacity-50" />
+              <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center bg-cyan-100 bg-opacity-25 opacity-0 transition hover:opacity-100">
+                <HiPlusCircle className="text-7xl text-cyan-300 text-opacity-50" />
               </div>
             )}
           </>
         )}
       </button>
-      <span className="text-sm italic opacity-50">Max 5</span>
+      <span className="inline-block text-sm italic text-slate-500/75">
+        Max 5
+      </span>
       {notEnoughImagesError && (
         <p className="mt-1 text-red-400">At least one image is required</p>
       )}
-      <div className="grid flex-1 grid-cols-5 gap-1">
+      <div className="grid h-16 flex-1 grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i} className="relative">
             <button
               type="button"
-              className={`relative h-full w-full rounded border bg-neutral-100 ${
+              className={`size-full relative rounded border bg-neutral-100 ${
                 image.errors
                   ? 'border-red-300 hover:border-red-400 focus:border-red-400'
                   : ''
@@ -241,6 +243,6 @@ export default function ImageUploader({
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

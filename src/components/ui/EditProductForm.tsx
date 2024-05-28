@@ -135,12 +135,12 @@ export default function EditProductForm({ product, categoryTags }: Props) {
   return (
     <form
       onSubmit={submitWrapper}
-      className="flex max-w-sm flex-col items-center justify-center gap-10 rounded-lg border-2 border-gray-50 bg-white p-8 shadow-md"
+      className="w-full max-w-md space-y-6 rounded-lg border-2 border-gray-50 bg-white p-8 shadow-md"
     >
-      <header className="w-full">
-        <h1 className="text-2xl font-bold text-green-800">Edit Product</h1>
+      <header>
+        <h1 className="text-2xl font-bold text-cyan-700">Edit Product</h1>
       </header>
-      <div className="flex w-full flex-col gap-6">
+      <section className="w-full space-y-6">
         <ImageUploader
           defaultImages={product.images}
           addImage={addImage}
@@ -148,8 +148,8 @@ export default function EditProductForm({ product, categoryTags }: Props) {
           setImageUploadError={setImageUploadError}
           notEnoughImagesError={notEnoughImagesError}
         />
-        <div className="flex flex-col gap-2">
-          <label htmlFor="title" className="text-green-800 opacity-75">
+        <div className="space-y-2">
+          <label htmlFor="title" className="text-slate-500">
             Title
           </label>
           <input
@@ -157,14 +157,14 @@ export default function EditProductForm({ product, categoryTags }: Props) {
             id="title"
             type="text"
             placeholder="Enter product title"
-            className="input p-4"
+            className="input p-3"
           />
           {errors.title && (
             <p className="text-red-400">{errors.title.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="description" className="text-green-800 opacity-75">
+        <div className="space-y-2">
+          <label htmlFor="description" className="text-slate-500">
             Description
           </label>
           <textarea
@@ -173,15 +173,15 @@ export default function EditProductForm({ product, categoryTags }: Props) {
             cols={30}
             rows={5}
             placeholder="Enter product description"
-            className="input p-4"
+            className="input p-3"
           />
           {errors.description && (
             <p className="text-red-400">{errors.description.message}</p>
           )}
         </div>
         <div className="flex justify-between">
-          <div className="flex w-[45%] flex-col gap-2">
-            <label htmlFor="price" className="text-green-800 opacity-75">
+          <div className="w-[45%] space-y-2">
+            <label htmlFor="price" className="text-slate-500">
               Price (USD)
             </label>
             <input
@@ -192,14 +192,14 @@ export default function EditProductForm({ product, categoryTags }: Props) {
               step=".01"
               type="number"
               placeholder="Enter product price"
-              className="input p-4"
+              className="input p-3"
             />
             {errors.price && (
               <p className="text-red-400">{errors.price.message}</p>
             )}
           </div>
-          <div className="flex w-[45%] flex-col gap-2">
-            <label htmlFor="stock" className="text-green-800 opacity-75">
+          <div className="w-[45%] space-y-2">
+            <label htmlFor="stock" className="text-slate-500">
               Stock
             </label>
             <input
@@ -212,7 +212,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
               min={1}
               type="number"
               placeholder="Enter product stock"
-              className="input p-4"
+              className="input p-3"
             />
             {errors.stock && (
               <p className="text-red-400">{errors.stock.message}</p>
@@ -226,7 +226,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
           notEnoughCategoriesError={notEnoughCategoriesError}
           setNotEnoughCategoriesError={setNotEnoughCategoriesError}
         />
-      </div>
+      </section>
       <button
         type="submit"
         className={`flex w-full items-center justify-center gap-2 p-3 ${
