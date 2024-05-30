@@ -30,7 +30,7 @@ export default function NavBar() {
             <li className="flex items-center justify-center">
               <Link
                 href="/cart"
-                className="rounded-full bg-cyan-50 p-1 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
+                className="rounded-full bg-cyan-50 p-1 text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
               >
                 <HiShoppingCart />
               </Link>
@@ -39,13 +39,13 @@ export default function NavBar() {
               <button
                 type="button"
                 onClick={() => setShowMenu((prev) => !prev)}
-                className="rounded-full bg-cyan-50 p-1 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
+                className="rounded-full bg-cyan-50 p-1 text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
               >
                 <HiUser />
               </button>
             </li>
           </ul>
-          {showMenu && <DropdownMenu setShowMenu={setShowMenu} />}
+          {showMenu && <DropdownMenu close={() => setShowMenu(false)} />}
         </nav>
       </div>
     </div>

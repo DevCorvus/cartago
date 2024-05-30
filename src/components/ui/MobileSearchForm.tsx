@@ -7,11 +7,18 @@ import { getCategoryTags } from '@/data/category';
 import { toastError } from '@/lib/toast';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { HiOutlineEmojiSad } from 'react-icons/hi';
-import { ImSpinner8 } from 'react-icons/im';
-import { useClickOutside } from '@/hooks/useClickOutside';
 import { useSearchFormStore } from '@/stores/useSearchFormStore';
+import { ImSpinner8 } from 'react-icons/im';
 
-export default function SearchForm() {
+interface Props {
+  visible: boolean;
+}
+
+const menuStyles = {
+  boxShadow: '0 0 6px 1px rgb(0 0 0 / 0.1)',
+};
+
+export default function MobileSearchForm({ visible }: Props) {
   const { input, setInput, categoryTags, setCategoryTags } =
     useSearchFormStore();
 
@@ -70,15 +77,21 @@ export default function SearchForm() {
     }
   };
 
-  const ref = useClickOutside<HTMLDivElement>(() => setShowMenu(false));
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const inputElement = inputRef.current;
+
+    if (visible && inputElement) {
+      inputElement.focus();
+    }
+  }, [visible]);
 
   return (
-    <div
-      ref={ref}
-      className="max-w-72 relative hidden flex-1 font-sans font-normal text-slate-700 md:block"
-    >
-      <section className="group flex items-center rounded-full border border-transparent bg-slate-50 py-2 pl-4 shadow-inner shadow-slate-300 outline-none focus-within:border-cyan-500">
+    <div className="relative flex w-full flex-col-reverse font-sans text-slate-600">
+      <section className="group flex items-center rounded-full border border-slate-200 bg-white py-2 pl-4 text-black shadow-md focus-within:border-cyan-500">
         <input
+          ref={inputRef}
           type="text"
           className="w-full resize-none bg-transparent"
           placeholder="Search"
@@ -99,9 +112,12 @@ export default function SearchForm() {
         </button>
       </section>
       {showMenu && (
-        <div className="absolute top-12 w-full rounded-b-lg border-t border-slate-100 bg-slate-50 px-3 py-2 shadow-md">
+        <div
+          style={menuStyles}
+          className="mx-auto w-[88%] rounded-t-lg border border-slate-200 bg-slate-50 px-3 py-2 shadow-md"
+        >
           {categoryTags.length === 0 ? (
-            <p className="flex items-center justify-center gap-1 text-sm text-slate-500">
+            <p className="flex items-center justify-center gap-1 text-sm">
               Nothing found <HiOutlineEmojiSad className="text-base" />
             </p>
           ) : (

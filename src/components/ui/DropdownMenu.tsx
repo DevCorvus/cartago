@@ -4,7 +4,6 @@ import { hasPermissions } from '@/shared/auth/auth.utils';
 import { Permissions } from '@/shared/auth/rbac';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { Dispatch, SetStateAction } from 'react';
 import {
   HiMiniHeart,
   HiMiniShoppingBag,
@@ -14,19 +13,19 @@ import {
   HiShoppingCart,
 } from 'react-icons/hi2';
 
-interface MenuProps {
-  setShowMenu: Dispatch<SetStateAction<boolean>>;
+interface Props {
+  close(): void;
 }
 
-export default function DropdownMenu({ setShowMenu }: MenuProps) {
+export default function DropdownMenu({ close }: Props) {
   const user = useUser();
 
-  const ref = useClickOutside<HTMLDivElement>(() => setShowMenu(false));
-
-  const handleSubmit = async () => {
+  const handleLogout = async () => {
     await signOut({ redirect: true, callbackUrl: '/' });
-    setShowMenu(false);
+    close();
   };
+
+  const ref = useClickOutside<HTMLDivElement>(close);
 
   return (
     <div ref={ref} className="min-w-48 absolute right-0 top-12">
@@ -39,7 +38,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                   <Link
                     href="/login"
                     className="btn inline-block w-full py-2"
-                    onClick={() => setShowMenu(false)}
+                    onClick={close}
                   >
                     Login
                   </Link>
@@ -47,7 +46,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                 <li className="text-center">
                   <Link
                     href="/register"
-                    onClick={() => setShowMenu(false)}
+                    onClick={close}
                     className="flex w-full justify-center rounded-full bg-slate-200/50 py-2 text-slate-600 transition hover:text-cyan-600 focus:text-cyan-600"
                   >
                     Register
@@ -63,7 +62,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
             <li>
               <Link
                 href="/cart"
-                onClick={() => setShowMenu(false)}
+                onClick={close}
                 className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
               >
                 <HiShoppingCart />
@@ -73,7 +72,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
             <li>
               <Link
                 href="/items/wished"
-                onClick={() => setShowMenu(false)}
+                onClick={close}
                 className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
               >
                 <HiMiniHeart />
@@ -86,7 +85,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                   <li>
                     <Link
                       href="/seller/products"
-                      onClick={() => setShowMenu(false)}
+                      onClick={close}
                       className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                     >
                       <HiMiniShoppingBag />
@@ -98,7 +97,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                   <li>
                     <Link
                       href="/admin/categories"
-                      onClick={() => setShowMenu(false)}
+                      onClick={close}
                       className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                     >
                       <HiMiniTag />
@@ -109,7 +108,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                 <li>
                   <Link
                     href="/account/orders"
-                    onClick={() => setShowMenu(false)}
+                    onClick={close}
                     className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                   >
                     <HiMiniTruck />
@@ -119,7 +118,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
                 <li>
                   <Link
                     href="/account"
-                    onClick={() => setShowMenu(false)}
+                    onClick={close}
                     className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                   >
                     <HiMiniUser />
@@ -137,7 +136,7 @@ export default function DropdownMenu({ setShowMenu }: MenuProps) {
               <ul>
                 <li>
                   <button
-                    onClick={handleSubmit}
+                    onClick={handleLogout}
                     className="flex w-full justify-center rounded-full bg-slate-200/50 py-2 text-slate-600 transition hover:text-cyan-600 focus:text-cyan-600"
                   >
                     Sign out

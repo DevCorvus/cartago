@@ -10,6 +10,7 @@ import { cartService, wishedItemService } from '@/server/services';
 import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
 import { Toaster } from 'react-hot-toast';
 import NextTopLoader from 'nextjs-toploader';
+import MobileControls from '@/components/ui/MobileControls';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -46,6 +47,7 @@ export default async function RootLayout({
               <NavBar />
               <main className="min-h-screen w-full">{children}</main>
               <div id="modal-container" />
+              <MobileControls />
               <Toaster position="bottom-right" />
             </UserProvider>
           </ReactQueryProvider>
