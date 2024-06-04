@@ -32,9 +32,21 @@ export default function AddOrderForm({ order }: Props) {
 
   const { isLoading, isError, data } = useMinimalAddresses();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = useForm<CreatePaymentDto>({
+    resolver: zodResolver(createPaymentSchema),
+  });
+
   useEffect(() => {
-    if (data) setAddresses(data);
-  }, [data]);
+    if (data) {
+      setAddresses(data);
+      setValue('address', data.find((address) => address.default)?.id || '');
+    }
+  }, [data, setValue]);
 
   useEffect(() => {
     if (isError) toastError();
@@ -57,15 +69,10 @@ export default function AddOrderForm({ order }: Props) {
         },
       ];
     });
+    setTimeout(() => {
+      setValue('address', newAddress.id);
+    }, 100);
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<CreatePaymentDto>({
-    resolver: zodResolver(createPaymentSchema),
-  });
 
   const paymentMutation = usePayment();
 
@@ -96,10 +103,10 @@ export default function AddOrderForm({ order }: Props) {
     >
       <div className="space-y-10">
         <header className="text-2xl font-bold text-cyan-700">
-          <h2 className="flex items-center justify-between gap-2">
+          <h1 className="flex items-center justify-between gap-2">
             Placing order
             <OrderStatusTag status={order.status} className="text-lg" />
-          </h2>
+          </h1>
         </header>
         <section className="text-sm">
           <table>
@@ -129,7 +136,7 @@ export default function AddOrderForm({ order }: Props) {
         </section>
         <section className="space-y-2">
           <header className="flex items-center justify-between text-lg font-semibold text-cyan-700">
-            <h3>Shipping address</h3>
+            <h2>Shipping address</h2>
             <div>
               <button
                 onClick={() => setShowAddressForm(true)}
@@ -143,13 +150,7 @@ export default function AddOrderForm({ order }: Props) {
           </header>
           <div>
             <div className="flex gap-2">
-              <select
-                className="input p-3"
-                {...register('address')}
-                defaultValue={
-                  addresses.find((address) => address.default)?.id || ''
-                }
-              >
+              <select className="input p-3" {...register('address')}>
                 <option value="" disabled>
                   Select address
                 </option>
@@ -167,7 +168,7 @@ export default function AddOrderForm({ order }: Props) {
         </section>
         <section className="space-y-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Payment method</h3>
+            <h2>Payment method</h2>
           </header>
           <div>
             <select
@@ -189,7 +190,7 @@ export default function AddOrderForm({ order }: Props) {
         </section>
         <section className="space-y-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Items</h3>
+            <h2>Items</h2>
           </header>
           {order.items.map((item) => (
             <div
@@ -234,7 +235,7 @@ export default function AddOrderForm({ order }: Props) {
       <div className="flex w-full flex-col gap-10">
         <section className="flex flex-col gap-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Summary</h3>
+            <h2>Summary</h2>
           </header>
           <div className="flex flex-col gap-3 rounded-lg bg-slate-50/75 p-6 shadow-md">
             <div className="flex flex-col gap-1">
