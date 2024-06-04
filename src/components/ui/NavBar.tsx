@@ -6,10 +6,13 @@ import { HiShoppingCart, HiUser } from 'react-icons/hi2';
 import { useEffect, useState } from 'react';
 import DropdownMenu from './DropdownMenu';
 import CartagoIcon from './svg/CartagoIcon';
+import { useCartStore } from '@/stores/useCartStore';
 
 export default function NavBar() {
   const [showMenu, setShowMenu] = useState(false);
   const [blurryBackground, setBlurryBackground] = useState(false);
+
+  const cartItemsLength = useCartStore((state) => state.productIds.length);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,8 +47,15 @@ export default function NavBar() {
           <li className="flex items-center justify-center">
             <Link
               href="/cart"
-              className="rounded-full bg-cyan-50 p-1 text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
+              className="relative rounded-full bg-cyan-50 p-1 text-cyan-600 shadow-sm transition hover:text-cyan-500 hover:shadow-md focus:text-cyan-500 focus:shadow-md"
             >
+              {cartItemsLength > 0 && (
+                <div className="size-4 absolute -right-1 -top-1 flex scale-90 items-center justify-center rounded-full bg-rose-400">
+                  <span className="text-xs text-slate-50">
+                    {cartItemsLength}
+                  </span>
+                </div>
+              )}
               <HiShoppingCart />
             </Link>
           </li>
