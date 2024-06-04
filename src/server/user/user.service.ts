@@ -50,6 +50,12 @@ export class UserService {
             },
           },
         });
+      } else {
+        await tx.cart.create({
+          data: {
+            userId: newUser.id,
+          },
+        });
       }
 
       if (data.wishedItems) {
