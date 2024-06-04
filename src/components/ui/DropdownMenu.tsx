@@ -28,7 +28,7 @@ export default function DropdownMenu({ close }: Props) {
   const ref = useClickOutside<HTMLDivElement>(close);
 
   return (
-    <div ref={ref} className="min-w-48 absolute right-0 top-12">
+    <div ref={ref} className="min-w-48 absolute right-0 top-10 md:top-12">
       <div className="space-y-4 rounded-b-lg border-t border-slate-100 bg-slate-50 p-6 font-normal shadow-md">
         {!user && (
           <>

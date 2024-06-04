@@ -135,15 +135,15 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
     <Modal close={close}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-gray-50 bg-white p-10 shadow-md lg:container lg:gap-6 lg:rounded-lg lg:p-12"
+        className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-neutral-100 bg-white p-6 shadow-md lg:container sm:p-8 md:p-10 lg:gap-6 lg:rounded-lg lg:p-12"
       >
-        <header>
-          <h2 className="text-xl font-bold text-green-800">
+        <header className="col-span-full">
+          <span className="text-xl font-bold text-cyan-700">
             Edit {address.nickname}
-          </h2>
+          </span>
         </header>
         <div className="col-span-2 space-y-2">
-          <label htmlFor="nickname" className="text-green-800 opacity-75">
+          <label htmlFor="nickname" className="text-slate-500">
             Nickname
           </label>
           <input
@@ -158,7 +158,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="contact-name" className="text-green-800 opacity-75">
+          <label htmlFor="contact-name" className="text-slate-500">
             Contact name
           </label>
           <input
@@ -173,11 +173,11 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="phone-number" className="text-green-800 opacity-75">
+          <label htmlFor="phone-number" className="text-slate-500">
             Phone number
           </label>
-          <div className="relative">
-            <div className="input flex items-center gap-2 p-3 focus-within:border-green-800">
+          <div className="relative w-full">
+            <div className="input flex items-center gap-2 p-3 focus-within:border-cyan-500">
               <div>
                 <button
                   ref={phoneCodesRef}
@@ -199,7 +199,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
                   </>
                 </button>
               </div>
-              <div>
+              <div className="flex-1">
                 <input
                   {...register('phoneNumber')}
                   type="text"
@@ -237,7 +237,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="relative col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="country" className="text-green-800 opacity-75">
+          <label htmlFor="country" className="text-slate-500">
             Country
           </label>
           <button
@@ -265,12 +265,12 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
             </>
           </button>
           {showCountries && (
-            <ul className="absolute top-[5.5rem] z-10 h-80 w-full overflow-y-auto rounded-md bg-slate-50 p-2 shadow-md">
+            <ul className="absolute top-20 z-10 h-80 w-full overflow-y-auto rounded-lg bg-slate-50 p-2 shadow-md">
               {countries.map((country) => (
                 <li key={country.id}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-1 py-1 text-sm text-slate-800 transition hover:text-green-700 focus:text-green-700"
+                    className="flex w-full items-center gap-1 py-1 text-sm transition hover:text-cyan-600 focus:text-cyan-600"
                     onClick={() => handleSelectCountry(country)}
                   >
                     <Image
@@ -293,7 +293,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="state" className="text-green-800 opacity-75">
+          <label htmlFor="state" className="text-slate-500">
             State
           </label>
           <select
@@ -321,7 +321,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="city" className="text-green-800 opacity-75">
+          <label htmlFor="city" className="text-slate-500">
             City
           </label>
           <input
@@ -334,7 +334,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           {errors.city && <p className="text-red-400">{errors.city.message}</p>}
         </div>
         <div className="col-span-2 space-y-2 lg:col-span-1">
-          <label htmlFor="postal-code" className="text-green-800 opacity-75">
+          <label htmlFor="postal-code" className="text-slate-500">
             Zip/Postal code
           </label>
           <input
@@ -349,7 +349,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2">
-          <label htmlFor="street" className="text-green-800 opacity-75">
+          <label htmlFor="street" className="text-slate-500">
             Street
           </label>
           <input
@@ -364,11 +364,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
           )}
         </div>
         <div className="col-span-2 space-y-2">
-          <label
-            hidden
-            htmlFor="street-details"
-            className="text-green-800 opacity-75"
-          >
+          <label hidden htmlFor="street-details" className="text-slate-500">
             Street details
           </label>
           <input
@@ -382,18 +378,18 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
             <p className="text-red-400">{errors.streetDetails.message}</p>
           )}
         </div>
-        <div className="col-span-2 flex items-center gap-2">
+        <div className="col-span-2 mt-2 flex items-center gap-2">
           <input
             {...register('default')}
             type="checkbox"
             id="default"
-            className="h-4 w-4 bg-slate-50 accent-green-800"
+            className="size-4 bg-slate-50 accent-cyan-600"
           />
-          <label htmlFor="default" className="text-green-800 opacity-75">
+          <label htmlFor="default" className="text-slate-500">
             Set as default
           </label>
         </div>
-        <div className="col-span-2 flex items-center gap-2">
+        <div className="col-span-2 mt-4 flex items-center gap-2">
           <button
             type="submit"
             className={`flex items-center gap-2 px-5 py-2 ${

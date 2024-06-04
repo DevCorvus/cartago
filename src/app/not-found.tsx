@@ -1,14 +1,21 @@
 import Link from 'next/link';
+import { HiOutlineEmojiSad } from 'react-icons/hi';
 
 export default function NotFound() {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 pt-24">
-      <header className="text-3xl font-bold text-green-800">
-        <h1>Not Found</h1>
-      </header>
-      <Link href="/" className="text-green-700 transition hover:text-green-500">
-        Go back to Home
-      </Link>
+    <div className="absolute inset-0 flex h-screen w-screen items-center justify-center">
+      <section className="max-w-md space-y-3 rounded-lg text-center text-slate-400">
+        <header className="space-y-1">
+          <HiOutlineEmojiSad className="mx-auto text-5xl" />
+          <h1 className="font-semibold">Not found</h1>
+        </header>
+        <Link
+          href="/items"
+          className="inline-block w-56 text-xs italic hover:underline"
+        >
+          Go back Home
+        </Link>
+      </section>
     </div>
   );
 }

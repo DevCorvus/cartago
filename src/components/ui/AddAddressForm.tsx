@@ -110,9 +110,9 @@ export function AddAddressForm({ addAddress, close }: Props) {
       <form
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
-        className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-neutral-100 bg-white p-10 shadow-md lg:container lg:gap-6 lg:rounded-lg lg:p-12"
+        className="grid w-full grid-cols-2 gap-4 overflow-y-auto border-2 border-neutral-100 bg-white p-6 shadow-md lg:container sm:p-8 md:p-10 lg:gap-6 lg:rounded-lg lg:p-12"
       >
-        <header>
+        <header className="col-span-full">
           <span className="text-xl font-bold text-cyan-700">New address</span>
         </header>
         <div className="col-span-2 space-y-2">
@@ -175,7 +175,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
                   </>
                 </button>
               </div>
-              <div>
+              <div className="flex-1">
                 <input
                   {...register('phoneNumber')}
                   type="text"
@@ -243,7 +243,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             </>
           </button>
           {showCountries && (
-            <ul className="absolute top-[5.5rem] z-10 h-80 w-full overflow-y-auto rounded-lg bg-slate-50 p-2 shadow-md">
+            <ul className="absolute top-20 z-10 h-80 w-full overflow-y-auto rounded-lg bg-slate-50 p-2 shadow-md">
               {countries.map((country) => (
                 <li key={country.id}>
                   <button
@@ -356,7 +356,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             <p className="text-red-400">{errors.streetDetails.message}</p>
           )}
         </div>
-        <div className="col-span-2 flex items-center gap-2">
+        <div className="col-span-2 mt-2 flex items-center gap-2">
           <input
             {...register('default')}
             type="checkbox"
@@ -367,7 +367,7 @@ export function AddAddressForm({ addAddress, close }: Props) {
             Set as default
           </label>
         </div>
-        <div className="col-span-2 flex items-center gap-2">
+        <div className="col-span-2 mt-4 flex items-center gap-2">
           <button
             type="submit"
             className={`flex items-center gap-2 px-5 py-2 ${

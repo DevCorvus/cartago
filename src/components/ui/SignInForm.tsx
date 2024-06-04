@@ -41,10 +41,10 @@ export function SignInForm() {
   };
 
   return (
-    <div className="space-y-12 w-full max-w-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="mx-auto w-full max-w-md space-y-12 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-10 p-10 rounded-lg shadow-md bg-white"
+        className="space-y-10 rounded-lg bg-white p-10 shadow-md"
       >
         <header className="w-full">
           <h1 className="text-2xl font-bold text-cyan-700">Login</h1>

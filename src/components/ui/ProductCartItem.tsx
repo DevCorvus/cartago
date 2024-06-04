@@ -47,7 +47,8 @@ export default function ProductCartItem({
           src={'/images/' + product.images[0].path}
           alt={`${product.title} image`}
           fill={true}
-          className="object-contain"
+          sizes="200px"
+          className="object-cover"
         />
       </Link>
       <div className="flex flex-1 flex-col justify-around px-2">
@@ -59,7 +60,7 @@ export default function ProductCartItem({
           >
             {product.title}
           </Link>
-          <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
+          <span className="rounded-xl bg-slate-100 px-1 text-sm font-semibold text-slate-700 shadow-sm md:text-base">
             {formatMoney(product.price)}
           </span>
         </div>

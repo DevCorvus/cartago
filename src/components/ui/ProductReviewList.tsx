@@ -7,6 +7,7 @@ import AddReviewForm from './AddReviewForm';
 import ProductReviewItem from './ProductReviewItem';
 import { useReviews } from '@/data/review';
 import SomethingWentWrong from './SomethingWentWrong';
+import { HiOutlineEmojiSad } from 'react-icons/hi';
 
 interface Props {
   productId: string;
@@ -39,7 +40,12 @@ export default function ProductReviewList({ productId }: Props) {
     );
   }, []);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div className="relative">
+        <Loading />
+      </div>
+    );
   if (isError) return <SomethingWentWrong />;
 
   return (
@@ -52,13 +58,19 @@ export default function ProductReviewList({ productId }: Props) {
       {canReview && (
         <AddReviewForm productId={productId} addReview={addReview} />
       )}
-      <ul className="space-y-3">
-        {reviews.map((review, i) => (
-          <li key={i}>
-            <ProductReviewItem review={review} updateReview={updateReview} />
-          </li>
-        ))}
-      </ul>
+      {reviews.length > 0 ? (
+        <ul className="space-y-3">
+          {reviews.map((review, i) => (
+            <li key={i}>
+              <ProductReviewItem review={review} updateReview={updateReview} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="flex items-center justify-center gap-1 rounded-lg bg-slate-200/50 p-8 text-sm text-slate-500">
+          No reviews yet <HiOutlineEmojiSad className="text-base" />
+        </p>
+      )}
     </section>
   );
 }

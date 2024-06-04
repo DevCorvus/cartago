@@ -50,28 +50,48 @@ export default function ProductScroller({ categoryId }: Props) {
     }
   }, [isVisible, fetchNextPage]);
 
+  const products = useMemo(() => data?.pages.flat() || [], [data]);
+
   return (
     <div>
-      <ProductList products={data?.pages.flat() || []} />
+      <ProductList products={products} />
       <div className="mt-8 flex justify-center">
-        {isLoading && <Loading />}
-        {!isLoading && hasNextPage && (
+        {isLoading ? (
+          <div className="relative">
+            <Loading />
+          </div>
+        ) : (
           <>
-            {showLoadMoreBtn ? (
-              <button onClick={() => fetchNextPage()} className="btn px-3 py-2">
-                Load more
-              </button>
+            {products.length > 0 ? (
+              <>
+                {hasNextPage ? (
+                  <>
+                    {showLoadMoreBtn ? (
+                      <button
+                        onClick={() => fetchNextPage()}
+                        className="btn px-3 py-2"
+                      >
+                        Load more
+                      </button>
+                    ) : (
+                      <div ref={observerTarget}></div>
+                    )}
+                  </>
+                ) : (
+                  <p className="flex items-center gap-1 text-sm text-slate-500">
+                    You reached the end
+                    <HiOutlineEmojiSad className="text-base" />
+                  </p>
+                )}
+              </>
             ) : (
-              <div ref={observerTarget}></div>
+              <p className="flex w-full items-center justify-center gap-1 rounded-lg bg-slate-200/50 p-8 text-sm text-slate-500">
+                Nothing found here <HiOutlineEmojiSad className="text-base" />
+              </p>
             )}
+            {isError && <SomethingWentWrong />}
           </>
         )}
-        {!isLoading && !hasNextPage && (
-          <p className="flex items-center gap-1 text-sm text-slate-500">
-            You reached the end <HiOutlineEmojiSad className="text-base" />
-          </p>
-        )}
-        {isError && <SomethingWentWrong />}
       </div>
     </div>
   );

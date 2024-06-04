@@ -101,7 +101,7 @@ export default function HeroImage() {
     <section className="relative flex h-full text-xl text-lime-900 md:text-4xl">
       <button
         type="button"
-        className="bg-opacity-35 absolute left-0 z-10 flex h-full w-8 items-center justify-center bg-neutral-200 text-white opacity-0 transition duration-300 hover:opacity-100 md:w-16"
+        className="bg-neutral-200/35 absolute left-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
         onClick={handleLeft}
       >
         <HiChevronLeft />
@@ -140,7 +140,7 @@ export default function HeroImage() {
       </div>
       <button
         type="button"
-        className="bg-opacity-35 absolute right-0 z-10 flex h-full w-8 items-center justify-center bg-neutral-200 text-white opacity-0 transition duration-300 hover:opacity-100 md:w-16"
+        className="bg-neutral-200/35 absolute right-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
         onClick={handleRight}
       >
         <HiChevronRight />

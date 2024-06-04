@@ -120,12 +120,12 @@ export default function CategorySlider({ categories, skip }: Props) {
       <button
         type="button"
         onClick={handleSlideLeftClick}
-        className="rounded-full bg-white p-2 text-slate-700 shadow-md transition hover:text-cyan-700"
+        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 md:p-2 md:text-base"
       >
         <HiChevronLeft />
       </button>
       <div
-        className="overflow-hidden rounded-full py-2.5"
+        className="overflow-hidden rounded-full py-2 md:py-5"
         ref={sliderContainerRef}
       >
         <ul
@@ -138,7 +138,7 @@ export default function CategorySlider({ categories, skip }: Props) {
                 <li key={category.id}>
                   <Link
                     href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full bg-white px-2 py-1 text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500"
+                    className="text-nowrap rounded-full bg-white px-2 py-1.5 text-sm text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500 md:text-base"
                   >
                     {capitalize(category.title)}
                   </Link>
@@ -151,7 +151,7 @@ export default function CategorySlider({ categories, skip }: Props) {
                 <li key={`${category.id}-duplicate`} aria-hidden={true}>
                   <Link
                     href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full bg-white px-2 py-1 text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500"
+                    className="text-nowrap rounded-full bg-white px-2 py-1.5 text-sm text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500 md:text-base"
                   >
                     {capitalize(category.title)}
                   </Link>
@@ -163,7 +163,7 @@ export default function CategorySlider({ categories, skip }: Props) {
       <button
         type="button"
         onClick={handleSlideRightClick}
-        className="rounded-full bg-white p-2 text-slate-700 shadow-md transition hover:text-cyan-700"
+        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 md:p-2 md:text-base"
       >
         <HiChevronRight />
       </button>

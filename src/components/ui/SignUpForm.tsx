@@ -85,10 +85,10 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="space-y-12 w-full max-w-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="mx-auto w-full max-w-md space-y-12 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-10 p-10 rounded-lg shadow-md bg-white"
+        className="space-y-10 rounded-lg bg-white p-10 shadow-md"
       >
         <header className="w-full">
           <h1 className="text-2xl font-bold text-cyan-700">Register</h1>
@@ -164,11 +164,11 @@ export default function SignUpForm() {
             <input
               type="checkbox"
               id="export"
-              className="size-4 bg-slate-50 transition accent-cyan-600 hover:accent-cyan-600"
+              className="h-4 w-4 bg-slate-50 accent-cyan-600"
               checked={isExportingData}
               onChange={(e) => setExportingData(e.target.checked)}
             />
-            <label htmlFor="export" className="text-sm text-cyan-600">
+            <label htmlFor="export" className="text-slate-500">
               Export cart and wished items
             </label>
           </div>

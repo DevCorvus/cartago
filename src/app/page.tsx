@@ -8,10 +8,10 @@ export default async function Home() {
 
   return (
     <div>
-      <div className="h-[75vh] pt-14 md:h-[50vh] xl:h-[40vh] 2xl:h-[30vh]">
+      <div className="h-[75vh] pt-10 md:h-[50vh] md:pt-14 xl:h-[40vh] 2xl:h-[30vh]">
         <HeroImage />
       </div>
-      <div className="container mx-auto space-y-6 p-6">
+      <div className="container mx-auto space-y-4 p-4">
         <CategorySlider categories={categories} />
         <ProductScroller />
       </div>
