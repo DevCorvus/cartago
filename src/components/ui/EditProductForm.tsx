@@ -13,9 +13,9 @@ import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schem
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getMoneyString } from '@/lib/dinero';
-import { ImSpinner8 } from 'react-icons/im';
 import { useUpdateProduct } from '@/data/product';
 import { toastError } from '@/lib/toast';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   product: ProductDto;
@@ -227,16 +227,13 @@ export default function EditProductForm({ product, categoryTags }: Props) {
           setNotEnoughCategoriesError={setNotEnoughCategoriesError}
         />
       </section>
-      <button
-        type="submit"
+      <SubmitButton
+        className="w-full p-3"
         disabled={isSubmitting}
-        className={`flex w-full items-center justify-center gap-2 p-3 ${
-          isSubmitting ? 'btn-disabled' : 'btn'
-        }`}
+        placeholder="Applying"
       >
-        {isSubmitting && <ImSpinner8 className="animate-spin" />}
-        {isSubmitting ? 'Applying...' : 'Apply'}
-      </button>
+        Apply
+      </SubmitButton>
     </form>
   );
 }

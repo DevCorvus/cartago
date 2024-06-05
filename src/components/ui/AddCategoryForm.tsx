@@ -11,7 +11,7 @@ import { useCreateCategory } from '@/data/category';
 import { toastError } from '@/lib/toast';
 import Modal from './Modal';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   addCategory(data: CategoryDto): void;
@@ -99,14 +99,13 @@ export default function AddCategoryForm({ addCategory, close }: Props) {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="submit"
+          <SubmitButton
+            className="px-5 py-2"
             disabled={isSubmitting}
-            className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-5 py-2`}
+            placeholder="Creating"
           >
-            {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            {isSubmitting ? 'Creating...' : 'Create'}
-          </button>
+            Create
+          </SubmitButton>
           <button
             type="button"
             onClick={close}

@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPaymentSchema } from '@/shared/schemas/payment.schema';
-import { ImSpinner8 } from 'react-icons/im';
 import { formatDate } from '@/utils/formatDate';
 import OrderStatusTag from './OrderStatusTag';
 import Link from 'next/link';
@@ -20,6 +19,7 @@ import { useMinimalAddresses } from '@/data/address';
 import { usePayment } from '@/data/order';
 import { toastError } from '@/lib/toast';
 import Loading from './Loading';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   order: CheckoutOrderDto;
@@ -258,14 +258,13 @@ export default function AddOrderForm({ order }: Props) {
           </div>
         </section>
         <div className="flex items-center gap-2">
-          <button
-            type="submit"
-            className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex items-center gap-2 px-3 py-2`}
+          <SubmitButton
+            className="px-3 py-2"
             disabled={isSubmitting}
+            placeholder="Placing order"
           >
-            {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            {isSubmitting ? 'Placing order' : 'Place order'}
-          </button>
+            Place order
+          </SubmitButton>
           <Link href="/cart" className="btn-alternative px-3 py-2">
             Cancel
           </Link>

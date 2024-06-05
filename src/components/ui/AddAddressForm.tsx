@@ -8,12 +8,12 @@ import { CountryDto } from '@/shared/dtos/country.dto';
 import Image from 'next/image';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { ImSpinner8 } from 'react-icons/im';
 import LoadingModal from './LoadingModal';
 import { EXCLUDED_COUNTRY_PHONES } from '@/utils/constants';
 import { useCountries } from '@/data/country';
 import { useCreateAddress } from '@/data/address';
 import { toastError } from '@/lib/toast';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   addAddress(newAddress: AddressDto): void;
@@ -368,16 +368,13 @@ export function AddAddressForm({ addAddress, close }: Props) {
           </label>
         </div>
         <div className="col-span-2 mt-4 flex items-center gap-2">
-          <button
-            type="submit"
+          <SubmitButton
+            className="px-5 py-2"
             disabled={isSubmitting}
-            className={`flex items-center gap-2 px-5 py-2 ${
-              isSubmitting ? 'btn-disabled' : 'btn'
-            }`}
+            placeholder="Creating"
           >
-            {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            {isSubmitting ? 'Creating...' : 'Create'}
-          </button>
+            Create
+          </SubmitButton>
           <button
             type="button"
             onClick={close}

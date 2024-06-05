@@ -9,9 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schema';
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
-import { ImSpinner8 } from 'react-icons/im';
 import { useCreateProduct } from '@/data/product';
 import { toastError } from '@/lib/toast';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   categoryTags: CategoryTagDto[];
@@ -199,16 +199,13 @@ export default function AddProductForm({ categoryTags }: Props) {
           setNotEnoughCategoriesError={setNotEnoughCategoriesError}
         />
       </section>
-      <button
-        type="submit"
+      <SubmitButton
+        className="w-full p-3"
         disabled={isSubmitting}
-        className={`flex w-full items-center justify-center gap-2 p-3 ${
-          isSubmitting ? 'btn-disabled' : 'btn'
-        }`}
+        placeholder="Creating"
       >
-        {isSubmitting && <ImSpinner8 className="animate-spin" />}
-        {isSubmitting ? 'Creating...' : 'Create'}
-      </button>
+        Create
+      </SubmitButton>
     </form>
   );
 }

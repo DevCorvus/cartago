@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import RatingInput from './RatingInput';
 import { useUpdateReview } from '@/data/review';
 import { toastError } from '@/lib/toast';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   review: ReviewDto;
@@ -91,16 +91,13 @@ export default function EditReviewForm({ review, updateReview, close }: Props) {
         )}
       </div>
       <div className="flex gap-2">
-        <button
-          type="submit"
+        <SubmitButton
+          className="px-5 py-2"
           disabled={updateReviewMutation.isPending}
-          className={`${updateReviewMutation.isPending ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-5 py-2`}
+          placeholder="Applying"
         >
-          {updateReviewMutation.isPending && (
-            <ImSpinner8 className="animate-spin" />
-          )}
-          {updateReviewMutation.isPending ? 'Applying...' : 'Apply'}
-        </button>
+          Apply
+        </SubmitButton>
         <button
           type="button"
           className="btn-alternative px-3 py-2"

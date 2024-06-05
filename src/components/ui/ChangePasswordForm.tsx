@@ -7,8 +7,8 @@ import { updateUserPasswordSchema } from '@/shared/schemas/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ImSpinner8 } from 'react-icons/im';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import SubmitButton from './SubmitButton';
 
 export default function ChangePasswordForm() {
   const router = useRouter();
@@ -92,14 +92,13 @@ export default function ChangePasswordForm() {
         </div>
       </div>
       <div>
-        <button
-          type="submit"
+        <SubmitButton
+          className="w-full p-3"
           disabled={isSubmitting}
-          className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-1 p-3`}
+          placeholder="Updating"
         >
-          {isSubmitting && <ImSpinner8 className="animate-spin" />}
-          {isSubmitting ? 'Updating' : 'Update'}
-        </button>
+          Update
+        </SubmitButton>
       </div>
     </form>
   );

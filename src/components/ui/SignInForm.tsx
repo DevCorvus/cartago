@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 export function SignInForm() {
   const router = useRouter();
@@ -91,16 +91,13 @@ export function SignInForm() {
             <p className="text-red-400">Wrong email or password</p>
           )}
         </section>
-        <button
-          type="submit"
+        <SubmitButton
+          className="w-full p-3"
           disabled={isLoading}
-          className={`flex w-full items-center justify-center gap-2 p-3 ${
-            isLoading ? 'btn-disabled' : 'btn'
-          }`}
+          placeholder="Signin In"
         >
-          {isLoading && <ImSpinner8 className="animate-spin" />}
-          {isLoading ? 'Signin In' : 'Sign In'}
-        </button>
+          Sign In
+        </SubmitButton>
       </form>
       <div className="text-center text-sm text-slate-500">
         <p>

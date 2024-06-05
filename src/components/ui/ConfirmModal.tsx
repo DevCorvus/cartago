@@ -1,7 +1,7 @@
 import { useClickOutside } from '@/hooks/useClickOutside';
 import Modal from './Modal';
 import { FormEvent, useState } from 'react';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   action: () => Promise<void>;
@@ -33,14 +33,13 @@ export default function ConfirmModal({ action, close }: Props) {
           <span>Are you sure?</span>
         </header>
         <div className="flex gap-2">
-          <button
-            type="submit"
+          <SubmitButton
+            className="px-2 py-1.5"
             disabled={isLoading}
-            className={`${isLoading ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-2 py-1.5`}
+            placeholder="Confirming"
           >
-            {isLoading && <ImSpinner8 className="animate-spin" />}
-            {isLoading ? 'Confirming...' : 'Confirm'}
-          </button>
+            Confirm
+          </SubmitButton>
           <button
             type="button"
             onClick={close}

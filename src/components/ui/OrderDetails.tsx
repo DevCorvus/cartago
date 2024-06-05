@@ -15,7 +15,7 @@ import PaymentStatusTag from './PaymentStatusTag';
 import Link from 'next/link';
 import { useConfirmDelivery } from '@/data/order';
 import { toastError } from '@/lib/toast';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   order: OrderDto;
@@ -179,23 +179,14 @@ export default function OrderDetails({ order }: Props) {
       </div>
       {order.status === 'SHIPPED' && (
         <form onSubmit={handleSubmit}>
-          <button
-            type="submit"
-            className={`${confirmDeliveryMutation.isPending ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
+          <SubmitButton
+            className="w-full p-3"
             disabled={confirmDeliveryMutation.isPending}
+            placeholder="Confirming"
           >
-            {confirmDeliveryMutation.isPending ? (
-              <>
-                <ImSpinner8 className="text-xl" />
-                Confirming...
-              </>
-            ) : (
-              <>
-                <HiOutlineCheckCircle className="text-xl" />
-                Confirm Delivery
-              </>
-            )}
-          </button>
+            <HiOutlineCheckCircle className="text-lg" />
+            Confirm Delivery
+          </SubmitButton>
         </form>
       )}
     </div>

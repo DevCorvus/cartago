@@ -11,7 +11,7 @@ import { createUpdateCategorySchema } from '@/shared/schemas/category.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Modal from './Modal';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   category: CategoryDto;
@@ -110,14 +110,13 @@ export default function EditCategoryForm({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="submit"
+          <SubmitButton
+            className="px-5 py-2"
             disabled={isSubmitting}
-            className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-5 py-2`}
+            placeholder="Applying"
           >
-            {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            {isSubmitting ? 'Applying...' : 'Apply'}
-          </button>
+            Apply
+          </SubmitButton>
           <button
             type="button"
             onClick={close}

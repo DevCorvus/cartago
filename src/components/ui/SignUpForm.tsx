@@ -13,7 +13,7 @@ import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { useCreateUser } from '@/data/user';
 import { toastError } from '@/lib/toast';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -183,16 +183,13 @@ export default function SignUpForm() {
             <p className="text-red-400">User already exists</p>
           )}
         </section>
-        <button
-          type="submit"
+        <SubmitButton
+          className="w-full p-3"
           disabled={isLoading}
-          className={`flex w-full items-center justify-center gap-2 p-3 ${
-            isLoading ? 'btn-disabled' : 'btn'
-          }`}
+          placeholder="Signin Up"
         >
-          {isLoading && <ImSpinner8 className="animate-spin" />}
-          {isLoading ? 'Signin Up' : 'Sign Up'}
-        </button>
+          Sign Up
+        </SubmitButton>
       </form>
       <div className="text-center text-sm text-slate-500">
         <p>

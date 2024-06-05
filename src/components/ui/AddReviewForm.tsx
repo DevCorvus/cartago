@@ -7,7 +7,7 @@ import { HiMiniPlus } from 'react-icons/hi2';
 import RatingInput from './RatingInput';
 import { useCreateReview } from '@/data/review';
 import { toastError } from '@/lib/toast';
-import { ImSpinner8 } from 'react-icons/im';
+import SubmitButton from './SubmitButton';
 
 interface Props {
   productId: string;
@@ -100,16 +100,13 @@ export default function AddReviewForm({ productId, addReview }: Props) {
         )}
       </div>
       <div className="flex gap-2">
-        <button
+        <SubmitButton
+          className="px-5 py-2"
           disabled={createReviewMutation.isPending}
-          type="submit"
-          className={`${createReviewMutation.isPending ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-5 py-2`}
+          placeholder="Sending"
         >
-          {createReviewMutation.isPending && (
-            <ImSpinner8 className="animate-spin" />
-          )}
-          {createReviewMutation.isPending ? 'Sending' : 'Send'}
-        </button>
+          Send
+        </SubmitButton>
         <button
           type="button"
           className="btn-alternative px-3 py-2"

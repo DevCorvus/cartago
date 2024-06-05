@@ -6,7 +6,6 @@ import ProductCartItem from '@/components/ui/ProductCartItem';
 import { useMemo, useEffect, useState, FormEvent, useCallback } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import Loading from '@/components/ui/Loading';
-import { ImSpinner8 } from 'react-icons/im';
 import { formatMoney, getTotalMoney } from '@/lib/dinero';
 import {
   useCartItems,
@@ -19,6 +18,7 @@ import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { toastAmountSynced, toastError } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
 import EmptyCart from './EmptyCart';
+import SubmitButton from './SubmitButton';
 
 export default function UserShoppingCart() {
   const router = useRouter();
@@ -158,23 +158,14 @@ export default function UserShoppingCart() {
         </span>
       </p>
       <form onSubmit={handleCheckout}>
-        <button
-          type="submit"
+        <SubmitButton
+          className="w-full p-3"
           disabled={checkoutMutation.isPending || insufficientStock}
-          className={`${checkoutMutation.isPending || insufficientStock ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
+          placeholder="Generating order"
         >
-          {!checkoutMutation.isPending ? (
-            <>
-              <HiOutlineShoppingCart />
-              Checkout
-            </>
-          ) : (
-            <>
-              <ImSpinner8 className="animate-spin" />
-              Generating order...
-            </>
-          )}
-        </button>
+          <HiOutlineShoppingCart className="text-lg" />
+          Checkout
+        </SubmitButton>
       </form>
     </div>
   );
