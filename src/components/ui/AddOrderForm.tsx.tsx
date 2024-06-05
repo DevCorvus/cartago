@@ -260,11 +260,11 @@ export default function AddOrderForm({ order }: Props) {
         <div className="flex items-center gap-2">
           <button
             type="submit"
-            className="btn flex items-center gap-2 px-3 py-2"
+            className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex items-center gap-2 px-3 py-2`}
             disabled={isSubmitting}
           >
             {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            Place order
+            {isSubmitting ? 'Placing order' : 'Place order'}
           </button>
           <Link href="/cart" className="btn-alternative px-3 py-2">
             Cancel

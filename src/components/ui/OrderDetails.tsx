@@ -15,6 +15,7 @@ import PaymentStatusTag from './PaymentStatusTag';
 import Link from 'next/link';
 import { useConfirmDelivery } from '@/data/order';
 import { toastError } from '@/lib/toast';
+import { ImSpinner8 } from 'react-icons/im';
 
 interface Props {
   order: OrderDto;
@@ -40,10 +41,10 @@ export default function OrderDetails({ order }: Props) {
     <div className="w-full max-w-md space-y-10 rounded-lg bg-white p-8 text-slate-700 shadow-md">
       <div className="space-y-10">
         <header className="text-2xl font-bold text-cyan-700">
-          <h2 className="flex items-center justify-between gap-2">
+          <h1 className="flex items-center justify-between gap-2">
             Placing order
             <OrderStatusTag status={order.status} className="text-lg" />
-          </h2>
+          </h1>
         </header>
         <section className="text-sm">
           <table>
@@ -73,7 +74,7 @@ export default function OrderDetails({ order }: Props) {
         </section>
         <section className="space-y-2">
           <header className="flex items-center justify-between text-lg font-semibold text-cyan-700">
-            <h3>Shipping address</h3>
+            <h2>Shipping address</h2>
           </header>
           <div>
             <p className="rounded-lg bg-slate-50/75 p-3 shadow-md">
@@ -83,7 +84,7 @@ export default function OrderDetails({ order }: Props) {
         </section>
         <section className="space-y-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Payment method</h3>
+            <h2>Payment method</h2>
           </header>
           <p className="flex items-center justify-between rounded-lg bg-slate-50/75 p-2.5 shadow-md">
             {order.payment.method}
@@ -96,7 +97,7 @@ export default function OrderDetails({ order }: Props) {
         {order.shipment && (
           <section className="flex flex-col gap-2">
             <header className="text-lg font-semibold text-cyan-700">
-              <h3>Shipment</h3>
+              <h2>Shipment</h2>
             </header>
             <p className="flex items-center justify-between rounded-lg bg-slate-50/75 p-2.5 shadow-md">
               Status
@@ -108,7 +109,7 @@ export default function OrderDetails({ order }: Props) {
         )}
         <section className="space-y-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Items</h3>
+            <h2>Items</h2>
           </header>
           {order.items.map((item) => (
             <div
@@ -153,7 +154,7 @@ export default function OrderDetails({ order }: Props) {
       <div className="flex w-full flex-col gap-10">
         <section className="flex flex-col gap-2">
           <header className="text-lg font-semibold text-cyan-700">
-            <h3>Summary</h3>
+            <h2>Summary</h2>
           </header>
           <div className="flex flex-col gap-3 rounded-lg bg-slate-50/75 p-6 shadow-md">
             <div className="flex flex-col gap-1">
@@ -180,10 +181,20 @@ export default function OrderDetails({ order }: Props) {
         <form onSubmit={handleSubmit}>
           <button
             type="submit"
-            className="btn flex w-full items-center justify-center gap-2 p-3"
+            className={`${confirmDeliveryMutation.isPending ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
+            disabled={confirmDeliveryMutation.isPending}
           >
-            <HiOutlineCheckCircle className="text-xl" />
-            Confirm Delivery
+            {confirmDeliveryMutation.isPending ? (
+              <>
+                <ImSpinner8 className="text-xl" />
+                Confirming...
+              </>
+            ) : (
+              <>
+                <HiOutlineCheckCircle className="text-xl" />
+                Confirm Delivery
+              </>
+            )}
           </button>
         </form>
       )}

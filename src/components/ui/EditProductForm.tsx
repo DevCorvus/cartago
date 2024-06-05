@@ -229,19 +229,13 @@ export default function EditProductForm({ product, categoryTags }: Props) {
       </section>
       <button
         type="submit"
+        disabled={isSubmitting}
         className={`flex w-full items-center justify-center gap-2 p-3 ${
           isSubmitting ? 'btn-disabled' : 'btn'
         }`}
-        disabled={isSubmitting}
       >
-        {isSubmitting ? (
-          <>
-            <ImSpinner8 className="animate-spin" />
-            Updating
-          </>
-        ) : (
-          <>Update</>
-        )}
+        {isSubmitting && <ImSpinner8 className="animate-spin" />}
+        {isSubmitting ? 'Applying...' : 'Apply'}
       </button>
     </form>
   );

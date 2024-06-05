@@ -13,13 +13,15 @@ import { CreateCartItemDto } from '@/shared/dtos/cartItem.dto';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { useCreateUser } from '@/data/user';
 import { toastError } from '@/lib/toast';
+import { ImSpinner8 } from 'react-icons/im';
 
 export default function SignUpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
+  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
   const [isExportingData, setExportingData] = useState(true);
 
   const {
@@ -33,6 +35,8 @@ export default function SignUpForm() {
   const registerMutation = useCreateUser();
 
   const onSubmit: SubmitHandler<CreateUserDto> = async (data) => {
+    setLoading(true);
+
     if (isExportingData) {
       const wishedItems = localStorageWished.get();
 
@@ -52,6 +56,7 @@ export default function SignUpForm() {
     try {
       await registerMutation.mutateAsync(data);
     } catch {
+      setLoading(false);
       return;
     }
 
@@ -75,6 +80,8 @@ export default function SignUpForm() {
     } catch (err) {
       toastError(err);
     }
+
+    setLoading(false);
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -176,8 +183,15 @@ export default function SignUpForm() {
             <p className="text-red-400">User already exists</p>
           )}
         </section>
-        <button type="submit" className="btn w-full p-3">
-          Sign Up
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`flex w-full items-center justify-center gap-2 p-3 ${
+            isLoading ? 'btn-disabled' : 'btn'
+          }`}
+        >
+          {isLoading && <ImSpinner8 className="animate-spin" />}
+          {isLoading ? 'Signin Up' : 'Sign Up'}
         </button>
       </form>
       <div className="text-center text-sm text-slate-500">

@@ -201,19 +201,13 @@ export default function AddProductForm({ categoryTags }: Props) {
       </section>
       <button
         type="submit"
+        disabled={isSubmitting}
         className={`flex w-full items-center justify-center gap-2 p-3 ${
           isSubmitting ? 'btn-disabled' : 'btn'
         }`}
-        disabled={isSubmitting}
       >
-        {isSubmitting ? (
-          <>
-            <ImSpinner8 className="animate-spin" />
-            Creating
-          </>
-        ) : (
-          <>Create</>
-        )}
+        {isSubmitting && <ImSpinner8 className="animate-spin" />}
+        {isSubmitting ? 'Creating...' : 'Create'}
       </button>
     </form>
   );

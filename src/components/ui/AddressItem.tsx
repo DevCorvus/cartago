@@ -83,7 +83,6 @@ export default function AddressItem({
                   <HiPencil />
                 </button>
                 <button
-                  type="submit"
                   title="Delete address"
                   className="transition hover:text-rose-400 focus:text-rose-400"
                   onClick={() => setShowDeleteConfirmation(true)}

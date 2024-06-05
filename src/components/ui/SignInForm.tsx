@@ -9,9 +9,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { ImSpinner8 } from 'react-icons/im';
 
 export function SignInForm() {
   const router = useRouter();
+
+  const [isLoading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
 
   const {
@@ -21,6 +24,7 @@ export function SignInForm() {
   } = useForm<LoginUserDto>({ resolver: zodResolver(loginUserSchema) });
 
   const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
+    setLoading(true);
     setLoginError(false);
 
     try {
@@ -38,6 +42,8 @@ export function SignInForm() {
     } catch (err) {
       toastError(err);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -85,8 +91,15 @@ export function SignInForm() {
             <p className="text-red-400">Wrong email or password</p>
           )}
         </section>
-        <button type="submit" className="btn w-full p-3">
-          Sign In
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`flex w-full items-center justify-center gap-2 p-3 ${
+            isLoading ? 'btn-disabled' : 'btn'
+          }`}
+        >
+          {isLoading && <ImSpinner8 className="animate-spin" />}
+          {isLoading ? 'Signin In' : 'Sign In'}
         </button>
       </form>
       <div className="text-center text-sm text-slate-500">

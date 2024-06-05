@@ -94,7 +94,8 @@ export default function ChangePasswordForm() {
       <div>
         <button
           type="submit"
-          className="btn flex w-full items-center justify-center gap-1 p-3"
+          disabled={isSubmitting}
+          className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-1 p-3`}
         >
           {isSubmitting && <ImSpinner8 className="animate-spin" />}
           {isSubmitting ? 'Updating' : 'Update'}

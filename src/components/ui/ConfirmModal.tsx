@@ -36,10 +36,10 @@ export default function ConfirmModal({ action, close }: Props) {
           <button
             type="submit"
             disabled={isLoading}
-            className="btn flex items-center gap-1 px-2 py-1.5"
+            className={`${isLoading ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-2 py-1.5`}
           >
             {isLoading && <ImSpinner8 className="animate-spin" />}
-            Confirm
+            {isLoading ? 'Confirming...' : 'Confirm'}
           </button>
           <button
             type="button"

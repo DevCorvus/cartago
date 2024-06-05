@@ -111,12 +111,12 @@ export default function EditCategoryForm({
         </div>
         <div className="flex items-center gap-2">
           <button
-            disabled={isSubmitting}
             type="submit"
-            className="btn flex items-center gap-1 px-5 py-2"
+            disabled={isSubmitting}
+            className={`${isSubmitting ? 'btn-disabled' : 'btn'} flex items-center gap-1 px-5 py-2`}
           >
             {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            {isSubmitting ? 'Applying' : 'Apply'}
+            {isSubmitting ? 'Applying...' : 'Apply'}
           </button>
           <button
             type="button"

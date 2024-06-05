@@ -161,7 +161,7 @@ export default function UserShoppingCart() {
         <button
           type="submit"
           disabled={checkoutMutation.isPending || insufficientStock}
-          className={`${insufficientStock ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
+          className={`${checkoutMutation.isPending || insufficientStock ? 'btn-disabled' : 'btn'} flex w-full items-center justify-center gap-2 p-3`}
         >
           {!checkoutMutation.isPending ? (
             <>

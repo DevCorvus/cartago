@@ -27,7 +27,7 @@ select {
 }
 
 .btn-disabled {
-  @apply rounded-full bg-slate-500/75 text-center text-slate-50;
+  @apply rounded-full bg-slate-400 text-center text-slate-50;
 }
 
 .btn-alternative {

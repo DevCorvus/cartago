@@ -392,13 +392,13 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
         <div className="col-span-2 mt-4 flex items-center gap-2">
           <button
             type="submit"
+            disabled={isSubmitting}
             className={`flex items-center gap-2 px-5 py-2 ${
               isSubmitting ? 'btn-disabled' : 'btn'
             }`}
-            disabled={isSubmitting}
           >
             {isSubmitting && <ImSpinner8 className="animate-spin" />}
-            Update
+            {isSubmitting ? 'Updating' : 'Update'}
           </button>
           <button
             type="button"
