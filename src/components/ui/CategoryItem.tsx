@@ -46,7 +46,7 @@ export default function CategoryItem({
               {!showDetails ? <HiChevronDown /> : <HiChevronUp />}
             </button>
           </div>
-          <div className="flex items-center gap-3 text-slate-600">
+          <div className="flex items-center gap-3 text-slate-500">
             <button
               title="Edit category"
               className="transition hover:text-green-500 focus:text-green-500"

@@ -60,7 +60,7 @@ export default function ProductCartItem({
           >
             {product.title}
           </Link>
-          <span className="rounded-xl bg-slate-100 px-1 text-sm font-semibold text-slate-700 shadow-sm md:text-base">
+          <span className="rounded-xl bg-slate-100 px-1 font-semibold text-slate-700 shadow-sm">
             {formatMoney(product.price)}
           </span>
         </div>

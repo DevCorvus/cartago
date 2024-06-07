@@ -25,7 +25,7 @@ export default function ProductRelatedItem({ product }: Props) {
       className="group relative flex flex-col rounded-lg border-b-2 border-neutral-100 bg-white shadow-md"
     >
       {isNew && (
-        <span className="absolute -left-3 -top-3 z-10 rounded-md bg-lime-100 px-2 py-1 text-xs text-lime-600 shadow-md">
+        <span className="absolute -left-3 -top-3 z-10 rounded-md border border-cyan-600 bg-cyan-50 p-1 text-xs font-semibold text-cyan-600 shadow-md">
           New
         </span>
       )}

@@ -2,6 +2,7 @@
 
 import { UserProfileDto } from '@/shared/dtos/user.dto';
 import Link from 'next/link';
+import { HiLockClosed, HiMapPin, HiTruck } from 'react-icons/hi2';
 
 interface Props {
   profile: UserProfileDto;
@@ -38,28 +39,31 @@ export default function AccountDetails({ profile }: Props) {
         </tbody>
       </table>
       <hr />
-      <ul className="space-y-1">
+      <ul>
         <li>
           <Link
             href="/account/addresses"
-            className="text-cyan-600 transition hover:text-cyan-500 focus:text-cyan-500"
+            className="group flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-100 hover:shadow-sm focus:bg-slate-100 focus:shadow-sm"
           >
+            <HiMapPin className="text-slate-400 transition group-hover:text-cyan-500 group-focus:text-cyan-500" />
             Addresses
           </Link>
         </li>
         <li>
           <Link
             href="/account/orders"
-            className="text-cyan-600 transition hover:text-cyan-500 focus:text-cyan-500"
+            className="group flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
           >
+            <HiTruck className="text-slate-400 transition group-hover:text-cyan-500 group-focus:text-cyan-500" />
             Orders
           </Link>
         </li>
         <li>
           <Link
             href="/account/change-password"
-            className="text-cyan-600 transition hover:text-cyan-500 focus:text-cyan-500"
+            className="group flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
           >
+            <HiLockClosed className="text-slate-400 transition group-hover:text-cyan-500 group-focus:text-cyan-500" />
             Change password
           </Link>
         </li>

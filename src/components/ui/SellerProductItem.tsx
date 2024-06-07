@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Rating from './Rating';
 import { HiOutlinePencilSquare, HiOutlineTrash } from 'react-icons/hi2';
 import ConfirmModal from './ConfirmModal';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { ONE_WEEK } from '@/shared/constants';
 
 interface Props {
   product: ProductCardDto;
@@ -15,6 +16,12 @@ interface Props {
 export default function SellerProductItem({ product, deleteProduct }: Props) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
+  const isNew = useMemo(() => {
+    const createdAt = new Date(product.createdAt);
+    const createdAtInMs = createdAt.getTime();
+    return Date.now() < createdAtInMs + ONE_WEEK;
+  }, [product.createdAt]);
+
   return (
     <div className="relative">
       <Link
@@ -22,32 +29,37 @@ export default function SellerProductItem({ product, deleteProduct }: Props) {
         key={product.id}
         className="group relative flex flex-col rounded-lg border-b-2 border-neutral-100 bg-white shadow-md"
       >
-        <div className="relative h-40 w-full overflow-hidden rounded-t-lg bg-neutral-100 shadow-inner">
+        {isNew && (
+          <span className="absolute -left-3 -top-3 z-10 rounded-md border border-cyan-600 bg-cyan-50 p-1 text-xs font-semibold text-cyan-600 shadow-md">
+            New
+          </span>
+        )}
+        <div className="relative aspect-square w-full overflow-hidden rounded-t-lg bg-neutral-100 shadow-inner">
           <Image
             src={'/images/' + product.images[0].path}
             alt={product.title}
             fill={true}
-            sizes="200px"
-            className="object-contain transition duration-300 group-hover:scale-110"
+            sizes="300px"
+            className="object-cover transition duration-300 group-hover:scale-110"
           />
         </div>
         <section className="relative flex flex-1 flex-col gap-1 p-2">
           <header className="flex items-center justify-between gap-0.5 capitalize">
             <h2
-              className="line-clamp-1 font-medium text-slate-700"
+              className="line-clamp-1 text-sm font-medium text-slate-700 md:text-base"
               title={product.title}
             >
               {product.title}
             </h2>
-            <span className="rounded-xl bg-green-50 px-1 text-lg font-bold text-green-600 shadow-sm">
+            <span className="rounded-xl bg-green-50 px-1 text-sm font-semibold text-green-600 shadow-sm md:text-base md:font-bold">
               {formatMoney(product.price)}
             </span>
           </header>
           <div className="flex items-center justify-between text-slate-500">
-            <p className="text-sm">
+            <p className="text-xs sm:text-sm">
               <span className="font-medium">{product.sales}</span> sold
             </p>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 text-xs sm:text-base">
               <Rating score={product.rating.score} />
               <span className="text-xs">({product.rating.count})</span>
             </div>

@@ -59,29 +59,34 @@ async function Orders({ user }: Props) {
               <div className="flex flex-col gap-2 p-4 md:p-2">
                 <span
                   title="Order ID"
-                  className="rounded-md bg-slate-200/50 px-1 py-0.5 text-center text-sm md:text-base"
+                  className="rounded-md bg-slate-200/50 px-1 py-0.5 text-center text-xs sm:text-sm md:text-base"
                 >
                   {order.id}
                 </span>
                 <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 md:text-sm">
-                  <p className="col-span-1 flex gap-3">
-                    <span>Total</span>
+                  <p className="col-span-1 flex flex-col gap-1 sm:flex-row">
+                    <span>Total</span>{' '}
                     <span className="font-medium text-slate-600">
                       {formatMoney(order.total)}
                     </span>
                   </p>
-                  <p className="col-span-1">
+                  <p className="col-span-1 flex flex-col gap-1 sm:flex-row">
                     <span>Created at</span>{' '}
                     <span className="font-medium text-slate-600">
                       {formatDate(order.createdAt)}
                     </span>
                   </p>
-                  <p className="col-span-1">
-                    <span>Order</span> <OrderStatusTag status={order.status} />
+                  <p className="col-span-1 flex flex-col gap-1 sm:flex-row">
+                    <span>Status</span>
+                    <span>
+                      <OrderStatusTag status={order.status} />
+                    </span>
                   </p>
-                  <p className="col-span-1">
-                    <span>Payment</span>{' '}
-                    <PaymentStatusTag status={order.payment.status} />
+                  <p className="col-span-1 flex flex-col gap-1 sm:flex-row">
+                    <span>Payment</span>
+                    <span>
+                      <PaymentStatusTag status={order.payment.status} />
+                    </span>
                   </p>
                 </div>
               </div>

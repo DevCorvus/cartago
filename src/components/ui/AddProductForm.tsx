@@ -34,8 +34,14 @@ export default function AddProductForm({ categoryTags }: Props) {
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    watch,
   } = useForm<CreateUpdatePartialProductDto>({
     resolver: zodResolver(createUpdatePartialProductSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      stock: 1,
+    },
   });
 
   const createProductMutation = useCreateProduct();
@@ -106,6 +112,8 @@ export default function AddProductForm({ categoryTags }: Props) {
     setImages((prev) => prev.filter((image) => image.name !== name));
   };
 
+  const description = watch('description');
+
   return (
     <form
       onSubmit={submitWrapper}
@@ -140,14 +148,19 @@ export default function AddProductForm({ categoryTags }: Props) {
           <label htmlFor="description" className="text-slate-500">
             Description
           </label>
-          <textarea
-            {...register('description')}
-            id="description"
-            cols={30}
-            rows={5}
-            placeholder="Enter product description"
-            className="input p-3"
-          />
+          <div>
+            <textarea
+              {...register('description')}
+              id="description"
+              cols={30}
+              rows={5}
+              placeholder="Enter product description"
+              className="input p-3"
+            />
+            <span className="block text-right text-xs text-slate-500/50">
+              ({description.length}/500)
+            </span>
+          </div>
           {errors.description && (
             <p className="text-red-400">{errors.description.message}</p>
           )}
@@ -181,7 +194,6 @@ export default function AddProductForm({ categoryTags }: Props) {
                 onBlur: handleStockBlur,
               })}
               id="stock"
-              defaultValue={1}
               min={1}
               type="number"
               placeholder="Enter product stock"

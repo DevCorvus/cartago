@@ -2,7 +2,6 @@
 
 import { CheckoutOrderDto } from '@/shared/dtos/order.dto';
 import { HiOutlineQuestionMarkCircle, HiPlus } from 'react-icons/hi2';
-import Image from 'next/image';
 import { formatMoney } from '@/lib/dinero';
 import { CreatePaymentDto } from '@/shared/dtos/payment.dto';
 import { useRouter } from 'next/navigation';
@@ -20,6 +19,7 @@ import { usePayment } from '@/data/order';
 import { toastError } from '@/lib/toast';
 import Loading from './Loading';
 import SubmitButton from './SubmitButton';
+import OrderItem from './OrderItem';
 
 interface Props {
   order: CheckoutOrderDto;
@@ -113,7 +113,7 @@ export default function AddOrderForm({ order }: Props) {
             <tbody>
               <tr>
                 <th className="px-2 py-0.5 text-left">ID</th>
-                <td>
+                <td className="text-xs sm:text-sm md:text-base">
                   <span className="rounded-md bg-slate-50 px-1 py-0.5 shadow-sm">
                     {order.id}
                   </span>
@@ -121,7 +121,7 @@ export default function AddOrderForm({ order }: Props) {
               </tr>
               <tr>
                 <th className="px-2 py-0.5 text-left">Date</th>
-                <td>
+                <td className="text-xs sm:text-sm md:text-base">
                   <p className="flex items-center gap-1 px-1 py-0.5">
                     <span>{formatDate(new Date(order.createdAt))}</span>
                     <HiOutlineQuestionMarkCircle
@@ -192,44 +192,13 @@ export default function AddOrderForm({ order }: Props) {
           <header className="text-lg font-semibold text-cyan-700">
             <h2>Items</h2>
           </header>
-          {order.items.map((item) => (
-            <div
-              key={item.id}
-              className="flex gap-2 rounded-md bg-slate-50/75 shadow-md"
-            >
-              <Link
-                href={`/items/${item.id}`}
-                className="relative h-20 w-20 rounded-l-md bg-neutral-100"
-              >
-                <Image
-                  src={'/images/' + item.image.path}
-                  alt={item.title}
-                  fill={true}
-                  sizes="100px"
-                  className="rounded-md object-contain"
-                />
-              </Link>
-              <section className="flex flex-1 flex-col justify-around p-1">
-                <div>
-                  <p>{item.title}</p>
-                </div>
-                <div className="grid grid-cols-2 text-sm">
-                  <p>
-                    <span className="text-slate-500">Amount</span>{' '}
-                    <span className="rounded-xl bg-slate-100 px-1 font-medium text-slate-600 shadow-sm">
-                      {item.amount}
-                    </span>
-                  </p>
-                  <p>
-                    <span className="text-slate-500">Price</span>{' '}
-                    <span className="rounded-xl bg-slate-100 px-1 font-medium text-slate-600 shadow-sm">
-                      {formatMoney(item.price)}
-                    </span>
-                  </p>
-                </div>
-              </section>
-            </div>
-          ))}
+          <ul className="space-y-2">
+            {order.items.map((item) => (
+              <li key={item.id}>
+                <OrderItem data={item} />
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
       <div className="flex w-full flex-col gap-10">
@@ -237,7 +206,7 @@ export default function AddOrderForm({ order }: Props) {
           <header className="text-lg font-semibold text-cyan-700">
             <h2>Summary</h2>
           </header>
-          <div className="flex flex-col gap-3 rounded-lg bg-slate-50/75 p-6 shadow-md">
+          <div className="flex flex-col gap-3 rounded-lg bg-slate-50/75 p-4 shadow-md sm:p-6">
             <div className="flex flex-col gap-1">
               <p className="flex justify-between">
                 Total items cost{' '}

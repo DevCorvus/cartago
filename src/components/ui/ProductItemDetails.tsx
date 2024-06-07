@@ -43,10 +43,10 @@ export default function ProductItemDetails({
         <div className="space-y-4">
           <div className="flex flex-col-reverse gap-6">
             <header className="flex w-full items-center justify-between">
-              <h1 className="line-clamp-1 text-2xl font-semibold text-slate-700">
+              <h1 className="line-clamp-1 text-xl font-semibold text-slate-700 md:text-2xl">
                 {product.title}
               </h1>
-              <span className="rounded-xl bg-green-50 px-2 py-1 text-xl font-bold text-green-600 shadow-sm">
+              <span className="rounded-xl bg-green-50 px-2 py-1 text-lg font-bold text-green-600 shadow-sm md:text-xl">
                 {formatMoney(product.price)}
               </span>
             </header>
@@ -89,7 +89,7 @@ export default function ProductItemDetails({
             ) : (
               <p className="italic text-slate-400">No description</p>
             )}
-            <div className="grid grid-cols-2 gap-3 text-slate-400">
+            <div className="grid grid-cols-2 gap-1 text-xs text-slate-400 sm:text-sm md:text-base">
               <p className="flex items-center gap-1">
                 <HiOutlineShoppingBag />
                 <span className="font-medium">{product.sales}</span> sold

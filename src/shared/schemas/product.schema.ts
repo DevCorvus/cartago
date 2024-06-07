@@ -18,7 +18,7 @@ const priceSchema = z
 
 export const createUpdatePartialProductSchema = z.object({
   title: zodNotProfaneString(z.string().min(10).max(150).trim()),
-  description: zodNotProfaneString(z.string().max(200).trim()),
+  description: zodNotProfaneString(z.string().max(500).trim()),
   price: priceSchema,
   stock: z.number().int().min(1),
 });

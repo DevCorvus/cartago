@@ -91,7 +91,7 @@ export default function AddCategoryForm({ addCategory, close }: Props) {
               placeholder="Enter category description"
             />
             <span className="block text-right text-xs text-slate-500/50">
-              ({description.length}/200)
+              ({description.length}/300)
             </span>
           </div>
           {errors.description && (
