@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { HiPencilSquare, HiUserCircle } from 'react-icons/hi2';
 import EditReviewForm from './EditReviewForm';
 import Rating from './Rating';
+import LongText from './LongText';
 
 interface Props {
   review: ReviewDto;
@@ -53,9 +54,7 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
             )}
           </div>
         </div>
-        <p className="hyphens-auto whitespace-pre-line break-words font-sans text-slate-600">
-          {review.content}
-        </p>
+        <LongText text={review.content} maxLength={100} />
       </div>
     </div>
   );
