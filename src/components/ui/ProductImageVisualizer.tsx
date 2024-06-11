@@ -1,22 +1,32 @@
 'use client';
 
 import { useCursorPosition } from '@/hooks/useCursorPosition';
+import { formatMoney } from '@/lib/dinero';
 import {
   calculatePaddingBasedOnAspectRatios,
   getImageDimensions,
 } from '@/utils/dimensions';
 import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import NewTag from './NewTag';
 
 interface Props {
   path: string;
   title: string;
+  price: number;
+  createdAt: Date;
   zoom?: number;
 }
 
 // This implementation is a little bit complex because it has to keep the aspect ratio when magnifying the image
 // I don't feel like this abstraction is any good either but it works
-export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
+export function ProductImageVisualizer({
+  path,
+  title,
+  price,
+  createdAt,
+  zoom = 2,
+}: Props) {
   const [showMagnifier, setShowMagnifier] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -56,6 +66,7 @@ export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
       onMouseEnter={() => setShowMagnifier(true)}
       onMouseLeave={() => setShowMagnifier(false)}
     >
+      <NewTag date={createdAt} />
       <NextImage
         src={'/images/' + path}
         priority={true}
@@ -78,6 +89,9 @@ export function ProductImageVisualizer({ path, title, zoom = 2 }: Props) {
         }}
         className="pointer-events-none absolute z-10 rounded-lg border border-white bg-neutral-100 bg-no-repeat"
       />
+      <span className="absolute bottom-2 right-2 rounded-xl border border-green-200 bg-green-50 px-1.5 py-0.5 text-xl font-bold text-green-600 shadow-md">
+        {formatMoney(price)}
+      </span>
     </div>
   );
 }

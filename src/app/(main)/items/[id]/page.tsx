@@ -1,9 +1,9 @@
-import ProductItemDetails from '@/components/ui/ProductItemDetails';
 import { productService } from '@/server/services';
 import { notFound } from 'next/navigation';
 import { paramsSchema } from '@/shared/schemas/params.schema';
 import { Params } from '@/shared/dtos/params.dto';
 import { getUserSession } from '@/server/auth/auth.utils';
+import ProductDetails from '@/components/ui/ProductDetails';
 
 interface Props {
   params: Params;
@@ -27,5 +27,5 @@ export default async function ProductItem({ params }: Props) {
     notFound();
   }
 
-  return <ProductItemDetails {...productWithRelatedOnes} />;
+  return <ProductDetails {...productWithRelatedOnes} />;
 }

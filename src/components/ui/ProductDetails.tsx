@@ -13,7 +13,6 @@ import WishProduct from './WishProduct';
 import { ProductDetailsDto } from '@/shared/dtos/product.dto';
 import Link from 'next/link';
 import { capitalize } from '@/utils/capitalize';
-import { formatMoney } from '@/lib/dinero';
 import ProductReviewList from './ProductReviewList';
 import { ProductImageVisualizer } from './ProductImageVisualizer';
 import { formatTimeFromNow } from '@/lib/dayjs';
@@ -21,7 +20,7 @@ import Rating from './Rating';
 import ProductRelatedList from './ProductRelatedList';
 import { useCartItem } from '@/hooks/useCartItem';
 
-export default function ProductItemDetails({
+export default function ProductDetails({
   isOwner,
   product,
   relatedProducts,
@@ -39,21 +38,20 @@ export default function ProductItemDetails({
 
   return (
     <div className="mx-auto max-w-md space-y-12">
-      <section className="space-y-8 rounded-lg bg-white p-8 shadow-md">
+      <section className="relative space-y-8 rounded-lg bg-white p-8 shadow-md">
         <div className="space-y-4">
           <div className="flex flex-col-reverse gap-6">
             <header className="flex w-full items-center justify-between">
-              <h1 className="line-clamp-1 text-xl font-semibold text-slate-700 md:text-2xl">
+              <h1 className="text-xl font-semibold text-slate-700 md:text-2xl">
                 {product.title}
               </h1>
-              <span className="rounded-xl bg-green-50 px-2 py-1 text-lg font-bold text-green-600 shadow-sm md:text-xl">
-                {formatMoney(product.price)}
-              </span>
             </header>
             <div className="size-full relative flex flex-col gap-4">
               <ProductImageVisualizer
                 path={selectedImage.path}
                 title={product.title}
+                price={product.price}
+                createdAt={product.createdAt}
               />
               <div className="grid h-14 grid-cols-5 gap-1 sm:h-16 sm:gap-2">
                 {product.images.map((image, i) => (
