@@ -116,6 +116,7 @@ export default function HeroImage() {
           {HERO_IMAGES.map((image, i) => (
             <div key={i} className="relative h-full shrink-0 grow-0 basis-full">
               <Image
+                priority
                 src={image.src}
                 alt={image.alt}
                 fill={true}

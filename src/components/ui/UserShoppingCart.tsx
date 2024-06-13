@@ -118,7 +118,7 @@ export default function UserShoppingCart() {
       router.push('/checkout/' + checkoutOrder.id);
     } catch (err) {
       toastError(err);
-      refetch();
+      await refetch();
     }
   };
 

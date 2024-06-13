@@ -3,7 +3,7 @@
 import { useProducts } from '@/data/product';
 import Loading from './Loading';
 import ProductList from './ProductList';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
 import SomethingWentWrong from './SomethingWentWrong';
 import { HiOutlineEmojiSad } from 'react-icons/hi';
@@ -35,11 +35,20 @@ export default function ProductScroller({ categoryId }: Props) {
     }
   }, [isFetching]);
 
+  const prevCategoryIdRef = useRef<number | null>(null);
+
   useEffect(() => {
-    setPageCounter(0);
-    setTimeout(() => {
-      refetch();
-    });
+    const prevCategoryId = prevCategoryIdRef.current;
+    if (prevCategoryId !== null && prevCategoryId !== categoryId) {
+      setPageCounter(0);
+      setTimeout(() => {
+        (async () => {
+          await refetch();
+        })();
+      });
+    }
+
+    prevCategoryIdRef.current = categoryId !== undefined ? categoryId : null;
   }, [categoryId, refetch]);
 
   const { observerTarget, isVisible } = useObserver({ threshold: 1 });

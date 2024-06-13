@@ -5,7 +5,7 @@ import { HiMinus, HiOutlineTrash, HiPlus } from 'react-icons/hi2';
 import Link from 'next/link';
 import { ProductCartItemDto } from '@/shared/dtos/product.dto';
 import { formatMoney } from '@/lib/dinero';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface Props {
@@ -29,12 +29,17 @@ export default function ProductCartItem({
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setInput(Math.min(Math.max(value, 1), product.stock));
+
+    if (!isNaN(value)) {
+      setInput(Math.min(Math.max(value, 1), product.stock));
+    }
   };
 
-  if (debouncedInput !== product.amount) {
-    setItemAmount(product.id, debouncedInput);
-  }
+  useEffect(() => {
+    if (debouncedInput !== product.amount) {
+      setItemAmount(product.id, debouncedInput);
+    }
+  }, [debouncedInput, product.id, product.amount, setItemAmount]);
 
   return (
     <div className="flex h-20 w-full rounded-md bg-slate-50/75 shadow-md">
