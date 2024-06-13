@@ -3,6 +3,7 @@
 import { useCursorPosition } from '@/hooks/useCursorPosition';
 import { formatMoney } from '@/lib/dinero';
 import {
+  Dimensions,
   calculatePaddingBasedOnAspectRatios,
   getImageDimensions,
 } from '@/utils/dimensions';
@@ -29,39 +30,74 @@ export function ProductImageVisualizer({
 }: Props) {
   const [showMagnifier, setShowMagnifier] = useState(false);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const position = useCursorPosition(ref);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const position = useCursorPosition(containerRef);
 
-  const [container, setContainer] = useState({ width: 0, height: 0 });
+  const [containerDimensions, setContainerDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
   const [padding, setPadding] = useState({ x: 0, y: 0 });
 
   const magnifierSize = 100;
 
+  const imageDimensionsRef = useRef<Dimensions | null>(null);
+
   useEffect(() => {
-    const container = ref.current;
+    const container = containerRef.current;
 
     if (container) {
-      const containerDimensions = {
+      const dimensions = {
         width: container.clientWidth,
         height: container.clientHeight,
       };
 
-      setContainer(containerDimensions);
+      setContainerDimensions(dimensions);
 
       (async () => {
-        const imageDimensions = await getImageDimensions(path);
+        imageDimensionsRef.current = await getImageDimensions(path);
+
         const paddingBasedOnAspectRatios = calculatePaddingBasedOnAspectRatios(
-          imageDimensions,
-          containerDimensions,
+          imageDimensionsRef.current,
+          dimensions,
         );
+
         setPadding(paddingBasedOnAspectRatios);
       })();
     }
   }, [path]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const container = containerRef.current;
+
+      if (container && imageDimensionsRef.current) {
+        const dimensions = {
+          width: container.clientWidth,
+          height: container.clientHeight,
+        };
+
+        setContainerDimensions(dimensions);
+
+        const paddingBasedOnAspectRatios = calculatePaddingBasedOnAspectRatios(
+          imageDimensionsRef.current,
+          dimensions,
+        );
+
+        setPadding(paddingBasedOnAspectRatios);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       className="relative h-72 cursor-none rounded-md bg-neutral-100 shadow-md"
       onMouseEnter={() => setShowMagnifier(true)}
       onMouseLeave={() => setShowMagnifier(false)}
@@ -83,7 +119,7 @@ export function ProductImageVisualizer({
           left: position.x - magnifierSize / 2,
           top: position.y - magnifierSize / 2,
           backgroundImage: `url('/images/${path}')`,
-          backgroundSize: `${(container.width - padding.x * 2) * zoom}px ${(container.height - padding.y * 2) * zoom}px`,
+          backgroundSize: `${(containerDimensions.width - padding.x * 2) * zoom}px ${(containerDimensions.height - padding.y * 2) * zoom}px`,
           backgroundPositionX: `${-(position.x - padding.x) * zoom + magnifierSize / 2}px`,
           backgroundPositionY: `${-(position.y - padding.y) * zoom + magnifierSize / 2}px`,
         }}
