@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
-import { capitalize } from '@/utils/capitalize';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import { useEffect, useRef, useState } from 'react';
+import CategoryLink from './CategoryLink';
 
 interface Props {
   categories: CategoryTagDto[];
@@ -89,38 +88,49 @@ export default function CategorySlider({ categories, skip }: Props) {
 
   const timeoutId = useRef<NodeJS.Timeout>();
 
-  const handleMouseEnterSliderContainer = () => {
+  const handleEnterSliderContainer = () => {
     clearTimeout(timeoutId.current);
     setAutoplay(false);
   };
 
-  const handleMouseLeaveSliderContainer = () => {
-    timeoutId.current = setTimeout(() => setAutoplay(true), 2500);
+  const handleLeaveSliderContainer = () => {
+    timeoutId.current = setTimeout(() => setAutoplay(true), 3000);
   };
 
-  const touchTimeoutId = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    const sliderContainer = sliderContainerRef.current;
 
-  const handleTouchStartSliderContainer = () => {
-    clearTimeout(touchTimeoutId.current);
-    setAutoplay(false);
-  };
+    if (sliderContainer) {
+      sliderContainer.addEventListener('focusin', handleEnterSliderContainer);
+      sliderContainer.addEventListener('focusout', handleLeaveSliderContainer);
+    }
 
-  const handleTouchEndSliderContainer = () => {
-    touchTimeoutId.current = setTimeout(() => setAutoplay(true), 3500);
-  };
+    return () => {
+      if (sliderContainer) {
+        sliderContainer.removeEventListener(
+          'focusin',
+          handleEnterSliderContainer,
+        );
+        sliderContainer.removeEventListener(
+          'focusout',
+          handleLeaveSliderContainer,
+        );
+      }
+    };
+  }, []);
 
   return (
     <section
       className="flex w-full items-center gap-2"
-      onMouseEnter={handleMouseEnterSliderContainer}
-      onMouseLeave={handleMouseLeaveSliderContainer}
-      onTouchStart={handleTouchStartSliderContainer}
-      onTouchEnd={handleTouchEndSliderContainer}
+      onMouseEnter={handleEnterSliderContainer}
+      onMouseLeave={handleLeaveSliderContainer}
+      onTouchStart={handleEnterSliderContainer}
+      onTouchEnd={handleLeaveSliderContainer}
     >
       <button
         type="button"
         onClick={handleSlideLeftClick}
-        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 md:p-2 md:text-base"
+        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 focus:text-cyan-700 md:p-2 md:text-base"
       >
         <HiChevronLeft />
       </button>
@@ -136,12 +146,10 @@ export default function CategorySlider({ categories, skip }: Props) {
             (category) =>
               category.id !== skip && (
                 <li key={category.id}>
-                  <Link
-                    href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full bg-white px-2 py-1.5 text-sm text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500 md:text-base"
-                  >
-                    {capitalize(category.title)}
-                  </Link>
+                  <CategoryLink
+                    categoryId={category.id}
+                    title={category.title}
+                  />
                 </li>
               ),
           )}
@@ -149,12 +157,10 @@ export default function CategorySlider({ categories, skip }: Props) {
             (category) =>
               category.id !== skip && (
                 <li key={`${category.id}-duplicate`} aria-hidden={true}>
-                  <Link
-                    href={`/items?categoryId=${category.id}`}
-                    className="text-nowrap rounded-full bg-white px-2 py-1.5 text-sm text-slate-500 shadow-md transition hover:text-cyan-500 focus:text-cyan-500 md:text-base"
-                  >
-                    {capitalize(category.title)}
-                  </Link>
+                  <CategoryLink
+                    categoryId={category.id}
+                    title={category.title}
+                  />
                 </li>
               ),
           )}
@@ -163,7 +169,7 @@ export default function CategorySlider({ categories, skip }: Props) {
       <button
         type="button"
         onClick={handleSlideRightClick}
-        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 md:p-2 md:text-base"
+        className="rounded-full bg-white p-1.5 text-sm text-slate-700 shadow-md transition hover:text-cyan-700 focus:text-cyan-700 md:p-2 md:text-base"
       >
         <HiChevronRight />
       </button>
