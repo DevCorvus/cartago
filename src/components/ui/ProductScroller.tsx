@@ -1,7 +1,6 @@
 'use client';
 
 import { useProducts } from '@/data/product';
-import Loading from './Loading';
 import ProductList from './ProductList';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useObserver } from '@/hooks/useObserver';
@@ -63,13 +62,9 @@ export default function ProductScroller({ categoryId }: Props) {
 
   return (
     <div>
-      <ProductList products={products} />
+      <ProductList isLoading={isLoading} products={products} />
       <div className="mt-8 flex justify-center">
-        {isLoading ? (
-          <div className="relative">
-            <Loading />
-          </div>
-        ) : (
+        {!isLoading && (
           <>
             {products.length > 0 ? (
               <>

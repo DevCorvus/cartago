@@ -3,7 +3,6 @@
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
 import ProductList from '@/components/ui/ProductList';
 import { useGuestWishedProducts, useWishedProducts } from '@/data/product';
-import Loading from '@/components/ui/Loading';
 import SomethingWentWrong from '@/components/ui/SomethingWentWrong';
 import { localStorageWished } from '@/utils/localStorageWished';
 import { useEffect } from 'react';
@@ -45,10 +44,12 @@ export default function Wished() {
     }
   }, [guestData, removeWishedItem]);
 
-  if (isLoading || isGuestLoading) return <Loading />;
   if (isError || isGuestError) return <SomethingWentWrong />;
 
-  if ((data && data.length === 0) || (guestData && guestData.length === 0)) {
+  if (
+    ((!isLoading || isGuestLoading) && data && data.length === 0) ||
+    (guestData && guestData.length === 0)
+  ) {
     return (
       <div className="absolute inset-0 flex h-screen w-screen items-center justify-center">
         <section className="max-w-md space-y-3 rounded-lg text-center text-slate-400">
@@ -68,15 +69,15 @@ export default function Wished() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header>
         <h1 className="text-2xl font-bold text-cyan-700">Wish List</h1>
       </header>
       <div>
         {isAuthenticated ? (
-          <ProductList products={data || []} />
+          <ProductList isLoading={isLoading} products={data || []} />
         ) : (
-          <ProductList products={guestData || []} />
+          <ProductList isLoading={isGuestLoading} products={guestData || []} />
         )}
       </div>
     </div>
