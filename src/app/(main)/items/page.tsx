@@ -1,10 +1,9 @@
 import CategoryWithProducts from '@/components/ui/CategoryWithProducts';
 import CategorySlider from '@/components/ui/CategorySlider';
-import ProductList from '@/components/ui/ProductList';
-import { categoryService, productService } from '@/server/services';
+import { categoryService } from '@/server/services';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
-import { getUserSession } from '@/server/auth/auth.utils';
+import ProductScroller from '@/components/ui/ProductScroller';
 
 const paramsSchema = z.object({
   categoryId: z.number().int().positive(),
@@ -17,7 +16,6 @@ interface Props {
 }
 
 export default async function ProductItems({ searchParams }: Props) {
-  const user = await getUserSession();
   const categoryId = searchParams.categoryId;
 
   if (categoryId) {
@@ -45,15 +43,12 @@ export default async function ProductItems({ searchParams }: Props) {
     );
   }
 
-  const products = await productService.findAll({
-    userId: user?.id,
-  });
   const categories = await categoryService.findAllTags();
 
   return (
     <div className="w-full space-y-6">
       <CategorySlider categories={categories} />
-      <ProductList products={products} />
+      <ProductScroller />
     </div>
   );
 }
