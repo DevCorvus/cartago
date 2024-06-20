@@ -11,6 +11,7 @@ import ReactQueryProvider from '@/components/providers/ReactQueryProvider';
 import { Toaster } from 'react-hot-toast';
 import NextTopLoader from 'nextjs-toploader';
 import MobileControls from '@/components/ui/MobileControls';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
