@@ -14,21 +14,25 @@ import {
 } from 'react-icons/hi2';
 
 interface Props {
-  close(): void;
+  show: boolean;
+  hide(): void;
 }
 
-export default function DropdownMenu({ close }: Props) {
+export default function DropdownMenu({ show, hide }: Props) {
   const user = useUser();
 
   const handleLogout = async () => {
     await signOut({ redirect: true, callbackUrl: '/' });
-    close();
+    hide();
   };
 
-  const ref = useClickOutside<HTMLDivElement>(close);
+  const ref = useClickOutside<HTMLDivElement>(hide);
 
   return (
-    <div ref={ref} className="min-w-48 absolute right-0 top-10 md:top-12">
+    <div
+      ref={ref}
+      className={`min-w-48 absolute right-0 top-10 overflow-hidden transition-all md:top-12 ${show ? 'h-[330px]' : 'h-0'}`}
+    >
       <div className="space-y-4 rounded-b-lg border-t border-slate-100 bg-slate-50 p-6 font-normal shadow-md">
         {!user && (
           <>
@@ -38,7 +42,7 @@ export default function DropdownMenu({ close }: Props) {
                   <Link
                     href="/login"
                     className="btn inline-block w-full py-2"
-                    onClick={close}
+                    onClick={hide}
                   >
                     Login
                   </Link>
@@ -46,7 +50,7 @@ export default function DropdownMenu({ close }: Props) {
                 <li className="text-center">
                   <Link
                     href="/register"
-                    onClick={close}
+                    onClick={hide}
                     className="flex w-full justify-center rounded-full bg-slate-200/50 py-2 text-slate-600 transition hover:text-cyan-600 focus:text-cyan-600"
                   >
                     Register
@@ -62,7 +66,7 @@ export default function DropdownMenu({ close }: Props) {
             <li>
               <Link
                 href="/cart"
-                onClick={close}
+                onClick={hide}
                 className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
               >
                 <HiShoppingCart />
@@ -72,7 +76,7 @@ export default function DropdownMenu({ close }: Props) {
             <li>
               <Link
                 href="/items/wished"
-                onClick={close}
+                onClick={hide}
                 className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
               >
                 <HiMiniHeart />
@@ -85,7 +89,7 @@ export default function DropdownMenu({ close }: Props) {
                   <li>
                     <Link
                       href="/seller/products"
-                      onClick={close}
+                      onClick={hide}
                       className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                     >
                       <HiMiniShoppingBag />
@@ -97,7 +101,7 @@ export default function DropdownMenu({ close }: Props) {
                   <li>
                     <Link
                       href="/admin/categories"
-                      onClick={close}
+                      onClick={hide}
                       className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                     >
                       <HiMiniTag />
@@ -108,7 +112,7 @@ export default function DropdownMenu({ close }: Props) {
                 <li>
                   <Link
                     href="/account/orders"
-                    onClick={close}
+                    onClick={hide}
                     className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                   >
                     <HiMiniTruck />
@@ -118,7 +122,7 @@ export default function DropdownMenu({ close }: Props) {
                 <li>
                   <Link
                     href="/account"
-                    onClick={close}
+                    onClick={hide}
                     className="flex w-full items-center gap-1 rounded-lg p-1 transition hover:bg-slate-200/50 hover:shadow-sm focus:bg-slate-200/50 focus:shadow-sm"
                   >
                     <HiMiniUser />

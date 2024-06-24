@@ -26,6 +26,12 @@ export default function NavBar() {
     };
   }, []);
 
+  const hideDropdownMenu = () => {
+    if (showMenu) {
+      setShowMenu(false);
+    }
+  };
+
   return (
     <div
       className={`${blurryBackground ? 'bg-white/75 backdrop-blur-sm focus-within:bg-white focus-within:backdrop-blur-none hover:bg-white hover:backdrop-blur-none' : 'bg-white'} fixed z-50 w-full px-4 py-2 font-semibold text-cyan-700 shadow-md transition duration-500`}
@@ -69,7 +75,7 @@ export default function NavBar() {
             </button>
           </li>
         </ul>
-        {showMenu && <DropdownMenu close={() => setShowMenu(false)} />}
+        <DropdownMenu show={showMenu} hide={hideDropdownMenu} />
       </nav>
     </div>
   );
