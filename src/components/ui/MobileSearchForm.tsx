@@ -12,13 +12,14 @@ import { ImSpinner8 } from 'react-icons/im';
 
 interface Props {
   visible: boolean;
+  hide(): void;
 }
 
 const menuStyles = {
   boxShadow: '0 0 6px 1px rgb(0 0 0 / 0.1)',
 };
 
-export default function MobileSearchForm({ visible }: Props) {
+export default function MobileSearchForm({ visible, hide }: Props) {
   const { input, setInput, categoryTags, setCategoryTags } =
     useSearchFormStore();
 
@@ -87,8 +88,17 @@ export default function MobileSearchForm({ visible }: Props) {
     }
   }, [visible]);
 
+  const handleAnimationEnd = () => {
+    if (!visible) {
+      hide();
+    }
+  };
+
   return (
-    <div className="relative flex w-full flex-col-reverse font-sans text-slate-600">
+    <div
+      className={`${visible ? 'show-mobile-search' : 'hide-mobile-search'} relative flex flex-col-reverse overflow-hidden font-sans text-slate-600`}
+      onAnimationEnd={handleAnimationEnd}
+    >
       <section className="group flex items-center rounded-full border border-slate-200 bg-white py-2 pl-4 text-black shadow-md focus-within:border-cyan-500">
         <input
           ref={inputRef}

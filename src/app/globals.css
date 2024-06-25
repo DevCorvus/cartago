@@ -33,3 +33,30 @@ select {
 .btn-alternative {
   @apply rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-700 focus:bg-slate-100 focus:text-slate-700;
 }
+
+.show-mobile-search {
+  animation: show-mobile-search 0.1s ease-in;
+}
+
+.hide-mobile-search {
+  animation: hide-mobile-search 0.1s ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes show-mobile-search {
+  from {
+    width: 40px;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes hide-mobile-search {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 40px;
+  }
+}
