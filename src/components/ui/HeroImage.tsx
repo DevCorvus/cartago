@@ -1,15 +1,17 @@
 'use client';
 
+import { Roboto } from 'next/font/google';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 
+const roboto = Roboto({ subsets: ['latin'], weight: '900' });
+
 const HERO_IMAGES = [
-  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
-  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
-  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
-  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
-  { src: '/background-tiny.jpeg', alt: 'Hero Image' },
+  { src: '/fashion.webp', alt: 'Hero Image #1' },
+  { src: '/kitchen.webp', alt: 'Hero Image #2' },
+  { src: '/toys.webp', alt: 'Hero Image #3' },
+  { src: '/phone.webp', alt: 'Hero Image #4' },
 ];
 
 export default function HeroImage() {
@@ -98,54 +100,68 @@ export default function HeroImage() {
   }, [current]);
 
   return (
-    <section className="relative flex h-full text-xl text-lime-900 md:text-4xl">
-      <button
-        type="button"
-        className="bg-neutral-200/35 absolute left-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
-        onClick={handleLeft}
-      >
-        <HiChevronLeft />
-      </button>
-      <div className="size-full overflow-hidden">
-        <div
-          className={`size-full flex ${
-            isResizing ? '' : 'transition duration-500'
-          }`}
-          ref={sliderRef}
+    <header className="h-[75vh] pt-10 md:h-[50vh] md:pt-14 2xl:h-[40vh]">
+      <div className="relative flex h-full">
+        <button
+          type="button"
+          className="bg-neutral-200/35 absolute left-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
+          onClick={handleLeft}
         >
-          {HERO_IMAGES.map((image, i) => (
-            <div key={i} className="relative h-full shrink-0 grow-0 basis-full">
-              <Image
-                priority
-                src={image.src}
-                alt={image.alt}
-                fill={true}
-                className="object-cover"
+          <HiChevronLeft />
+        </button>
+        <h1
+          style={{
+            ...roboto.style,
+            filter: 'drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.8))',
+          }}
+          className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-[325px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-cyan-400 to-green-400 bg-clip-text text-center text-4xl text-transparent md:w-[450px] md:text-5xl xl:w-[650px] xl:text-7xl 2xl:w-[850px] 2xl:text-8xl"
+        >
+          We bring the world to your cart.
+        </h1>
+        <div className="size-full overflow-hidden">
+          <div
+            className={`size-full flex ${
+              isResizing ? '' : 'transition duration-500'
+            }`}
+            ref={sliderRef}
+          >
+            {HERO_IMAGES.map((image, i) => (
+              <div
+                key={i}
+                className="relative h-full shrink-0 grow-0 basis-full"
+              >
+                <Image
+                  priority
+                  src={image.src}
+                  alt={image.alt}
+                  fill={true}
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="absolute bottom-2 flex w-full items-center justify-center gap-2">
+          {HERO_IMAGES.map((_, i) => (
+            <button key={i} onClick={() => handleDot(i)} className="flex">
+              <span
+                className={`size-3 rounded-full border-2 shadow-md transition duration-300 ${
+                  current === i
+                    ? 'border-white bg-white'
+                    : 'border-neutral-200 bg-transparent hover:border-white'
+                }`}
               />
-            </div>
+            </button>
           ))}
         </div>
+        <button
+          type="button"
+          className="bg-neutral-200/35 absolute right-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
+          onClick={handleRight}
+        >
+          <HiChevronRight />
+        </button>
       </div>
-      <div className="absolute bottom-2 flex w-full items-center justify-center gap-2">
-        {HERO_IMAGES.map((_, i) => (
-          <button key={i} onClick={() => handleDot(i)} className="flex">
-            <span
-              className={`size-3 rounded-full border-2 shadow-md transition duration-300 ${
-                current === i
-                  ? 'border-white bg-white'
-                  : 'border-neutral-200 bg-transparent hover:border-white'
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-      <button
-        type="button"
-        className="bg-neutral-200/35 absolute right-0 z-10 flex h-full w-8 items-center justify-center text-white opacity-0 backdrop-blur-sm transition duration-300 hover:opacity-100 md:w-16"
-        onClick={handleRight}
-      >
-        <HiChevronRight />
-      </button>
-    </section>
+    </header>
   );
 }
