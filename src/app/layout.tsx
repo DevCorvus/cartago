@@ -12,6 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import NextTopLoader from 'nextjs-toploader';
 import MobileControls from '@/components/ui/MobileControls';
 import 'react-loading-skeleton/dist/skeleton.css';
+import Footer from '../components/ui/Footer';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -49,6 +50,7 @@ export default async function RootLayout({
               <main className="min-h-screen w-full">{children}</main>
               <div id="modal-container" />
               <MobileControls />
+              <Footer />
               <Toaster position="bottom-right" />
             </UserProvider>
           </ReactQueryProvider>
