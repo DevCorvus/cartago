@@ -17,7 +17,10 @@ export default function MobileControls() {
   };
 
   return (
-    <div ref={ref} className="fixed bottom-0 left-0 z-30 w-full p-4 md:hidden">
+    <div
+      ref={ref}
+      className={`fixed ${showBtn ? 'bottom-4 left-4' : 'bottom-4 left-0 w-full px-4'} z-30 md:hidden`}
+    >
       <div className="container mx-auto">
         <div className={showBtn ? 'hidden' : ''}>
           <MobileSearchForm
