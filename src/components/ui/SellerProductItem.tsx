@@ -30,7 +30,7 @@ export default function SellerProductItem({ product, deleteProduct }: Props) {
             alt={product.title}
             fill={true}
             sizes="300px"
-            className="object-cover transition duration-300 group-hover:scale-110"
+            className="object-cover transition duration-300 group-hover:scale-110 group-focus:scale-110"
           />
           <span className="absolute bottom-2 right-2 rounded-xl border border-green-200 bg-green-50 px-1 font-bold text-green-600 shadow-md">
             {formatMoney(product.price)}

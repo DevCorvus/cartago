@@ -23,7 +23,7 @@ export default function ProductRelatedItem({ product }: Props) {
           alt={product.title}
           fill={true}
           sizes="200px"
-          className="object-cover transition duration-300 group-hover:scale-110"
+          className="object-cover transition duration-300 group-hover:scale-110 group-focus:scale-110"
         />
         <span className="absolute bottom-1 right-1 rounded-xl border border-green-200 bg-green-50 px-1 font-bold text-green-600 shadow-md">
           {formatMoney(product.price)}
