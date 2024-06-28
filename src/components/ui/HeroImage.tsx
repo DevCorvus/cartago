@@ -116,7 +116,16 @@ export default function HeroImage() {
           }}
           className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-[325px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-cyan-400 to-green-400 bg-clip-text text-center text-4xl text-transparent md:w-[450px] md:text-5xl xl:w-[650px] xl:text-7xl 2xl:w-[850px] 2xl:text-8xl"
         >
-          We bring the world to your cart.
+          We bring the{' '}
+          <span
+            style={{
+              backgroundImage: 'url("/sand.webp")',
+            }}
+            className="bg-cover bg-clip-text bg-center brightness-90"
+          >
+            Punic
+          </span>{' '}
+          world to your cart.
         </h1>
         <div className="size-full overflow-hidden">
           <div
