@@ -8,10 +8,10 @@ import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 const roboto = Roboto({ subsets: ['latin'], weight: '900' });
 
 const HERO_IMAGES = [
-  { src: '/fashion.webp', alt: 'Hero Image #1' },
-  { src: '/kitchen.webp', alt: 'Hero Image #2' },
-  { src: '/toys.webp', alt: 'Hero Image #3' },
-  { src: '/phone.webp', alt: 'Hero Image #4' },
+  { src: '/images/fashion.webp', alt: 'Hero Image #1' },
+  { src: '/images/kitchen.webp', alt: 'Hero Image #2' },
+  { src: '/images/toys.webp', alt: 'Hero Image #3' },
+  { src: '/images/phone.webp', alt: 'Hero Image #4' },
 ];
 
 export default function HeroImage() {
@@ -119,7 +119,7 @@ export default function HeroImage() {
           We bring the{' '}
           <span
             style={{
-              backgroundImage: 'url("/sand.webp")',
+              backgroundImage: 'url("/images/sand-texture.webp")',
             }}
             className="bg-cover bg-clip-text bg-center brightness-90"
           >
