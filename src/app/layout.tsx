@@ -14,17 +14,37 @@ import MobileControls from '@/components/ui/MobileControls';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Footer from '../components/ui/Footer';
 
-const openSans = Open_Sans({
-  subsets: ['latin'],
-});
+const title = 'Cartago';
+const description = 'eCommerce platform demo';
 
 export const metadata: Metadata = {
   title: 'Cartago | Punic eCommerce',
-  description: 'eCommerce platform demo',
+  description,
+  keywords: ['ecommerce'],
   icons: {
     icon: '/favicon.png',
   },
+  openGraph: {
+    title,
+    description,
+    siteName: title,
+    images: {
+      url: '/preview.png',
+    },
+  },
+  twitter: {
+    title,
+    description,
+    card: 'summary_large_image',
+    images: {
+      url: '/preview.png',
+    },
+  },
 };
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+});
 
 export default async function RootLayout({
   children,
