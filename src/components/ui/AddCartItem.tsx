@@ -24,7 +24,7 @@ export default function AddCartItem({ productId }: Props) {
           <button
             type="submit"
             title="Add to Shopping Cart"
-            className={`rounded-full bg-white p-0.5 text-xl shadow-md transition hover:text-cyan-500`}
+            className="rounded-full bg-white p-1 text-xl shadow-md transition hover:text-cyan-500"
           >
             <HiOutlineShoppingCart />
           </button>
@@ -33,7 +33,7 @@ export default function AddCartItem({ productId }: Props) {
         <Link
           href="/cart"
           title="View in Shopping Cart"
-          className="rounded-full bg-white p-0.5 text-xl text-cyan-600 shadow-md transition hover:text-cyan-500"
+          className="rounded-full bg-white p-1 text-xl text-cyan-600 shadow-md transition hover:text-cyan-500"
         >
           <HiShoppingCart />
         </Link>

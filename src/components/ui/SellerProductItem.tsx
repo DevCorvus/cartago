@@ -61,14 +61,14 @@ export default function SellerProductItem({ product, deleteProduct }: Props) {
           <Link
             title="Edit this product"
             href={`/items/${product.id}/edit`}
-            className="rounded-full bg-white p-0.5 text-xl shadow-md transition hover:text-green-500"
+            className="rounded-full bg-white p-1 text-xl shadow-md transition hover:text-green-500"
           >
             <HiOutlinePencilSquare />
           </Link>
           <button
             title="Delete this product"
             onClick={() => setShowDeleteConfirmation(true)}
-            className="rounded-full bg-white p-0.5 text-xl shadow-md transition hover:text-rose-400"
+            className="rounded-full bg-white p-1 text-xl shadow-md transition hover:text-rose-400"
           >
             <HiOutlineTrash />
           </button>

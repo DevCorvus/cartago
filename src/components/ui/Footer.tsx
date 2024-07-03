@@ -5,7 +5,7 @@ import { ImGithub } from 'react-icons/im';
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-lg bg-gradient-to-b from-cyan-900 to-cyan-950 px-4 py-6 text-cyan-50">
+    <footer className="rounded-t-lg bg-gradient-to-b from-cyan-900 to-cyan-950 p-4 text-cyan-50">
       <div className="container mx-auto flex flex-wrap justify-between gap-4">
         <header className="flex flex-1 items-center gap-4">
           <Link
@@ -27,7 +27,7 @@ export default function Footer() {
               target="_blank"
               className="transition hover:text-cyan-300 focus:text-cyan-300"
             >
-              <ImGithub className="text-4xl" />
+              <ImGithub className="text-3xl" />
             </a>
           </section>
           <section className="flex items-center gap-3">
@@ -37,7 +37,7 @@ export default function Footer() {
                 <a
                   href="https://github.com/DevCorvus"
                   target="_blank"
-                  className="size-10 relative inline-block rounded-full outline outline-cyan-500 transition hover:outline-cyan-300 focus:outline-cyan-300"
+                  className="size-8 relative inline-block rounded-full outline outline-cyan-500 transition hover:outline-cyan-300 focus:outline-cyan-300"
                 >
                   <Image
                     fill={true}
@@ -52,7 +52,7 @@ export default function Footer() {
                 <a
                   href="https://github.com/Lachicagladiadora"
                   target="_blank"
-                  className="size-10 relative inline-block rounded-full outline outline-cyan-500 transition hover:outline-cyan-300 focus:outline-cyan-300"
+                  className="size-8 relative inline-block rounded-full outline outline-cyan-500 transition hover:outline-cyan-300 focus:outline-cyan-300"
                 >
                   <Image
                     fill={true}

@@ -21,7 +21,7 @@ export default function WishProductItem({ productId }: Props) {
       <button
         type="submit"
         title={isWished ? 'Remove from Wish List' : 'Add to Wish List'}
-        className={`rounded-full bg-white p-0.5 text-xl shadow-md transition ${isWished ? 'text-rose-400' : 'hover:text-rose-400'}`}
+        className={`rounded-full bg-white p-1 text-xl shadow-md transition ${isWished ? 'text-rose-400' : 'hover:text-rose-400'}`}
       >
         {isWished ? <HiHeart /> : <HiOutlineHeart />}
       </button>
