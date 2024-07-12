@@ -1,9 +1,23 @@
 import SellerProductList from '@/components/ui/SellerProductList';
+import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/shared/auth/rbac';
-import withAuth from '@/server/middlewares/withAuth';
+import { redirect } from 'next/navigation';
 
-async function SellerProducts() {
+export default async function SellerProducts() {
+  const user = await getUserSession();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const hasPermissions = await checkUserPermissions(
+    [Permissions.VIEW_SELLER_PANEL],
+    user.role,
+  );
+
+  if (!hasPermissions) {
+    redirect('/');
+  }
+
   return <SellerProductList />;
 }
-
-export default withAuth(SellerProducts, [Permissions.VIEW_SELLER_PANEL]);

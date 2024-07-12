@@ -1,19 +1,21 @@
 import OrderStatusTag from '@/components/ui/OrderStatusTag';
 import PaymentStatusTag from '@/components/ui/PaymentStatusTag';
 import { formatMoney } from '@/lib/dinero';
-import { UserSession } from '@/shared/auth/auth.types';
-import withAuth from '@/server/middlewares/withAuth';
 import { orderService } from '@/server/services';
 import { formatDate } from '@/utils/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlineTruck } from 'react-icons/hi2';
+import { getUserSession } from '@/server/auth/auth.utils';
+import { redirect } from 'next/navigation';
 
-interface Props {
-  user: UserSession;
-}
+export default async function Orders() {
+  const user = await getUserSession();
 
-async function Orders({ user }: Props) {
+  if (!user) {
+    redirect('/login');
+  }
+
   const orders = await orderService.findAll(user.id);
 
   if (orders.length === 0) {
@@ -97,5 +99,3 @@ async function Orders({ user }: Props) {
     </div>
   );
 }
-
-export default withAuth(Orders);

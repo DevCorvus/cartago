@@ -1,18 +1,31 @@
 import EditProductForm from '@/components/ui/EditProductForm';
-import { UserSession } from '@/shared/auth/auth.types';
 import { Permissions } from '@/shared/auth/rbac';
-import withAuth from '@/server/middlewares/withAuth';
 import { categoryService, productService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 
 interface Props {
   params: Params;
-  user: UserSession;
 }
 
-async function EditProduct({ user, params }: Props) {
+export default async function EditProduct({ params }: Props) {
+  const user = await getUserSession();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const hasPermissions = await checkUserPermissions(
+    [Permissions.EDIT_PRODUCT],
+    user.role,
+  );
+
+  if (!hasPermissions) {
+    redirect('/');
+  }
+
   const result = await paramsSchema.safeParseAsync(params);
 
   if (!result.success) {
@@ -28,5 +41,3 @@ async function EditProduct({ user, params }: Props) {
   const categoryTags = await categoryService.findAllTags();
   return <EditProductForm product={product} categoryTags={categoryTags} />;
 }
-
-export default withAuth(EditProduct, [Permissions.EDIT_PRODUCT]);

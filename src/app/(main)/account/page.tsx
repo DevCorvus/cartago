@@ -1,14 +1,15 @@
-import { UserSession } from '@/shared/auth/auth.types';
-import withAuth from '@/server/middlewares/withAuth';
 import { userService } from '@/server/services';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import AccountDetails from '@/components/ui/AccountDetails';
+import { getUserSession } from '@/server/auth/auth.utils';
 
-interface Props {
-  user: UserSession;
-}
+export default async function Account() {
+  const user = await getUserSession();
 
-async function Account({ user }: Props) {
+  if (!user) {
+    redirect('/login');
+  }
+
   const profile = await userService.getProfile(user.id);
 
   if (!profile) {
@@ -17,5 +18,3 @@ async function Account({ user }: Props) {
 
   return <AccountDetails profile={profile} />;
 }
-
-export default withAuth(Account);

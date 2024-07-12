@@ -1,8 +1,13 @@
 import SignUpForm from '@/components/ui/SignUpForm';
-import withoutAuth from '@/server/middlewares/withoutAuth';
+import { getUserSession } from '@/server/auth/auth.utils';
+import { redirect } from 'next/navigation';
 
-async function SignUp() {
+export default async function SignUp() {
+  const user = await getUserSession();
+
+  if (user) {
+    redirect('/');
+  }
+
   return <SignUpForm />;
 }
-
-export default withoutAuth(SignUp);

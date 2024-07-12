@@ -1,17 +1,21 @@
-import { UserSession } from '@/shared/auth/auth.types';
-import withAuth from '@/server/middlewares/withAuth';
 import { orderService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import OrderDetails from '@/components/ui/OrderDetails';
+import { getUserSession } from '@/server/auth/auth.utils';
 
 interface Props {
-  user: UserSession;
   params: Params;
 }
 
-async function Order({ user, params }: Props) {
+export default async function Order({ params }: Props) {
+  const user = await getUserSession();
+
+  if (!user) {
+    redirect('/login');
+  }
+
   const result = await paramsSchema.safeParseAsync(params);
 
   if (!result.success) {
@@ -26,5 +30,3 @@ async function Order({ user, params }: Props) {
 
   return <OrderDetails order={order} />;
 }
-
-export default withAuth(Order);

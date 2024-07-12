@@ -1,8 +1,26 @@
+import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/shared/auth/rbac';
-import withAuth from '@/server/middlewares/withAuth';
+import { redirect } from 'next/navigation';
 
-async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = await getUserSession();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const hasPermissions = await checkUserPermissions(
+    [Permissions.VIEW_ADMIN_PANEL],
+    user.role,
+  );
+
+  if (!hasPermissions) {
+    redirect('/');
+  }
+
   return <>{children}</>;
 }
-
-export default withAuth(AdminLayout, [Permissions.VIEW_ADMIN_PANEL]);

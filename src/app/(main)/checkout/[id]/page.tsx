@@ -1,17 +1,21 @@
 import AddOrderForm from '@/components/ui/AddOrderForm.tsx';
-import { UserSession } from '@/shared/auth/auth.types';
-import withAuth from '@/server/middlewares/withAuth';
 import { orderService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getUserSession } from '@/server/auth/auth.utils';
 
 interface Props {
   params: Params;
-  user: UserSession;
 }
 
-async function Checkout({ params, user }: Props) {
+export default async function Checkout({ params }: Props) {
+  const user = await getUserSession();
+
+  if (!user) {
+    redirect('/login');
+  }
+
   const result = await paramsSchema.safeParseAsync(params);
 
   if (!result.success) {
@@ -31,5 +35,3 @@ async function Checkout({ params, user }: Props) {
 
   return <AddOrderForm order={checkoutOrder} />;
 }
-
-export default withAuth(Checkout);
