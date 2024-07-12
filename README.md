@@ -25,8 +25,8 @@ DATABASE_URL="your_postgres_database_url"
 NEXTAUTH_SECRET="your_nextauth_secret"
 AWS_BUCKET_REGION="your_aws_bucket_region"
 AWS_BUCKET_NAME="your_aws_bucket_name"
-AWS_ACCESS_KEY="your_aws_access_key"
-AWS_SECRET_ACCESS_KEY="your_aws_secret_access_key"
+AWS_S3_ACCESS_KEY="your_aws_s3_access_key"
+AWS_S3_SECRET_ACCESS_KEY="your_aws_s3_secret_access_key"
 
 # Optional
 MODERATE_CONTENT_API_KEY="your_moderate_content_api_key"
