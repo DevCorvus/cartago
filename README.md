@@ -6,6 +6,8 @@
 
 Ecommerce platform demo made from scratch with Next.js 14, NextAuth, TailwindCSS, Prisma (Postgres), AWS S3, Zod and Zustand.
 
+**Check it out: https://cartago.vercel.app/**
+
 ## How it works
 
 In theory, the same as any other ecommerce, although minified for obvious reasons and focused instead on ease of use. There are at least three roles from which most features emerge. Customers, who can "wish" products and add them to the shopping cart, from there they can checkout to create an order (by filling in some basic information), make a payment and confirm the subsequent delivery (sadly, we should clarify that nothing will be sent to you). Sellers, who can publish the different products and manage their inventory. Finally, Admins manage categories and have some additional privileges such as the ability to remove any product from the platform. All of this is what defines in practice the basic workflow of an ecommerce.
