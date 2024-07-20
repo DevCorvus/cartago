@@ -21,8 +21,12 @@ export const metadata: Metadata = {
   title: 'Cartago | Punic eCommerce',
   description,
   keywords: ['ecommerce'],
+  metadataBase: new URL('https://cartago.vercel.app'),
   icons: {
     icon: '/favicon.png',
+  },
+  alternates: {
+    canonical: '/',
   },
   openGraph: {
     title,
