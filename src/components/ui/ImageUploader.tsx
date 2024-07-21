@@ -1,12 +1,6 @@
 import { productImageSchema } from '@/shared/schemas/product.schema';
 import Image from 'next/image';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   HiMiniXCircle,
@@ -17,11 +11,7 @@ import { extname } from 'path';
 import Loading from './Loading';
 import { toastError } from '@/lib/toast';
 import { ProductImageDto } from '@/shared/dtos/product.dto';
-
-export interface FileUpload {
-  file: File;
-  keep?: boolean;
-}
+import { FieldError, Merge } from 'react-hook-form';
 
 interface ImagePreview {
   filename: string;
@@ -31,18 +21,16 @@ interface ImagePreview {
 
 interface Props {
   defaultImages?: ProductImageDto[];
-  addImage: (options: FileUpload) => void;
+  addImage: (file: File) => void;
   removeImage: (name: string) => void;
-  setImageUploadError: Dispatch<SetStateAction<boolean>>;
-  notEnoughImagesError: boolean;
+  error?: Merge<FieldError, (FieldError | undefined)[] | undefined>;
 }
 
 export default function ImageUploader({
   defaultImages,
   addImage,
   removeImage,
-  setImageUploadError,
-  notEnoughImagesError,
+  error,
 }: Props) {
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
   const [selectedImage, setSelectedImage] = useState<ImagePreview | null>(null);
@@ -59,9 +47,7 @@ export default function ImageUploader({
   };
 
   const handleNewImage = useCallback(
-    (options: FileUpload) => {
-      const file = options.file;
-
+    (file: File) => {
       const validation = productImageSchema.safeParse(file);
 
       const imagePreview: ImagePreview = {
@@ -72,7 +58,7 @@ export default function ImageUploader({
           : validation.error.errors.map((err) => err.message),
       };
 
-      addImage(options);
+      addImage(file);
       addImagePreview(imagePreview);
     },
     [addImage],
@@ -102,7 +88,7 @@ export default function ImageUploader({
               type: imageType,
             });
 
-            handleNewImage({ file: imageFile, keep: true });
+            handleNewImage(imageFile);
           } catch (err) {
             toastError(err);
           }
@@ -131,7 +117,7 @@ export default function ImageUploader({
         };
         reader.onload = () => {
           if (!imagePreviews.some((image) => image.filename === file.name)) {
-            handleNewImage({ file, keep: false });
+            handleNewImage(file);
           }
         };
 
@@ -140,10 +126,6 @@ export default function ImageUploader({
     },
     [imagePreviews, handleNewImage],
   );
-
-  useEffect(() => {
-    setImageUploadError(imagePreviews.some((img) => Boolean(img.errors)));
-  }, [imagePreviews, setImageUploadError]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -205,9 +187,7 @@ export default function ImageUploader({
       <span className="inline-block text-sm italic text-slate-500/75">
         Max 5
       </span>
-      {notEnoughImagesError && (
-        <p className="mt-1 text-red-400">At least one image is required</p>
-      )}
+      {error && <p className="mt-1 text-red-400">{error.message}</p>}
       <div className="grid h-16 flex-1 grid-cols-5 gap-1">
         {imagePreviews.map((image, i) => (
           <div key={i} className="relative">

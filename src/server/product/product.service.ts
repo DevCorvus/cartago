@@ -2,14 +2,13 @@ import { prisma } from '@/lib/prisma';
 import { PRODUCT_PAGE_SIZE } from '@/shared/constants';
 import {
   ProductDto,
-  CreateProductDto,
+  CreateUpdateProductDto,
   ProductCardDto,
   ProductDetailsDto,
   ProductCartItemWithoutAmountDto,
   ProductRating,
   ProductCard,
   NewProductDto,
-  UpdateProductDto,
 } from '@/shared/dtos/product.dto';
 import { StorageService } from '../storage/storage.service';
 
@@ -383,7 +382,10 @@ export class ProductService {
     return count > 0;
   }
 
-  async create(userId: string, data: CreateProductDto): Promise<NewProductDto> {
+  async create(
+    userId: string,
+    data: CreateUpdateProductDto,
+  ): Promise<NewProductDto> {
     let images;
 
     try {
@@ -426,7 +428,7 @@ export class ProductService {
   async update(
     id: string,
     userId: string,
-    data: UpdateProductDto,
+    data: CreateUpdateProductDto,
   ): Promise<void> {
     // TODO: A lot more edge cases to take into consideration
 
@@ -436,8 +438,7 @@ export class ProductService {
     });
 
     const productImagesToDelete = productImages.filter(
-      (image) =>
-        !data.imageFilenamesToKeep.some((filename) => filename === image.path),
+      (image) => !data.images.some((file) => file.name === image.path),
     );
 
     const productImageFilenamesToDelete = productImagesToDelete.map(
@@ -447,8 +448,7 @@ export class ProductService {
     await this.storageService.deleteMany(productImageFilenamesToDelete);
 
     const newProductImages = data.images.filter(
-      (file) =>
-        !data.imageFilenamesToKeep.some((filename) => filename === file.name),
+      (file) => !productImages.some((image) => image.path === file.name),
     );
 
     const newProductImageFilenames =

@@ -2,9 +2,9 @@ import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/shared/auth/rbac';
 import { moderationService, productService } from '@/server/services';
 import { Params } from '@/shared/dtos/params.dto';
-import { UpdateProductDto } from '@/shared/dtos/product.dto';
+import { CreateUpdateProductDto } from '@/shared/dtos/product.dto';
 import { paramsSchema } from '@/shared/schemas/params.schema';
-import { updateProductSchema } from '@/shared/schemas/product.schema';
+import { createUpdateProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface Props {
@@ -27,7 +27,7 @@ export async function PUT(req: NextRequest, { params }: Props) {
 
   if (!result.success) return NextResponse.json(null, { status: 400 });
 
-  let data: UpdateProductDto;
+  let data: CreateUpdateProductDto;
 
   try {
     const formData = await req.formData();
@@ -38,13 +38,10 @@ export async function PUT(req: NextRequest, { params }: Props) {
       price: Number(formData.get('price')),
       stock: Number(formData.get('stock')),
       images: formData.getAll('images'),
-      imageFilenamesToKeep: JSON.parse(
-        formData.get('imageFilenamesToKeep') as string,
-      ),
       categories: JSON.parse(formData.get('categories') as string),
     };
 
-    data = await updateProductSchema.parseAsync(input);
+    data = await createUpdateProductSchema.parseAsync(input);
   } catch {
     return NextResponse.json(null, { status: 400 });
   }

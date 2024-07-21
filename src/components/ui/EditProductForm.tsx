@@ -1,15 +1,15 @@
 'use client';
 
 import {
-  CreateUpdatePartialProductDto,
+  CreateUpdateProductFormSchema,
   ProductDto,
 } from '@/shared/dtos/product.dto';
-import { FocusEvent, FormEvent, useCallback, useState } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import ImageUploader, { FileUpload } from '@/components/ui/ImageUploader';
+import ImageUploader from '@/components/ui/ImageUploader';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createUpdatePartialProductSchema } from '@/shared/schemas/product.schema';
+import { createUpdateProductFormSchema } from '@/shared/schemas/product.schema';
 import CategoryTagsInput from '@/components/ui/CategoryTagsInput';
 import { CategoryTagDto } from '@/shared/dtos/category.dto';
 import { getMoneyString } from '@/lib/dinero';
@@ -25,40 +25,29 @@ interface Props {
 export default function EditProductForm({ product, categoryTags }: Props) {
   const router = useRouter();
 
-  const [images, setImages] = useState<FileUpload[]>([]);
-  const [notEnoughImagesError, setNotEnoughImagesError] =
-    useState<boolean>(false);
-  const [imageUploadError, setImageUploadError] = useState<boolean>(false);
-
-  const [categoryIds, setCategoryIds] = useState<number[]>([]);
-  const [notEnoughCategoriesError, setNotEnoughCategoriesError] =
-    useState<boolean>(false);
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitted },
     setValue,
+    getValues,
     watch,
-  } = useForm<CreateUpdatePartialProductDto>({
-    resolver: zodResolver(createUpdatePartialProductSchema),
+  } = useForm<CreateUpdateProductFormSchema>({
+    resolver: zodResolver(createUpdateProductFormSchema),
     defaultValues: {
       title: product.title,
       description: product.description,
       stock: product.stock,
+      images: [],
+      categories: [],
     },
   });
 
   const updateProductMutation = useUpdateProduct();
 
-  const onSubmit: SubmitHandler<CreateUpdatePartialProductDto> = async (
+  const onSubmit: SubmitHandler<CreateUpdateProductFormSchema> = async (
     data,
   ) => {
-    const noImages = images.length === 0;
-    const noCategories = categoryIds.length === 0;
-
-    if (noImages || noCategories || imageUploadError) return;
-
     const formData = new FormData();
 
     formData.set('title', data.title);
@@ -66,17 +55,8 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     formData.set('price', String(data.price));
     formData.set('stock', String(data.stock));
 
-    images.forEach((image) => formData.append('images', image.file));
-    formData.append(
-      'imageFilenamesToKeep',
-      JSON.stringify(
-        images
-          .filter((image) => Boolean(image.keep))
-          .map((image) => image.file.name),
-      ),
-    );
-
-    formData.append('categories', JSON.stringify(categoryIds));
+    data.images.forEach((image) => formData.append('images', image));
+    formData.append('categories', JSON.stringify(data.categories));
 
     try {
       await updateProductMutation.mutateAsync({
@@ -87,16 +67,6 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     } catch (err) {
       toastError(err);
     }
-  };
-
-  const submitWrapper = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setNotEnoughImagesError(images.length === 0);
-    setNotEnoughCategoriesError(categoryIds.length === 0);
-
-    const cb = handleSubmit(onSubmit);
-    await cb(e);
   };
 
   const handlePriceBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -115,29 +85,40 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     }
   };
 
-  const addImage = useCallback(({ file, keep }: FileUpload) => {
-    setImages((prev) => {
-      if (!prev.some((image) => image.file.name === file.name)) {
-        return [...prev, { file, keep }];
-      } else {
-        return prev;
+  const addImage = useCallback(
+    (file: File) => {
+      const prev = getValues('images');
+
+      if (!prev.some((prevFile) => prevFile.name === file.name)) {
+        setValue('images', [...prev, file], { shouldValidate: isSubmitted });
       }
-    });
-    setNotEnoughImagesError(false);
-  }, []);
+    },
+    [getValues, setValue, isSubmitted],
+  );
 
-  const removeImage = (name: string) => {
-    if (images.length === 1) {
-      setNotEnoughImagesError(true);
-    }
-    setImages((prev) => prev.filter((image) => image.file.name !== name));
-  };
+  const removeImage = useCallback(
+    (name: string) => {
+      const filteredImages = getValues('images').filter(
+        (image) => image.name !== name,
+      );
+      setValue('images', filteredImages, {
+        shouldValidate: isSubmitted,
+      });
+    },
+    [getValues, setValue, isSubmitted],
+  );
 
+  const setCategoryIds = useCallback(
+    (categoryIds: number[]) => {
+      setValue('categories', categoryIds, { shouldValidate: isSubmitted });
+    },
+    [setValue, isSubmitted],
+  );
   const description = watch('description');
 
   return (
     <form
-      onSubmit={submitWrapper}
+      onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-md space-y-6 rounded-lg border-2 border-gray-50 bg-white p-8 shadow-md"
     >
       <header>
@@ -148,8 +129,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
           defaultImages={product.images}
           addImage={addImage}
           removeImage={removeImage}
-          setImageUploadError={setImageUploadError}
-          notEnoughImagesError={notEnoughImagesError}
+          error={errors.images}
         />
         <div className="space-y-2">
           <label htmlFor="title" className="text-slate-500">
@@ -231,8 +211,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
           defaultCategoryTags={product.categories}
           categoryTags={categoryTags}
           setCategoryIds={setCategoryIds}
-          notEnoughCategoriesError={notEnoughCategoriesError}
-          setNotEnoughCategoriesError={setNotEnoughCategoriesError}
+          error={errors.categories}
         />
       </section>
       <SubmitButton

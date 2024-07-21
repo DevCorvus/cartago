@@ -1,6 +1,6 @@
 import { moderationService, productService } from '@/server/services';
-import { CreateProductDto } from '@/shared/dtos/product.dto';
-import { createProductSchema } from '@/shared/schemas/product.schema';
+import { CreateUpdateProductDto } from '@/shared/dtos/product.dto';
+import { createUpdateProductSchema } from '@/shared/schemas/product.schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserPermissions, getUserSession } from '@/server/auth/auth.utils';
 import { Permissions } from '@/shared/auth/rbac';
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(null, { status: 403 });
   }
 
-  let data: CreateProductDto;
+  let data: CreateUpdateProductDto;
 
   try {
     const formData = await req.formData();
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       categories: JSON.parse(formData.get('categories') as string),
     };
 
-    data = await createProductSchema.parseAsync(input);
+    data = await createUpdateProductSchema.parseAsync(input);
   } catch {
     return NextResponse.json(null, { status: 400 });
   }
