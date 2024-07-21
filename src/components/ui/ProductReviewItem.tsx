@@ -24,11 +24,11 @@ export default function ProductReviewItem({ review, updateReview }: Props) {
   }
 
   return (
-    <div className="flex gap-1.5 rounded-lg border-b-2 border-r-2 border-neutral-100 bg-white p-4 shadow-sm">
-      <HiUserCircle className="-mt-0.5 text-3xl text-cyan-700" />
-      <div className="flex flex-1 flex-col gap-1.5">
+    <div className="relative flex w-full gap-1.5 rounded-lg border-b-2 border-r-2 border-neutral-100 bg-white p-4 pl-12 shadow-sm">
+      <HiUserCircle className="absolute left-3 top-3.5 text-3xl text-cyan-700" />
+      <div className="flex w-full flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-baseline gap-1.5">
             <span className="font-semibold text-cyan-700">
               {review.user.fullname}
             </span>
