@@ -502,6 +502,9 @@ export class ProductService {
     const productSales = await prisma.orderItem.groupBy({
       by: ['productId'],
       where: {
+        order: {
+          status: { in: ['SHIPPED', 'DELIVERED'] },
+        },
         productId: {
           in: products.map((product) => product.id),
         },
