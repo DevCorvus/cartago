@@ -9,18 +9,24 @@ export const ACCEPTED_IMAGE_MIME_TYPES = [
   'image/webp',
 ];
 
-const priceInCentsSchema = z.number().int().min(100);
+const CENTS = 100;
+
+const priceInCentsSchema = z
+  .number()
+  .int()
+  .min(1 * CENTS)
+  .max(99_999_999 * CENTS);
 
 const priceSchema = z
   .string()
-  .transform((price) => Math.round(parseFloat(price) * 100))
+  .transform((price) => Math.round(parseFloat(price) * CENTS))
   .pipe(priceInCentsSchema);
 
 export const createUpdatePartialProductSchema = z.object({
   title: zodNotProfaneString(z.string().min(10).max(150).trim()),
   description: zodNotProfaneString(z.string().max(500).trim()),
   price: priceSchema,
-  stock: z.number().int().min(1),
+  stock: z.number().int().min(1).max(1000),
 });
 
 export const productImageSchema = z
