@@ -18,12 +18,12 @@ export default function LongText({ text, maxLength }: Props) {
           <>{text}</>
         )}
       </p>
-      {!showFullText && isBiggerThanMaxLength && (
+      {isBiggerThanMaxLength && (
         <button
           className="text-sm text-cyan-600 transition hover:text-cyan-500 focus:text-cyan-500"
-          onClick={() => setShowFullText(true)}
+          onClick={() => setShowFullText((prev) => !prev)}
         >
-          Show more
+          Show {!showFullText ? 'more' : 'less'}
         </button>
       )}
     </div>
