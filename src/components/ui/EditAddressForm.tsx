@@ -15,6 +15,8 @@ import { useCountries } from '@/data/country';
 import { useUpdateAddress } from '@/data/address';
 import { toastError } from '@/lib/toast';
 import SubmitButton from './SubmitButton';
+import { PhoneCodeInput } from './PhoneCodeInput';
+import { CountryInput } from './CountryInput';
 
 interface Props {
   address: AddressDto;
@@ -210,26 +212,10 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
               </div>
             </div>
             {showPhoneCodes && (
-              <ul className="absolute left-0 top-14 z-10 h-80 w-32 overflow-y-auto rounded-md bg-slate-50 p-2 shadow-md">
-                {countryPhones.map((country) => (
-                  <li key={country.id}>
-                    <button
-                      type="button"
-                      className="flex w-full items-center gap-1 py-1 text-sm text-slate-800 transition hover:text-green-700 focus:text-green-700"
-                      onClick={() => handleSelectCountryPhone(country)}
-                    >
-                      <Image
-                        src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
-                        alt={country.name + ' Flag'}
-                        width={0}
-                        height={0}
-                        className="h-auto w-6"
-                      />
-                      <span className="line-clamp-1">+{country.phoneCode}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <PhoneCodeInput
+                countryPhones={countryPhones}
+                setPhoneCode={handleSelectCountryPhone}
+              />
             )}
           </div>
           {errors.phoneNumber && (
@@ -265,28 +251,10 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
             </>
           </button>
           {showCountries && (
-            <ul className="absolute top-20 z-10 h-80 w-full overflow-y-auto rounded-lg bg-slate-50 p-2 shadow-md">
-              {countries.map((country) => (
-                <li key={country.id}>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-1 py-1 text-sm transition hover:text-cyan-600 focus:text-cyan-600"
-                    onClick={() => handleSelectCountry(country)}
-                  >
-                    <Image
-                      src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
-                      alt={country.name + ' Flag'}
-                      width={0}
-                      height={0}
-                      className="h-auto w-6"
-                    />
-                    <span className="line-clamp-1 text-left">
-                      {country.name}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <CountryInput
+              countries={countries}
+              setCountry={handleSelectCountry}
+            />
           )}
           {errors.countryId && (
             <p className="text-red-400">{errors.countryId.message}</p>
