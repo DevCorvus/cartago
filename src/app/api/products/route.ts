@@ -70,6 +70,10 @@ export async function POST(req: NextRequest) {
       categories: JSON.parse(formData.get('categories') as string),
     };
 
+    if (typeof input.description === 'string') {
+      input.description = input.description.replaceAll('\r\n', '\n');
+    }
+
     data = await createUpdateProductSchema.parseAsync(input);
   } catch {
     return NextResponse.json(null, { status: 400 });

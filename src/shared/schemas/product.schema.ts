@@ -34,8 +34,8 @@ export const productImageSchema = z
 export const productCategorySchema = z.number().int().positive();
 
 export const createUpdateProductFormSchema = z.object({
-  title: zodNotProfaneString(z.string().min(10).max(150).trim()),
-  description: zodNotProfaneString(z.string().max(500).trim()),
+  title: zodNotProfaneString(z.string().trim().min(10).max(150)),
+  description: zodNotProfaneString(z.string().trim().max(500)),
   price: priceFormSchema,
   stock: z.number().int().min(1).max(1000),
   images: z.array(productImageSchema).min(1).max(5),

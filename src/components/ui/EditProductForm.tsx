@@ -114,6 +114,7 @@ export default function EditProductForm({ product, categoryTags }: Props) {
     },
     [setValue, isSubmitted],
   );
+
   const description = watch('description');
 
   return (

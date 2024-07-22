@@ -5,14 +5,14 @@ import { zodNotProfaneString } from '@/lib/zod';
 const passwordSchema = z.string().min(6).max(256);
 
 export const loginUserSchema = z.object({
-  email: z.string().email().trim(),
+  email: z.string().trim().email(),
   password: passwordSchema,
 });
 
 export const createUserSchema = z
   .object({
-    fullname: zodNotProfaneString(z.string().min(4).trim()),
-    email: z.string().email().trim(),
+    fullname: zodNotProfaneString(z.string().trim().min(4)),
+    email: z.string().trim().email(),
     password: passwordSchema,
     confirmPassword: z.string(),
     wishedItems: z.array(z.string().uuid()).optional(),
