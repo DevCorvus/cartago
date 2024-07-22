@@ -13,7 +13,7 @@ export async function GET() {
 
   try {
     const cartItems = await cartService.findAllItems(cartId);
-    return NextResponse.json(cartItems, { status: 201 });
+    return NextResponse.json(cartItems, { status: 200 });
   } catch {
     return NextResponse.json(null, { status: 500 });
   }

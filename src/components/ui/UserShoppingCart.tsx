@@ -38,6 +38,8 @@ export default function UserShoppingCart() {
 
   useEffect(() => {
     if (data) {
+      setCartItems([]);
+
       const toSync = data
         .filter((item) => item.amount > item.stock)
         .map((item) => item.title);
