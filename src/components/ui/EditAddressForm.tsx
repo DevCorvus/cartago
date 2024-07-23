@@ -63,6 +63,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
     formState: { errors, isSubmitting },
     handleSubmit,
     setValue,
+    watch,
   } = useForm<CreateUpdateAddressForm>({
     resolver: zodResolver(createUpdateAddressFormSchema),
     defaultValues: {
@@ -127,9 +128,12 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
 
   const handleSelectCountry = (country: CountryDto) => {
     setValue('countryId', country.id, { shouldValidate: true });
+    setValue('stateId', country.states[0].id, { shouldValidate: true });
     setSelectedCountry(country);
     setShowCountries(false);
   };
+
+  const stateId = watch('stateId');
 
   if (isLoading) return <LoadingModal />;
 
@@ -269,7 +273,7 @@ export function EditAddressForm({ address, updateAddress, close }: Props) {
             id="state"
             className="input p-3"
             disabled={!selectedCountry}
-            defaultValue={address.state.id}
+            value={stateId}
           >
             <option value="" disabled>
               Select state
