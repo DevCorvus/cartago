@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import {
   HiCalendarDays,
   HiOutlineCircleStack,
@@ -19,12 +19,19 @@ import { formatTimeFromNow } from '@/lib/dayjs';
 import Rating from './Rating';
 import ProductRelatedList from './ProductRelatedList';
 import { useCartItem } from '@/hooks/useCartItem';
+import { useRouter } from 'next/navigation';
 
 export default function ProductDetails({
   isOwner,
   product,
   relatedProducts,
 }: ProductDetailsDto) {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+  }, [router]);
+
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
   const { addCartItem, inCart } = useCartItem(product.id);
