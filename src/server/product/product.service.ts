@@ -10,7 +10,7 @@ import {
   ProductCard,
   NewProductDto,
 } from '@/shared/dtos/product.dto';
-import { StorageService } from '../storage/storage.service';
+import { StorageService } from '../storage/supabase.service';
 
 interface ProductWithOwnerAndImages {
   userId: string;
@@ -479,7 +479,7 @@ export class ProductService {
         },
       });
     } catch {
-      await this.storageService.restoreMany(productImageFilenamesToDelete);
+      // No restoring this time (workaround)
       await this.storageService.deleteMany(newProductImageFilenames);
     }
   }

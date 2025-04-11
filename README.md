@@ -25,10 +25,9 @@ Compared to the big names in the sector, this one simplifies and/or lacks many t
 ```bash
 DATABASE_URL="your_postgres_database_url"
 NEXTAUTH_SECRET="your_nextauth_secret"
-AWS_BUCKET_REGION="your_aws_bucket_region"
-AWS_BUCKET_NAME="your_aws_bucket_name"
-AWS_S3_ACCESS_KEY="your_aws_s3_access_key"
-AWS_S3_SECRET_ACCESS_KEY="your_aws_s3_secret_access_key"
+SUPABASE_STORAGE_URL="your_supabase_storage_url"
+SUPABASE_SERVICE_KEY="your_supabase_role_key"
+SUPABASE_BUCKET_NAME="your_supabase_bucket_name"
 
 # Optional
 MODERATE_CONTENT_API_KEY="your_moderate_content_api_key"

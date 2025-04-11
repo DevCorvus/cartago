@@ -8,7 +8,7 @@ import { OrderService } from './order/order.service';
 import { PasswordService } from './password/password.service';
 import { ProductService } from './product/product.service';
 import { ReviewService } from './review/review.service';
-import { StorageService } from './storage/storage.service';
+import { StorageService } from './storage/supabase.service';
 import { UserService } from './user/user.service';
 import { WishedItemService } from './wished/wished.service';
 
